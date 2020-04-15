@@ -18,9 +18,18 @@
     <ClCompile Include="loadClue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Z:\College Stuff\CS162\ChemeketaDevEnvironment\TriangleProject\triangle\Point.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boardTile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clueBoard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Z:\College Stuff\CS162\ChemeketaDevEnvironment\TriangleProject\triangle\Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
