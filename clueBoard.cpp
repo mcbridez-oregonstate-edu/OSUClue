@@ -6,6 +6,6 @@ const int SIZE = 25;
 
 using namespace std;
 
-clueBoard::clueBoard() {
-	new boardTile*[25];
+clueBoard::clueBoard(boardTile** boardArray) {
+	board = boardArray;
 }

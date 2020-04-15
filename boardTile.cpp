@@ -22,6 +22,12 @@ boardTile::boardTile(string type, int row, int col) {
 		passable = true;
 	}
 }
+boardTile::boardTile() {
+	location = Point(0, 0);
+	occupied = false;
+	room = false;
+	passable = false;
+}
 bool boardTile::isOccupied() {
 	if (occupied == true) {
 		return true;

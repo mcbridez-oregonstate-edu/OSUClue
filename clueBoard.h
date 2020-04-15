@@ -13,7 +13,7 @@ private:
 public:
 
 	//constructor
-	clueBoard();
+	clueBoard(boardTile**);
 	//destructor
 
 	//assignment
