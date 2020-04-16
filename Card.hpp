@@ -19,6 +19,8 @@ private:
 public:
 	Card();
 	Card(std::string clueName, CardType clueType);
+	std::string getName();
+	CardType getType();
 };
 
 

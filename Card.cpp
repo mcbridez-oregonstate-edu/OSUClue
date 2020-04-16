@@ -25,3 +25,19 @@ Card::Card(std::string clueName, CardType clueType) {
 	name = clueName;
 	type = clueType;
 }
+
+/********************************************************************************
+** Function: std::string getName()
+** Description: Returns the name of the card
+********************************************************************************/
+std::string Card::getName() {
+	return name;
+}
+
+/********************************************************************************
+** Function: CardType getType()
+** Description: Returns the type of the card
+********************************************************************************/
+CardType Card::getType() {
+	return type;
+}
