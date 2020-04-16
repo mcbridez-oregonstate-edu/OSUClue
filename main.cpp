@@ -1,6 +1,9 @@
 #include <iostream>
+#include "gameInit.hpp"
 
 int main() {
-	std::cout << "test main";
+
+
+	cardSetup();
 	return 0;
 }
