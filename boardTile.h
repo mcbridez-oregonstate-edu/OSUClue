@@ -8,7 +8,7 @@
 class boardTile {
 private:
 
-	std::string type;
+	std::string tileType;
 	bool occupied;
 	bool room;
 	bool passable;
@@ -18,16 +18,18 @@ public:
 
 	boardTile();
 	boardTile(std::string type, int row, int col);
+	boardTile(std::string type);
 	//constructor
 
 	//destructor
 
 	//assignment
-
+	boardTile& operator = (const boardTile& other);
 	//declarations
 	bool isOccupied();
 	bool isRoom();
-	
-
+	bool isPassable();
+	void setCoor(int row, int col);
+	char charTile();
 };
 #endif

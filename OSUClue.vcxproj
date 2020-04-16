@@ -140,7 +140,7 @@
   <ItemGroup>
     <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="clueBoard.cpp" />
-    <ClCompile Include="loadClue.cpp" />
+    <ClCompile Include="loadClueBoard.cpp" />
     <ClCompile Include="Z:\College Stuff\CS162\ChemeketaDevEnvironment\TriangleProject\triangle\Point.cpp" />
   </ItemGroup>
   <ItemGroup>

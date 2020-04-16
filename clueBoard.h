@@ -7,7 +7,7 @@
 
 class clueBoard {
 private:
-	const int length = 25;
+	const int length = 27;
 	boardTile **board;
 
 public:
@@ -18,5 +18,7 @@ public:
 
 	//assignment
 
+	//declarations
+	void charBoard();
 };
 #endif
