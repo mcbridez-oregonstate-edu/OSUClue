@@ -11,7 +11,7 @@ void writeToLog(string message, string variable);
 
 int main() {
 	boardTile** boardArray = new boardTile * [27];
-	for (int i = 0; i < 27; i++) {
+	for (int i = 0; i < 25; i++) {
 		boardArray[i] = new boardTile[27];
 	}
 	boardTile room = boardTile("r");

@@ -8,7 +8,7 @@
 class clueBoard {
 private:
 	const int length = 27;
-	boardTile **board = nullptr;
+	boardTile **board;
 
 public:
 

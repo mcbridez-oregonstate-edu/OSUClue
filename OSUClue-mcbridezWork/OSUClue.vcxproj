@@ -141,12 +141,12 @@
     <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="clueBoard.cpp" />
     <ClCompile Include="loadClueBoard.cpp" />
-    <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Z:\College Stuff\CS162\ChemeketaDevEnvironment\TriangleProject\triangle\Point.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boardTile.h" />
     <ClInclude Include="clueBoard.h" />
-    <ClInclude Include="Point.h" />
+    <ClInclude Include="Z:\College Stuff\CS162\ChemeketaDevEnvironment\TriangleProject\triangle\Point.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

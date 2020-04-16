@@ -19,7 +19,6 @@ public:
 	boardTile();
 	boardTile(std::string type, int row, int col);
 	boardTile(std::string type);
-	boardTile(const boardTile& other);//copy constructor
 	//constructor
 
 	//destructor

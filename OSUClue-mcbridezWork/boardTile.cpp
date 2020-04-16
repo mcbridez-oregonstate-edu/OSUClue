@@ -28,18 +28,6 @@ boardTile::boardTile(string type, int row, int col) {
 boardTile::boardTile(std::string type)
 {
 }
-
-//copy constructor
-boardTile::boardTile(const boardTile& other)
-{
-	occupied = other.occupied;
-	room = other.room;
-	passable = other.passable;
-	location = other.location;
-	tileType = other.tileType;
-}
-
-
 boardTile::boardTile() {
 	location = Point(0, 0);
 	occupied = false;
@@ -73,22 +61,14 @@ bool boardTile::isPassable() {
 void boardTile::setCoor(int row, int col) {
 	location = Point(row, col);
 }
-
 boardTile& boardTile::operator = (const boardTile& other) {
-	if (this == &other)
-	{
-		return *this;
-	}
-
 	occupied = other.occupied;
 	room = other.room;
 	passable = other.passable;
 	location = other.location;
 	tileType = other.tileType;
-
 	return *this;
 }
-
 char boardTile::charTile() {
 	return tileType[0];
 }
