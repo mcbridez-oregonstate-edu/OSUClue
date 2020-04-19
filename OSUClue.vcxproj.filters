@@ -21,10 +21,10 @@
     <ClCompile Include="clueBoard.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="loadClueBoard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Point.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sfmlMainTester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
