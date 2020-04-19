@@ -11,7 +11,7 @@
 #include <vector>
 #include <tuple>
 
-
+//The default constructor for the player class; not sure how/if this will be used
 Player::Player()
 {
 	this->name = "N/A";
@@ -19,6 +19,7 @@ Player::Player()
 	this->notebook = "";
 }
 
+//An overloaded constructor for the Player class to set its attributes
 Player::Player(std::string name, PlayerToken token, std::vector<Card*> hand, std::tuple<int, int> position, std::string notebook)
 {
 	this->name = name;
@@ -28,16 +29,20 @@ Player::Player(std::string name, PlayerToken token, std::vector<Card*> hand, std
 	this->notebook = notebook;
 }
 
+//Gets the player's name
 std::string Player::getName()
 {
 	return this->name;
 }
 
+//Gets the player's token (represented as a number)
 PlayerToken Player::getToken()
 {
 	return this->token;
 }
 
+//Gets the player's token (represented as text)
+//If the token isn't set or is another unexpected value, returns "Unknown Character"
 std::string Player::getTokenName()
 {
 	if (this->token == GREEN) {
@@ -66,7 +71,6 @@ std::string Player::getTokenName()
 //Removes the first instance of a card from a player's hand given its name
 void Player::removeCard(std::string cardName)
 {
-
 	for (std::size_t i = 0; i < this->hand.size(); i++) {
 		if (this->hand.at(i)->getName() == cardName) {
 			this->hand.erase(this->hand.begin() + i);
@@ -75,26 +79,32 @@ void Player::removeCard(std::string cardName)
 	}
 }
 
+//Adds a specific card to hand
 void Player::addCard(Card* card)
 {
 	this->hand.push_back(card);
 }
 
+//Gets the player's hand as a vector of Cards
 std::vector<Card*> Player::getHand()
 {
 	return this->hand;
 }
 
+//Returns the Player's current position as a tuple (x, y)
 std::tuple<int, int> Player::getPosition()
 {
 	return this->position;
 }
 
+//Updates the Player's current position to a specific x, y coordinate
 void Player::updatePosition(std::tuple<int, int> pos)
 {
 	this->position = pos;
 }
 
+//Gets the Player's handbook
+//WIP in terms of how we want the notebook implemented; can probably parse over newlines currently
 std::string Player::getNotebook()
 {
 	if (this->notebook.empty()) {
@@ -106,6 +116,7 @@ std::string Player::getNotebook()
 	
 }
 
+//Adds an entry to the notebook, delimited by a newline and a "-"
 void Player::updateNotebook(std::string entry)
 {
 	this->notebook += "\n\t- "+entry;
