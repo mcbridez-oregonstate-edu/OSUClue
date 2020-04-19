@@ -12,11 +12,11 @@
 #include <tuple>
 
 
-
-
 Player::Player()
 {
-	
+	this->name = "N/A";
+	this->position = std::make_tuple(-1, -1);
+	this->notebook = "";
 }
 
 Player::Player(std::string name, PlayerToken token, std::vector<Card*> hand, std::tuple<int, int> position, std::string notebook)
@@ -40,13 +40,39 @@ PlayerToken Player::getToken()
 
 std::string Player::getTokenName()
 {
-	std::string tokenName = "Colonel Mustard";
-	return tokenName;
+	if (this->token == GREEN) {
+		return "Mr. Green";
+	}
+	else if (this->token == MUSTARD) {
+		return "Colonel Mustard";
+	}
+	else if (this->token == PEACOCK) {
+		return "Mrs. Peacock";
+	}
+	else if (this->token == PLUM) {
+		return "Professor Plum";
+	}
+	else if (this->token == SCARLET) {
+		return "Miss Scarlet";
+	}
+	else if (this->token == WHITE) {
+		return "Mrs. White";
+	}
+	else {
+		return  "Unknown Character";
+	}
 }
 
-void Player::removeCard(Card*)
+//Removes the first instance of a card from a player's hand given its name
+void Player::removeCard(std::string cardName)
 {
 
+	for (std::size_t i = 0; i < this->hand.size(); i++) {
+		if (this->hand.at(i)->getName() == cardName) {
+			this->hand.erase(this->hand.begin() + i);
+			break;
+		}
+	}
 }
 
 void Player::addCard(Card* card)
@@ -71,10 +97,16 @@ void Player::updatePosition(std::tuple<int, int> pos)
 
 std::string Player::getNotebook()
 {
-	return this->notebook;
+	if (this->notebook.empty()) {
+		return this->getTokenName() + "\'s Notebook:\n\t* No Current Entries *";
+	}
+	else {
+		return this->getTokenName() + "\'s Notebook:\n" + this->notebook;
+	}
+	
 }
 
 void Player::updateNotebook(std::string entry)
 {
-	this->notebook += entry;
+	this->notebook += "\n\t- "+entry;
 }

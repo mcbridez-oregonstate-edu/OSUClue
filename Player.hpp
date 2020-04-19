@@ -29,7 +29,7 @@ public:
 	std::string getName();
 	PlayerToken getToken();
 	std::string getTokenName();
-	void removeCard(Card*);
+	void removeCard(std::string);
 	void addCard(Card*);
 	std::vector<Card*> getHand();
 	std::tuple<int, int> getPosition();
