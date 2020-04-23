@@ -12,7 +12,10 @@
 
 
 void cardSetup();
+
+// For Testing
 void swap(Card** a, Card** b);
 void printCards(std::vector<Card*> hand);
+int inputValidation();
 
 #endif
