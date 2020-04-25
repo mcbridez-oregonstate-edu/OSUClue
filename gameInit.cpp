@@ -112,7 +112,7 @@ void cardSetup() {
 
 	Card* p7 = new Card("Billiard Room", PLACE);
 	placesVect.push_back(p7);
-	allCards.insert({ 18, p7 });
+	allCards.insert({ 19, p7 });
 
 	Card* p8 = new Card("Library", PLACE);
 	placesVect.push_back(p8);
@@ -284,86 +284,14 @@ void cardSetup() {
 
 		}
 
+		// user chooses to make an accusation
 		else if (choice == 2) {
-			// builds a vector containg pointers to the player's guess and compares that vector with case file
-			int guess = 0;
-			std::vector<Card*> accusationVect;
-
-			do {
-				std::cout << "Choose a Suspect:" << std::endl;
-				std::cout << "\t 1. Colonel Mustard" << std::endl;
-				std::cout << "\t 2. Miss Scarlet" << std::endl;
-				std::cout << "\t 3. Proffesor Plum" << std::endl;
-				std::cout << "\t 4. Mr. Green" << std::endl;
-				std::cout << "\t 5. Mrs White" << std::endl;
-				std::cout << "\t 6. Mrs. Peacock" << std::endl;
-				guess = inputValidation();
-
-				if (guess < 1 || guess > 6) {
-					std::cout << "OOPS! That wasn't one of the choices! Try again." << std::endl;
-				}
-				else {
-					accusationVect.push_back(allCards.at(guess));
-				}
-			} while (guess < 1 || guess > 6);
-
-			system("CLS");
-
-			do {
-				std::cout << "Choose a Weapon:" << std::endl;
-				std::cout << "\t 1. Rope" << std::endl;
-				std::cout << "\t 2. Lead Pipe" << std::endl;
-				std::cout << "\t 3. Knife" << std::endl;
-				std::cout << "\t 4. Wrench" << std::endl;
-				std::cout << "\t 5. Candlestick" << std::endl;
-				std::cout << "\t 6. Pistol" << std::endl;
-				guess = inputValidation() + 6;
-
-				if (guess < 7 || guess > 12) {
-					std::cout << "OOPS! That wasn't one of the choices! Try again." << std::endl;
-				}
-				else {
-					accusationVect.push_back(allCards.at(guess));
-				}
-			} while (guess < 7 || guess > 12);
-
-			system("CLS");
-
-
-			do {
-				std::cout << "Choose a Location:" << std::endl;
-				std::cout << "\t 1. Hall" << std::endl;
-				std::cout << "\t 2. Lounge" << std::endl;
-				std::cout << "\t 3. Dining Room" << std::endl;
-				std::cout << "\t 4. Kitchen" << std::endl;
-				std::cout << "\t 5. Ballroom" << std::endl;
-				std::cout << "\t 6. Conservatory" << std::endl;
-				std::cout << "\t 7. Billiard Room" << std::endl;
-				std::cout << "\t 8. Library" << std::endl;
-				std::cout << "\t 9. Study" << std::endl;
-				guess = inputValidation() + 12;
-
-				if (guess < 13 || guess > 21) {
-					std::cout << "OOPS! That wasn't one of the choices! Try again." << std::endl;
-				}
-				else {
-					accusationVect.push_back(allCards.at(guess));
-				}
-			} while (guess < 13 || guess > 21);
-
-			std::cout << "You chose: " << std::endl;
-			printCards(accusationVect);
-
-			// compare accusation with case file
-			std::cout << std::endl;
-			if (accusationVect == caseFile) {
+			if (accusation(caseFile, allCards)) {
 				std::cout << "Congratulations! You solved the murder!" << std::endl;
 			}
 			else {
 				std::cout << "The murderer got away." << std::endl;
 			}
-
-			accusationVect.clear(); 
 		}
 
 	} while (choice != 3); // loop until user exits;
@@ -378,6 +306,94 @@ void cardSetup() {
 	
 }
 
+/********************************************************************************
+** Function: int accusation(vector<Card*>, map<int, Card*>)
+** Description: Function that simulates the accusation action. Takes the caseFile
+**				as an argument and builds another vector containing suspect/location/weapon
+**				cards and compares it to the caseFile. Returns 1 if the accusastion
+**				is correct and 0 otherwise
+********************************************************************************/
+int accusation(std::vector<Card*> caseFile, std::map<int, Card*> allCards) {
+	// builds a vector containg pointers to the player's guess and compares that vector with case file
+	int guess = 0;
+	std::vector<Card*> accusationVect;
+
+	do {
+		std::cout << "Choose a Suspect:" << std::endl;
+		std::cout << "\t 1. Colonel Mustard" << std::endl;
+		std::cout << "\t 2. Miss Scarlet" << std::endl;
+		std::cout << "\t 3. Proffesor Plum" << std::endl;
+		std::cout << "\t 4. Mr. Green" << std::endl;
+		std::cout << "\t 5. Mrs White" << std::endl;
+		std::cout << "\t 6. Mrs. Peacock" << std::endl;
+		guess = inputValidation();
+
+		if (guess < 1 || guess > 6) {
+			std::cout << "OOPS! That wasn't one of the choices! Try again." << std::endl;
+		}
+		else {
+			accusationVect.push_back(allCards.at(guess));
+		}
+	} while (guess < 1 || guess > 6);
+
+	system("CLS");
+
+	do {
+		std::cout << "Choose a Weapon:" << std::endl;
+		std::cout << "\t 1. Rope" << std::endl;
+		std::cout << "\t 2. Lead Pipe" << std::endl;
+		std::cout << "\t 3. Knife" << std::endl;
+		std::cout << "\t 4. Wrench" << std::endl;
+		std::cout << "\t 5. Candlestick" << std::endl;
+		std::cout << "\t 6. Pistol" << std::endl;
+		guess = inputValidation() + 6;
+
+		if (guess < 7 || guess > 12) {
+			std::cout << "OOPS! That wasn't one of the choices! Try again." << std::endl;
+		}
+		else {
+			accusationVect.push_back(allCards.at(guess));
+		}
+	} while (guess < 7 || guess > 12);
+
+	system("CLS");
+
+
+	do {
+		std::cout << "Choose a Location:" << std::endl;
+		std::cout << "\t 1. Hall" << std::endl;
+		std::cout << "\t 2. Lounge" << std::endl;
+		std::cout << "\t 3. Dining Room" << std::endl;
+		std::cout << "\t 4. Kitchen" << std::endl;
+		std::cout << "\t 5. Ballroom" << std::endl;
+		std::cout << "\t 6. Conservatory" << std::endl;
+		std::cout << "\t 7. Billiard Room" << std::endl;
+		std::cout << "\t 8. Library" << std::endl;
+		std::cout << "\t 9. Study" << std::endl;
+		guess = inputValidation() + 12;
+
+		if (guess < 13 || guess > 21) {
+			std::cout << "OOPS! That wasn't one of the choices! Try again." << std::endl;
+		}
+		else {
+			accusationVect.push_back(allCards.at(guess));
+		}
+	} while (guess < 13 || guess > 21);
+
+	std::cout << "You chose: " << std::endl;
+	printCards(accusationVect);
+
+	// compare accusation with case file
+	std::cout << std::endl;
+	if (accusationVect == caseFile) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+
+	accusationVect.clear();
+}
 /************************************************ Functions for testing *****************************************/
 void swap(Card** a, Card** b) {
 

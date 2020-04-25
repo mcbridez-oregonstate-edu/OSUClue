@@ -9,9 +9,11 @@
 
 #include "Card.hpp"
 #include <vector>
+#include <map>
 
 
 void cardSetup();
+int accusation(std::vector<Card*>, std::map<int, Card*>);
 
 // For Testing
 void swap(Card** a, Card** b);
