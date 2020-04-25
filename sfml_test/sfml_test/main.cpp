@@ -59,23 +59,24 @@ int main()
 
 	//graphical output section
 	//creating a render window with SFML
-	sf::RenderWindow window(sf::VideoMode(1280,800), "Clue!", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
 	
+
 	//making textures
 	sf::Texture room_texture;
-	if (!room_texture.loadFromFile("room.bmp"))
+	if (!room_texture.loadFromFile("room.bmp", sf::IntRect(0, 0, 30, 30)))
 	{
 		cout << "Cannot open room.bmp" << endl;
 	}
 
 	sf::Texture wall_texture;
-	if (!wall_texture.loadFromFile("wall.bmp"))
+	if (!wall_texture.loadFromFile("wall.bmp", sf::IntRect(0, 0, 30, 30)))
 	{
 		cout << "Cannot open wall.bmp" << endl;
 	}
 
 	sf::Texture floor_texture;
-	if (!floor_texture.loadFromFile("floor.bmp"))
+	if (!floor_texture.loadFromFile("floor.bmp", sf::IntRect(0, 0, 30, 30)))
 	{
 		cout << "Cannot open floor.bmp" << endl;
 	}
@@ -97,11 +98,11 @@ int main()
 		for (int j = 0; j < 27; j++)
 		{
 			//setting coordinates in window
-			double x_position = 14.0 * i;
-			double y_position = 14.0 * j;
+			double x_position = 30.0 * i;
+			double y_position = 30.0 * j;
 
 			//setting the origin of each sprite
-			rendered_board[i][j].setOrigin(sf::Vector2f(x_position, y_position));
+			rendered_board[i][j].move(sf::Vector2f(x_position, y_position));
 
 			char currentRoom = boardArray[i][j].charTile();
 
@@ -178,14 +179,13 @@ int main()
 		{
 			if (event.key.code == sf::Keyboard::Right)
 			{
-				window.clear();
+				//window.clear();
 				triangle.move(sf::Vector2f(25.0, 25.0));
 				window.display();
 			}
 		}
 
     }
-
     return 0;
 }
 
