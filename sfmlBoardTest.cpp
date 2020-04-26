@@ -5,6 +5,7 @@
 #include <ostream>
 #include <vector>
 #include <sstream>
+#include "Mouse.hpp"
 #include "clueBoard.h"
 using namespace std;
 void writeToLog(string message, string variable);
@@ -181,6 +182,10 @@ int main()
 			{
 				//window.clear();
 				triangle.move(sf::Vector2f(25.0, 25.0));
+				window.display();
+			}
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				triangle.move(sf::Vector2f(sf::Mouse::getPosition(window)));
 				window.display();
 			}
 		}

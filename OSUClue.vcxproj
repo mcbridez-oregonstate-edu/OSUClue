@@ -146,12 +146,13 @@
   <ItemGroup>
     <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="clueBoard.cpp" />
-    <ClCompile Include="playerTurn.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="sfmlBoardTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boardTile.h" />
     <ClInclude Include="clueBoard.h" />
+    <ClInclude Include="Mouse.hpp" />
     <ClInclude Include="Point.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

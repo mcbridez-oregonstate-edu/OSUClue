@@ -24,7 +24,7 @@
     <ClCompile Include="Point.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="playerTurn.cpp">
+    <ClCompile Include="sfmlBoardTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.hpp">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
