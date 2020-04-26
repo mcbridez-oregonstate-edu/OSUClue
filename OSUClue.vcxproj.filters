@@ -24,7 +24,7 @@
     <ClCompile Include="Point.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfmlMainTester.cpp">
+    <ClCompile Include="playerTurn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

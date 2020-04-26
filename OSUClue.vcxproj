@@ -146,8 +146,8 @@
   <ItemGroup>
     <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="clueBoard.cpp" />
+    <ClCompile Include="playerTurn.cpp" />
     <ClCompile Include="Point.cpp" />
-    <ClCompile Include="sfmlMainTester.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boardTile.h" />
