@@ -127,7 +127,7 @@ int main()
 		}
 	}
 
-	cout << "Press the right arrow key to move the piece." << endl;
+	cout << "Move the piece with arrow keys or left click." << endl;
 
 	//rendering window
     while (window.isOpen())
@@ -141,10 +141,6 @@ int main()
         }
 
         window.clear();
-
-		//sf::Sprite sprite;
-		//sprite.setTexture(wall_texture);
-		//window.draw(sprite);
 		
 		//drawing board's sprites
 		for (int i = 0; i < 27; i++)
@@ -168,20 +164,41 @@ int main()
 		if ((pieceMoved == false) && (elapsed > sf::seconds(1.0f)))
 		{
 			window.clear();
-			triangle.move(sf::Vector2f(100.0, 100.0));
+			triangle.move(sf::Vector2f(10.0, 10.0));
 			window.display();
 			pieceMoved = true;
 		}*/
 
+		//test code for moving a piece with mouse input
+		//function sets the triangles positions
+		//to where the mouse cursor is when clicked
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			triangle.setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
+		}
+
 		//test code for moving a piece
-		//right arrow will move the piece to the bottom right
+		//arrow keys will move a piece in that direction
 		if (event.type == sf::Event::KeyPressed)
 		{
 			if (event.key.code == sf::Keyboard::Right)
 			{
-				//window.clear();
-				triangle.move(sf::Vector2f(25.0, 25.0));
-				window.display();
+				triangle.move(sf::Vector2f(10.0, 0));
+			}
+
+			if (event.key.code == sf::Keyboard::Left)
+			{
+				triangle.move(sf::Vector2f(-10.0, 0));
+			}
+
+			if (event.key.code == sf::Keyboard::Down)
+			{
+				triangle.move(sf::Vector2f(0, 10.0));
+			}
+
+			if (event.key.code == sf::Keyboard::Up)
+			{
+				triangle.move(sf::Vector2f(0, -10.0));
 			}
 		}
 
