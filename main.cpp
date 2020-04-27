@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Player.hpp"
+#include "Token.hpp"
 #include <iomanip>
 
 
@@ -7,6 +8,7 @@
 
 
 int main() {
+	
 
 	//Generating test values
 	std::vector<Card*> testHand;
@@ -23,6 +25,10 @@ int main() {
 	Card* c6 = new Card("Place_2", PLACE);
 	testHand.push_back(c6);
 	std::tuple<int, int> currentPos = std::make_tuple(1, 1);
+
+	//Using the overloaded Token constructor
+	Token* t1 = new Token("Knife", WEAPON_T, currentPos);
+	std::cout << t1->getName() << std::endl;
 
 	//Using the overloaded Player constructor
 	Player* p1 = new Player("Devin Mourrain", MUSTARD, testHand, currentPos, "");
