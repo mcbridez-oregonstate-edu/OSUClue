@@ -15,16 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Z:\College Stuff\CS162\ChemeketaDevEnvironment\TriangleProject\triangle\Point.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="boardTile.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="clueBoard.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="Point.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sfmlBoardTest.cpp">
+    <ClCompile Include="loadClueBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,11 +35,8 @@
     <ClInclude Include="clueBoard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
+    <ClInclude Include="Z:\College Stuff\CS162\ChemeketaDevEnvironment\TriangleProject\triangle\Point.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.hpp">
-      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
