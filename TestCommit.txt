@@ -1,3 +1,0 @@
-Test Commit - Adam
-This is a second test commit! - Devin
-This is a third test commit! - Jonathan
