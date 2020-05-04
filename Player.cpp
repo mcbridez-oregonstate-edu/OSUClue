@@ -7,6 +7,7 @@
 
 #include "Player.hpp"
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <tuple>
@@ -16,17 +17,39 @@ Player::Player()
 {
 	this->name = "N/A";
 	this->position = std::make_tuple(-1, -1);
-	this->notebook = "";
 }
 
 //An overloaded constructor for the Player class to set its attributes
-Player::Player(std::string name, PlayerToken token, std::vector<Card*> hand, std::tuple<int, int> position, std::string notebook)
+Player::Player(std::string name, PlayerToken token, std::vector<Card*> hand, std::tuple<int, int> position)
 {
 	this->name = name;
 	this->token = token;
 	this->hand = hand;
 	this->position = position;
-	this->notebook = notebook;
+	// -1 is empty, 0 is an "No", and 1 is a "Yes"; The initial layout is all empty
+	std::vector<std::vector<int>> initialNotebook{	{-1, -1, -1, -1, -1},			//Green
+													{-1, -1, -1, -1, -1},			//Mustard
+													{-1, -1, -1, -1, -1},			//Peacock
+													{-1, -1, -1, -1, -1},			//Plum
+													{-1, -1, -1, -1, -1},			//Scarlet
+													{-1, -1, -1, -1, -1},			//White
+													{-1, -1, -1, -1, -1},			//Candlestick
+													{-1, -1, -1, -1, -1},			//Dagger
+													{-1, -1, -1, -1, -1},			//Revolver
+													{-1, -1, -1, -1, -1},			//Lead Pipe
+													{-1, -1, -1, -1, -1},			//Rope
+													{-1, -1, -1, -1, -1},			//Wrench
+													{-1, -1, -1, -1, -1},			//Conservatory
+													{-1, -1, -1, -1, -1},			//Ballroom
+													{-1, -1, -1, -1, -1},			//Kitchen
+													{-1, -1, -1, -1, -1},			//Dining Room
+													{-1, -1, -1, -1, -1},			//Lounge
+													{-1, -1, -1, -1, -1},			//Hall
+													{-1, -1, -1, -1, -1},			//Study
+													{-1, -1, -1, -1, -1},			//Library
+													{-1, -1, -1, -1, -1},			//Billiard Room
+	};
+	this->notebook = initialNotebook;
 }
 
 //Gets the player's name
@@ -105,19 +128,24 @@ void Player::updatePosition(std::tuple<int, int> pos)
 
 //Gets the Player's handbook
 //WIP in terms of how we want the notebook implemented; can probably parse over newlines currently
-std::string Player::getNotebook()
+std::vector<std::vector<int>> Player::getNotebook()
 {
-	if (this->notebook.empty()) {
-		return this->getTokenName() + "\'s Notebook:\n\t* No Current Entries *";
-	}
-	else {
-		return this->getTokenName() + "\'s Notebook:\n" + this->notebook;
-	}
+	return this->notebook;
 	
 }
 
 //Adds an entry to the notebook, delimited by a newline and a "-"
-void Player::updateNotebook(std::string entry)
+void Player::updateNotebook(NotebookEntities row, int col, int change)
 {
-	this->notebook += "\n\t- "+entry;
+	this->notebook[row][col] = change;
+}
+
+//debug function; not likely for game use
+void Player::printNotebook() {
+	for (int i = 0; i < this->notebook.size(); i++) {
+		for (int j = 0; j < this->notebook[i].size(); j++) {
+			std::cout << this->notebook[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
 }
