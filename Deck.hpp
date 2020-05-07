@@ -6,20 +6,26 @@
 **************************************************************************/
 #include "Card.hpp"
 #include "Player.hpp"
+#include <vector>
+using std::vector;
 
 #ifndef DECK_HPP
 #define DECK_HPP
 
 class Deck {
 private:
-    Card[] deck;
-    void swap(Card*, Card*);    // A private helper function to aid in shuffling
+    //vector<Card> deck;
+    vector<Card*> solution;
+    void pickSolution();        // We only want to run this once, so make it private and put it in the constructor
+    void swap(Card** a, Card** b);    // Private helper function for shuffle
 
 public:
     Deck();
+    ~Deck();
+    vector<Card*> deck;          // Made public only for testing--reestablish private version when done
     void shuffle();
-    void pickSolution();
     void deal(Player[]);
+    vector<Card*> getSolution();
 };
 
 #endif // !DECK_HPP

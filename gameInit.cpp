@@ -85,40 +85,40 @@ void cardSetup() {
 	weaponsVect.push_back(w6);
 	allCards.insert({ 12, w6 });
 
-		// Place
-	Card* p1 = new Card("Hall", PLACE);
+		// ROOM
+	Card* p1 = new Card("Hall", ROOM);
 	placesVect.push_back(p1);
 	allCards.insert({ 13, p1 });
 
-	Card* p2 = new Card("Lounge", PLACE);
+	Card* p2 = new Card("Lounge", ROOM);
 	placesVect.push_back(p2);
 	allCards.insert({ 14, p2 });
 
-	Card* p3 = new Card("Dining Room", PLACE);
+	Card* p3 = new Card("Dining Room", ROOM);
 	placesVect.push_back(p3);
 	allCards.insert({ 15, p3 });
 
-	Card* p4 = new Card("Kitchen", PLACE);
+	Card* p4 = new Card("Kitchen", ROOM);
 	placesVect.push_back(p4);
 	allCards.insert({ 16, p4 });
 
-	Card* p5 = new Card("Ballroom", PLACE);
+	Card* p5 = new Card("Ballroom", ROOM);
 	placesVect.push_back(p5);
 	allCards.insert({ 17, p5 });
 
-	Card* p6 = new Card("Conservatory", PLACE);
+	Card* p6 = new Card("Conservatory", ROOM);
 	placesVect.push_back(p6);
 	allCards.insert({ 18, p6 });
 
-	Card* p7 = new Card("Billiard Room", PLACE);
+	Card* p7 = new Card("Billiard Room", ROOM);
 	placesVect.push_back(p7);
 	allCards.insert({ 19, p7 });
 
-	Card* p8 = new Card("Library", PLACE);
+	Card* p8 = new Card("Library", ROOM);
 	placesVect.push_back(p8);
 	allCards.insert({ 20, p8 });
 
-	Card* p9 = new Card("Study", PLACE);
+	Card* p9 = new Card("Study", ROOM);
 	placesVect.push_back(p9);
 	allCards.insert({ 21, p9 });
 
@@ -157,7 +157,7 @@ void cardSetup() {
 	std::vector<Card*> player6;
 	std::vector<Card*> caseFile;
 
-	// Select cards for the Case File, one of Suspect/Weapon/Place
+	// Select cards for the Case File, one of Suspect/Weapon/ROOM
 	int randomRoll = rand() % 6;
 	caseFile.push_back(suspectsVect.at(randomRoll));
 	suspectsVect.erase(suspectsVect.begin() + randomRoll); // remove card from the available pool of cards for the players
@@ -415,7 +415,7 @@ void printCards(std::vector<Card*> hand) {
 			std::cout << std::left << std::setw(20) << "Suspect" << std::endl;
 		}
 		else {
-			std::cout << std::left << std::setw(20) << "Place" << std::endl;
+			std::cout << std::left << std::setw(20) << "ROOM" << std::endl;
 		}
 	}
 }

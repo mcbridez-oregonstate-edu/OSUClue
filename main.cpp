@@ -1,8 +1,11 @@
 #include <iostream>
 #include "Player.hpp"
 #include "Token.hpp"
+#include "Deck.hpp"
 #include <iomanip>
-
+using std::cout;
+using std::endl;
+using std::tuple;
 
 //#include "gameInit.hpp"
 
@@ -10,7 +13,7 @@
 int main() {
 	
 
-	//Generating test values
+	/*//Generating test values
 	std::vector<Card*> testHand;
 	Card* c1 = new Card("Suspect_1", SUSPECT);
 	testHand.push_back(c1);
@@ -65,6 +68,87 @@ int main() {
 	p1->printNotebook();
 	std::cout << "===" << std::endl;
 
-	//cardSetup();
+	//cardSetup();*/
+	
+	// For testing
+	vector<Card*> hand1;
+	vector<Card*> hand2;
+	vector<Card*> hand3;
+	vector<Card*> hand4;
+	vector<Card*> hand5;
+	vector<Card*> hand6;
+
+	tuple<int, int> pos1;
+	tuple<int, int> pos2;
+	tuple<int, int> pos3;
+	tuple<int, int> pos4;
+	tuple<int, int> pos5;
+	tuple<int, int> pos6;
+
+	Player player1 = Player("Player 1", MUSTARD, hand1, pos1);
+	Player player2 = Player("Player 2", SCARLET, hand2, pos2);
+	Player player3 = Player("Player 3", PEACOCK, hand3, pos3);
+	Player player4 = Player("Player 4", GREEN, hand4, pos4);
+	Player player5 = Player("Player 5", WHITE, hand5, pos5);
+	Player player6 = Player("Player 6", PLUM, hand6, pos6);
+	Player players[6] = { player1, player2, player3, player4, player5, player6 };
+
+	Deck newDeck;
+
+	for (int i = 0; i < 18; i++)
+	{
+		cout << "Card " << i << ": " << newDeck.deck[i]->getName() << endl;
+	}
+
+	vector<Card*> solution = newDeck.getSolution();
+	cout << "Suspect: " << solution[0]->getName() << endl;
+	cout << "Weapon: " << solution[1]->getName() << endl;
+	cout << "Room: " << solution[2]->getName() << endl;
+
+	newDeck.shuffle();
+
+	for (int i = 0; i < 18; i++)
+	{
+		cout << "Card " << i << ": " << newDeck.deck[i]->getName() << endl;
+	}
+
+	newDeck.deal(players);
+	vector<Card*> player1hand = players[0].getHand();
+	vector<Card*> player2hand = players[1].getHand();
+	vector<Card*> player3hand = players[2].getHand();
+	vector<Card*> player4hand = players[3].getHand();
+	vector<Card*> player5hand = players[4].getHand();
+	vector<Card*> player6hand = players[5].getHand();
+
+	for (int i = 0; i < player1hand.size(); i++)
+	{
+		cout << "Player 1 has " << player1hand[i]->getName() << endl;
+	}
+		
+	for (int i = 0; i < player2hand.size(); i++)
+	{
+		cout << "Player 2 has " << player2hand[i]->getName() << endl;
+	}
+
+	for (int i = 0; i < player3hand.size(); i++)
+	{
+		cout << "Player 3 has " << player3hand[i]->getName() << endl;
+	}
+
+	for (int i = 0; i < player4hand.size(); i++)
+	{
+		cout << "Player 4 has " << player4hand[i]->getName() << endl;
+	}
+
+	for (int i = 0; i < player5hand.size(); i++)
+	{
+		cout << "Player 5 has " << player5hand[i]->getName() << endl;
+	}
+
+	for (int i = 0; i < player6hand.size(); i++)
+	{
+		cout << "Player 6 has " << player6hand[i]->getName() << endl;
+	}
+
 	return 0;
 }
