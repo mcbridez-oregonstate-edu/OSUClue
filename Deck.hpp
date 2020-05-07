@@ -13,6 +13,7 @@
 class Deck {
 private:
     Card[] deck;
+    void swap(Card*, Card*);    // A private helper function to aid in shuffling
 
 public:
     Deck();
