@@ -19,7 +19,7 @@ Card::Card() {
 
 /********************************************************************************
 ** Function: Card::(std::string clueName; CardType clueType)
-** Description: This is the default contructor for the Card Class.
+** Description: This is the default contructor for the Space Class.
 ********************************************************************************/
 Card::Card(std::string clueName, CardType clueType) {
 	name = clueName;
