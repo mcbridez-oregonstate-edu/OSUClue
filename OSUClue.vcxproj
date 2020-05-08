@@ -139,14 +139,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
-    <ClCompile Include="gameInit.cpp" />
+    <ClCompile Include="Deck.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.hpp" />
-    <ClInclude Include="gameInit.hpp" />
+    <ClInclude Include="Deck.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Token.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

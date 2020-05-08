@@ -10,7 +10,7 @@
 
 #include<string>
 
-enum CardType {WEAPON, SUSPECT, PLACE};
+enum CardType {WEAPON, SUSPECT, ROOM};
 
 class Card {
 private:

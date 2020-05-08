@@ -21,10 +21,13 @@
     <ClCompile Include="Card.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gameInit.cpp">
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,10 +35,13 @@
     <ClInclude Include="Card.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gameInit.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Player.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deck.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
