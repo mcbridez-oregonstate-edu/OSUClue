@@ -12,6 +12,8 @@
 #include<string>
 #include<vector>
 #include<tuple>
+using std::string;
+using std::vector;
 
 enum PlayerToken {GREEN, MUSTARD, PEACOCK, PLUM, SCARLET, WHITE};
 
@@ -38,14 +40,15 @@ public:
 	void removeCard(std::string);
 	void addCard(Card*);
 	std::vector<Card*> getHand();
+	void printHand();				// For testing purposes only, to be removed 
 	std::tuple<int, int> getPosition();
 	void updatePosition(std::tuple<int, int>);
 	std::vector<std::vector<int>> getNotebook();
 	void updateNotebook(NotebookEntities, int, int);
 	void printNotebook();
-
-
-
+	vector<string> makeSuggestion();
+	//void takeTurn();				// Location logic needs to be implemented so that this can check if certain conditions are met
+									// before presenting the player with their options.
 };
 
 #endif

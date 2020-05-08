@@ -14,7 +14,7 @@ using std::vector;
 
 class Deck {
 private:
-    //vector<Card> deck;
+    vector<Card*> deck;
     vector<Card*> solution;
     void pickSolution();        // We only want to run this once, so make it private and put it in the constructor
     void swap(Card** a, Card** b);    // Private helper function for shuffle
@@ -22,9 +22,8 @@ private:
 public:
     Deck();
     ~Deck();
-    vector<Card*> deck;          // Made public only for testing--reestablish private version when done
     void shuffle();
-    void deal(Player[]);
+    void deal(vector<Player>);
     vector<Card*> getSolution();
 };
 

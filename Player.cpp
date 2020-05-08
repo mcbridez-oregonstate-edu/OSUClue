@@ -1,5 +1,6 @@
 /********************************************************************************
 ** Created by: Devin Mourrain
+** Suggestion function by: Abigail Minchella
 ** Date: 4/17/2020
 ** Description: This is the implementation of the Player class. See "Player.hpp"
 				for a full list of the Player's attributes.
@@ -11,6 +12,16 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <time.h>
+#include <cstdlib>
+using std::vector;
+using std::string;
+using std::cout;
+using std::cin;
+using std::endl;
+using std::stoi;
+using std::srand;
+using std::rand;
 
 //The default constructor for the player class; not sure how/if this will be used
 Player::Player()
@@ -114,6 +125,15 @@ std::vector<Card*> Player::getHand()
 	return this->hand;
 }
 
+// Prints the Player's hand. For testing only, to be removed after UI integration
+void Player::printHand()
+{
+	for (int i = 0; i < hand.size(); i++)
+	{
+		cout << hand[i]->getName() << endl;
+	}
+}
+
 //Returns the Player's current position as a tuple (x, y)
 std::tuple<int, int> Player::getPosition()
 {
@@ -148,4 +168,237 @@ void Player::printNotebook() {
 		}
 		std::cout << std::endl;
 	}
+}
+
+/*******************************************************************************************
+							vector<string> Player::makeSuggestion()
+* Description: Prompts the player for suggestion input and returns their answers for
+* comparison with other players' hands in the calling function. Also provides functionality 
+* for the player to view their hand and notebook so that they are able to make an educated
+* guess. Currently implemented with console IO, to be integrated with a UI later
+*******************************************************************************************/
+vector<string> Player::makeSuggestion()
+{
+	// Output instructions
+	vector<string> suggestion;
+	cout << "Choose a suspect to suggest by typing a number or type 'Notebook' or 'Hand' to view your notebook or hand" << endl;
+	cout << "1. Miss Scarlet" << endl;
+	cout << "2. Mr. Green" << endl;
+	cout << "3. Mrs. White" << endl;
+	cout << "4. Professor Plum" << endl;
+	cout << "5. Colonel Mustard" << endl;
+	cout << "6. Mrs. Peacock" << endl;
+
+	// Get input
+	string input1;
+	cin >> input1;
+
+	// Set up validation loop--Won't be necessary if the UI incorporates buttons for the user to click when
+	// suggesting
+	bool valid = false;
+	while (!valid)
+	{
+		if (input1 == "Notebook")
+		{
+			printNotebook();
+			// This is essentially a placeholder
+			cout << "Notebook printed. Please make a suspect selection:" << endl;
+			cin >> input1;
+		}
+		else if (input1 == "Hand")
+		{
+			cout << "Your hand contains:" << endl;
+			printHand();
+			cout << "Hand printed. Please make a suspect selection:" << endl;
+			cin >> input1;
+		}
+		// I understand this is a bit clunky but this is mainly for testing so idc
+		else if (input1 == "1" || input1 == "2" || input1 == "3" || input1 == "4" || input1 == "5" || input1 == "6")
+		{
+			valid = true;
+		}
+		else
+		{
+			cout << "Input invalid. Please select a number or type Notebook or Hand to view those options" << endl;
+			cin >> input1;
+		}
+	}
+
+	// Change input to an int so that a switch statement can be used and my life can be made easier
+	int choice1 = stoi(input1);
+
+	// Add the suspect name to the suggestion based on the player's choice
+	switch (choice1)
+	{
+		case 1:
+		{
+			suggestion.push_back("Miss Scarlet");
+			break;
+		}
+		case 2:
+		{
+			suggestion.push_back("Mr. Green");
+			break;
+		}
+		case 3:
+		{
+			suggestion.push_back("Mrs. White");
+			break;
+		}
+		case 4:
+		{
+			suggestion.push_back("Professor Plum");
+			break;
+		}
+		case 5:
+		{
+			suggestion.push_back("Colonel Mustard");
+			break;
+		}
+		case 6:
+		{
+			suggestion.push_back("Mrs. Peacock");
+			break;
+		}
+	}
+
+	// Prompt user for weapon choice
+	cout << "Choose a weapon to suggest by typing a number or type 'Notebook' or 'Hand' to view your notebook or hand" << endl;
+	cout << "1. Rope" << endl;
+	cout << "2. Wrench" << endl;
+	cout << "3. Lead Pipe" << endl;
+	cout << "4. Knife" << endl;
+	cout << "5. Candlestick" << endl;
+	cout << "6. Revolver" << endl;
+
+	// Get input
+	string input2;
+	cin >> input2;
+
+	// Set up validation loop--Won't be necessary if the UI incorporates buttons for the user to click when
+	// suggesting
+	valid = false;
+	while (!valid)
+	{
+		if (input2 == "Notebook")
+		{
+			printNotebook();
+			// This is essentially a placeholder
+			cout << "Notebook printed. Please make a suspect selection:" << endl;
+			cin >> input2;
+		}
+		else if (input2 == "Hand")
+		{
+			cout << "Your hand contains:" << endl;
+			
+			cout << "Hand printed. Please make a suspect selection:" << endl;
+			cin >> input2;
+		}
+		// I understand this is a bit clunky but this is mainly for testing so idc
+		else if (input2 == "1" || input2 == "2" || input2 == "3" || input2 == "4" || input2 == "5" || input2 == "6")
+		{
+			valid = true;
+		}
+		else
+		{
+			cout << "Input invalid. Please select a number or type Notebook or Hand to view those options" << endl;
+			cin >> input2;
+		}
+	}
+
+	// Change input to an int so that a switch statement can be used and my life can be made easier
+	int choice2;
+	choice2 = stoi(input2);
+
+	// Add the suspect name to the suggestion based on the player's choice
+	switch (choice2)
+	{
+		case 1:
+		{
+			suggestion.push_back("Rope");
+			break;
+		}
+		case 2:
+		{
+			suggestion.push_back("Wrench");
+			break;
+		}
+		case 3:
+		{
+			suggestion.push_back("Lead Pipe");
+			break;
+		}
+		case 4:
+		{
+			suggestion.push_back("Knife");
+			break;
+		}
+		case 5:
+		{
+			suggestion.push_back("Candlestick");
+			break;
+		}
+		case 6:
+		{
+			suggestion.push_back("Revolver");
+			break;
+		}
+	}
+
+	// Pick a random room to make the suggestion out of since we don't have positional info yet and 
+	// the player doesn't get to choose this
+	int seed = time(0);
+	srand(seed);
+	int choice3;
+	choice3 = (rand() % 9) + 1;
+	switch (choice3)
+	{
+		case 1:
+		{
+			suggestion.push_back("Lounge");
+			break;
+		}
+		case 2:
+		{
+			suggestion.push_back("Billiard Room");
+			break;
+		}
+		case 3:
+		{
+			suggestion.push_back("Hall");
+			break;
+		}
+		case 4:
+		{
+			suggestion.push_back("Conservatory");
+			break;
+		}
+		case 5:
+		{
+			suggestion.push_back("Ballroom");
+			break;
+		}
+		case 6:
+		{
+			suggestion.push_back("Library");
+			break;
+		}
+		case 7:
+		{
+			suggestion.push_back("Kitchen");
+			break;
+		}
+		case 8:
+		{
+			suggestion.push_back("Study");
+			break;
+		}
+		case 9:
+		{
+			suggestion.push_back("Dining Room");
+			break;
+		}
+	}
+
+	return suggestion;
 }

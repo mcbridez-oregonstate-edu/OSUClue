@@ -2,6 +2,7 @@
 #include "Player.hpp"
 #include "Token.hpp"
 #include "Deck.hpp"
+#include "Game.hpp"
 #include <iomanip>
 using std::cout;
 using std::endl;
@@ -13,7 +14,7 @@ using std::tuple;
 int main() {
 	
 
-	/*//Generating test values
+	//Generating test values
 	std::vector<Card*> testHand;
 	Card* c1 = new Card("Suspect_1", SUSPECT);
 	testHand.push_back(c1);
@@ -23,9 +24,9 @@ int main() {
 	testHand.push_back(c3);
 	Card* c4 = new Card("Weapon_2", WEAPON);
 	testHand.push_back(c4);
-	Card* c5 = new Card("Place_1", PLACE);
+	Card* c5 = new Card("Place_1", ROOM);
 	testHand.push_back(c5);
-	Card* c6 = new Card("Place_2", PLACE);
+	Card* c6 = new Card("Place_2", ROOM);
 	testHand.push_back(c6);
 	std::tuple<int, int> currentPos = std::make_tuple(1, 1);
 
@@ -40,7 +41,6 @@ int main() {
 	std::cout << "Initial position: " + std::to_string(std::get<0>(p1->getPosition())) + ", " + std::to_string(std::get<1>(p1->getPosition())) << std::endl;
 	p1->updatePosition(std::make_tuple(1, 4));
 	std::cout << "After moving: " + std::to_string(std::get<0>(p1->getPosition())) + ", " + std::to_string(std::get<1>(p1->getPosition())) << std::endl;
-
 
 
 
@@ -68,7 +68,7 @@ int main() {
 	p1->printNotebook();
 	std::cout << "===" << std::endl;
 
-	//cardSetup();*/
+	//cardSetup();
 	
 	// For testing
 	vector<Card*> hand1;
@@ -91,14 +91,9 @@ int main() {
 	Player player4 = Player("Player 4", GREEN, hand4, pos4);
 	Player player5 = Player("Player 5", WHITE, hand5, pos5);
 	Player player6 = Player("Player 6", PLUM, hand6, pos6);
-	Player players[6] = { player1, player2, player3, player4, player5, player6 };
+	vector<Player> players = {player1, player2, player3, player4, player5, player6};
 
 	Deck newDeck;
-
-	for (int i = 0; i < 18; i++)
-	{
-		cout << "Card " << i << ": " << newDeck.deck[i]->getName() << endl;
-	}
 
 	vector<Card*> solution = newDeck.getSolution();
 	cout << "Suspect: " << solution[0]->getName() << endl;
@@ -106,11 +101,6 @@ int main() {
 	cout << "Room: " << solution[2]->getName() << endl;
 
 	newDeck.shuffle();
-
-	for (int i = 0; i < 18; i++)
-	{
-		cout << "Card " << i << ": " << newDeck.deck[i]->getName() << endl;
-	}
 
 	newDeck.deal(players);
 	vector<Card*> player1hand = players[0].getHand();
@@ -149,6 +139,18 @@ int main() {
 	{
 		cout << "Player 6 has " << player6hand[i]->getName() << endl;
 	}
+	
+	// Suggestion test
+	vector<string> player1suggest;
+	player1suggest = players[0].makeSuggestion();
+	
+	cout << "Player 1 has suggested:" << endl;
+	cout << player1suggest[0] << " with the " << player1suggest[1] << " in the " << player1suggest[2] << endl;
+	
+	/* Game class test---not really working rn
+	vector<string> player1suggest = { "Mrs. White", "Revolver", "Lounge" };
+	Game newGame = Game();
+	newGame.checkSuggestion(MUSTARD, player1suggest);*/
 
 	return 0;
 }

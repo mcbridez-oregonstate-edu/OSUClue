@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Token.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="Card.hpp" />
     <ClInclude Include="Deck.hpp" />
+    <ClInclude Include="Game.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Token.hpp" />
   </ItemGroup>
