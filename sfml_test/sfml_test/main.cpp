@@ -310,7 +310,6 @@ sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
 				{
 					if (isValidMove(boardArray[mustard.get_row()][mustard.get_col()], boardArray[mustard.get_row()][mustard.get_col() + 1])) {
 						mustard.move_token(width, 0, 0, 1);
-						
 					}
 				}
 
@@ -318,7 +317,6 @@ sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
 				{
 					if (isValidMove(boardArray[mustard.get_row()][mustard.get_col()], boardArray[mustard.get_row()][mustard.get_col() - 1])) {
 						mustard.move_token(-width, 0, 0, -1);
-						
 					}
 				}
 
@@ -326,7 +324,6 @@ sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
 				{
 					if (isValidMove(boardArray[mustard.get_row()][mustard.get_col()], boardArray[mustard.get_row() + 1][mustard.get_col()])) {
 						mustard.move_token(0, height, 1, 0);
-						
 					}
 				}
 
@@ -334,17 +331,15 @@ sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
 				{
 					if (isValidMove(boardArray[mustard.get_row()][mustard.get_col()], boardArray[mustard.get_row()-1][mustard.get_col()])) {
 						mustard.move_token(0, -height, -1, 0);
-						break;
 					}
 				}
 				
 			}
 		
-		}
-		
-		
-		
+		}	
 	}
+
+	// free allocated memory
 	for (int i = 0; i < 26; i++) {
 		delete[] boardArray[i];
 	}
@@ -359,24 +354,35 @@ void writeToLog(string message, string variable) {
 	log.close();
 }
 
+/************************************************************************************
+**	Name:bool isValidMove(boardTile current_space, boardTile target_space)
+**	Description: Check if the tile being moved to is valid. Returns true if valid,
+**				 false otherwise. Takes as arguments the boardTile of the current
+**				 space and the space being moved to
+************************************************************************************/
 bool isValidMove(boardTile current_space, boardTile target_space) {
 	
-	if (target_space.isPassable()) {
+	if (target_space.isPassable()) { // check if tile is a wall
+
+			// check if the user is moving from hall->room or room->hall
 		if ((current_space.getTile_type() == Room && target_space.getTile_type() == Floor) || (current_space.getTile_type() == Floor && target_space.getTile_type() == Room)) {
-			
+				// if user is moving from hall->room or room->hall, the must cross through a door
 			if (current_space.hasDoor() && target_space.hasDoor()) {
 				
 				return true;
 			}
+				// hall and/or room tile does not have a door to pass through
 			else {
 				
 				return false;
 			}
 		}
+			// user is moving from hall->hall or room->room
 		else {
 			return true;
 		}
 	}
+	// user cannot move through wall
 	else {
 		return false;
 	}
