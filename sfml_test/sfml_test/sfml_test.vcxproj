@@ -151,11 +151,13 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\SFML-2.5.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boardTile.h" />
     <ClInclude Include="clueBoard.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="token.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

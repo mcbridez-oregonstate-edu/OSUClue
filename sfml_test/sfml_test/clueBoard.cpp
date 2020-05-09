@@ -9,6 +9,7 @@ using namespace std;
 clueBoard::clueBoard(boardTile** boardArray) {
 	board = boardArray;
 }
+/*
 void clueBoard::charBoard() {
 	for (int r = 0; r < 27; r++) {
 		for (int c = 0; c < 27; c++) {
@@ -17,3 +18,4 @@ void clueBoard::charBoard() {
 		cout << endl;
 	}
 }
+*/

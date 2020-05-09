@@ -4,14 +4,16 @@
 #include <string>
 #include "Point.h"
 
+enum TILE_TYPE {Floor, Wall, Room};
 
 class boardTile {
 private:
 
-	std::string tileType;
+	TILE_TYPE tileType;
 	bool occupied;
 	bool room;
 	bool passable;
+	bool door;
 	Point location;
 
 public:
@@ -30,7 +32,8 @@ public:
 	bool isOccupied();
 	bool isRoom();
 	bool isPassable();
+	bool hasDoor();
 	void setCoor(int row, int col);
-	char charTile();
+	TILE_TYPE getTile_type();
 };
 #endif
