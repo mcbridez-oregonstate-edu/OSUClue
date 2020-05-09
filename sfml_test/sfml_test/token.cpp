@@ -25,6 +25,81 @@ token::token(sf::Color color, double row_start, double col_start, int row, int c
 }
 
 /*******************************************************************************************************************
+**	Name: token(std::string)
+**	Descrition: Constructor for the token class. Takes a string as an argument. It will initialize the color
+                and the starting location based on the string.
+********************************************************************************************************************/
+token::token(std::string name, double width, double height)
+{
+	sf::Color color;
+	double row_start;
+	double col_start;
+	int row;
+	int col;
+
+	if (name == "mustard")
+	{
+		color = sf::Color(225, 173, 1);
+		row_start = 155 + (width * 17);
+		col_start = 165 + (height * 23);
+		row = 24;
+		col = 18;
+	}
+
+	if (name == "scarlett")
+	{
+		color = sf::Color(139, 0, 0);
+		row_start = 155 + (width * 24);
+		col_start = 165 + (height * 16);
+		row = 25;
+		col = 17;
+	}
+
+	if (name == "green")
+	{
+		color = sf::Color(0, 128, 0);
+		row_start = 155 + (width * 0);
+		col_start = 165 + (height * 9);
+		row = 1;
+		col = 10;
+	}
+
+	if (name == "plum")
+	{
+		color = sf::Color(221, 160, 221);
+		row_start = 155 + (width * 19);
+		col_start = 165 + (height * 0);
+		row = 20;
+		col = 1;
+	}
+
+	if (name == "peacock")
+	{
+		color = sf::Color(0, 0, 255);
+		row_start = 155 + (width * 6);
+		col_start = 165 + (height * 0);
+		row = 7;
+		col = 1;
+	}
+
+	if (name == "white")
+	{
+		color = sf::Color(128, 128, 128);
+		row_start = 155 + (width * 0);
+		col_start = 165 + (height * 14);
+		row = 1;
+		col = 15;
+	}
+	
+	player_token.setFillColor(color);
+	player_token.setRadius(9);
+	player_token.setPointCount(4);
+	player_token.setPosition(row_start, col_start);
+	tile_row = row;
+	tile_col = col;
+}
+
+/*******************************************************************************************************************
 **	Name: get_token()
 **	Descrition: returns the player's token
 ********************************************************************************************************************/

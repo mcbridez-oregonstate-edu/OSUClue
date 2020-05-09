@@ -72,14 +72,12 @@ int main()
 	double width = 19.75;
 
 	//making mustard colored test piece
-	token mustard(sf::Color(225, 173, 1), 155 + (width * 16), 165 + (height * 22), 23, 17);
-	token scarlet(sf::Color(139, 0, 0), 155 + (width * 2), 165 + (height * 6), 7, 3);
-	token green(sf::Color(0, 128, 0), 155 + (width * 5), 165 + (height * 16), 17, 6);
-	token plum(sf::Color(221, 160, 221), 155 + (width * 11), 165 + (height * 7), 8, 12);
-	token peacock(sf::Color(0, 0, 255), 155 + (width * 19), 165 + (height * 15), 16, 20);
-	token white(sf::Color(128, 128, 128), 155 + (width * 19), 165 + (height * 1), 2, 20);
-
-
+	token mustard("mustard", width, height);
+	token scarlett("scarlett", width, height);
+	token green("green", width, height);
+	token plum("plum", width, height);
+	token peacock("peacock", width, height);
+	token white("white", width, height);
 
 
 	while (window.isOpen())
@@ -137,7 +135,7 @@ int main()
 
 		window.draw(rendered_board);
 		window.draw(mustard.get_token());
-		window.draw(scarlet.get_token());
+		window.draw(scarlett.get_token());
 		window.draw(green.get_token());
 		window.draw(plum.get_token());
 		window.draw(peacock.get_token());
