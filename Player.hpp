@@ -19,7 +19,7 @@ enum PlayerToken {GREEN, MUSTARD, PEACOCK, PLUM, SCARLET, WHITE};
 
 enum NotebookEntities {
 	GREEN_N, MUSTARD_N, PEACOCK_N, PLUM_N, SCARLET_N, WHITE_N,
-	CANDLESTICK_N, DAGGER_N, REVOLVER_N, PIPE_N, WRENCH_N,
+	CANDLESTICK_N, KNIFE_N, REVOLVER_N, PIPE_N, WRENCH_N,
 	CONSERVATORY_N, BALLROOM_N, KITCHEN_N, DINING_N, LOUNGE_N, HALL_N, STUDY_N, LIBRARY_N, BILLIARD_N
 };
 
@@ -47,6 +47,8 @@ public:
 	void updateNotebook(NotebookEntities, int, int);
 	void printNotebook();
 	vector<string> makeSuggestion();
+	bool containsCard(vector<string>);
+	string showCard(vector<string>);
 	//void takeTurn();				// Location logic needs to be implemented so that this can check if certain conditions are met
 									// before presenting the player with their options.
 };

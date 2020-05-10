@@ -415,7 +415,7 @@ void printCards(std::vector<Card*> hand) {
 			std::cout << std::left << std::setw(20) << "Suspect" << std::endl;
 		}
 		else {
-			std::cout << std::left << std::setw(20) << "ROOM" << std::endl;
+			std::cout << std::left << std::setw(20) << "Room" << std::endl;
 		}
 	}
 }

@@ -14,6 +14,8 @@
 #include <tuple>
 #include <time.h>
 #include <cstdlib>
+#include <limits>
+
 using std::vector;
 using std::string;
 using std::cout;
@@ -45,7 +47,7 @@ Player::Player(std::string name, PlayerToken token, std::vector<Card*> hand, std
 													{-1, -1, -1, -1, -1},			//Scarlet
 													{-1, -1, -1, -1, -1},			//White
 													{-1, -1, -1, -1, -1},			//Candlestick
-													{-1, -1, -1, -1, -1},			//Dagger
+													{-1, -1, -1, -1, -1},			//Knife
 													{-1, -1, -1, -1, -1},			//Revolver
 													{-1, -1, -1, -1, -1},			//Lead Pipe
 													{-1, -1, -1, -1, -1},			//Rope
@@ -401,4 +403,45 @@ vector<string> Player::makeSuggestion()
 	}
 
 	return suggestion;
+}
+
+//returns true if any card from the suggestion exists in the player's hand; returns false if no cards from the suggestion exist
+bool Player::containsCard(vector<string> suggestionList)
+{
+	for (int i = 0; i < this->hand.size(); i++) {
+		if ((this->hand[i])->getName().compare(suggestionList[0]) == 0 || (this->hand[i])->getName().compare(suggestionList[1]) == 0 || (this->hand[i])->getName().compare(suggestionList[2]) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+//a player responds to another player's suggestion by showing one of their cards
+//returns the name (string) of the card that they want to show
+string Player::showCard(vector<string> suggestionList)
+{
+	vector<string> possibleChoices;
+	int playerChoice;
+	cout << "Which of the following cards would you like to share?" << endl;
+	//create a temporary vector of matching cards that a player can choose from (ignores cards from the player's hand that weren't a part of the suggestion)
+	for (int i = 0; i < this->hand.size(); i++) {
+		if ((this->hand[i])->getName().compare(suggestionList[0]) == 0 || (this->hand[i])->getName().compare(suggestionList[1]) == 0 || (this->hand[i])->getName().compare(suggestionList[2]) == 0) {
+			cout << this->hand[i]->getName() << endl;
+			possibleChoices.push_back(hand[i]->getName());
+		}
+	}
+
+	//list choices by number
+	for (int i = 0; i < possibleChoices.size(); i++) {
+		cout << i + 1 << ". " << possibleChoices[i] << endl;
+	}
+
+	cin >> playerChoice;
+	while (!cin || playerChoice <= 0 || playerChoice > possibleChoices.size()) {		//validating that we want an integer response
+		cout << "Please select a valid option." << endl;
+		cin.clear();
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		cin >> playerChoice;
+	}
+	return possibleChoices[playerChoice-1];	
 }

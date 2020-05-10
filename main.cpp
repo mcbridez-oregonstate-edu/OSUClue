@@ -43,15 +43,14 @@ int main() {
 	std::cout << "After moving: " + std::to_string(std::get<0>(p1->getPosition())) + ", " + std::to_string(std::get<1>(p1->getPosition())) << std::endl;
 
 
-
 	//Accessing cards within a player's hand
-	std::cout << "P1's Cards: " << std::endl;
+	std::cout << "P1's Cards before removing a card: " << std::endl;
 	for (std::size_t i = 0; i < (p1->getHand()).size(); i++) {
 		std::cout << "\t Name: " + p1->getHand().at(i)->getName() << std::endl;
 	}
 
 	//Removing cards example
-	std::cout << "P1's Cards: " << std::endl;
+	std::cout << "P1's Cards after removing a card: " << std::endl;
 	p1->removeCard("Suspect_2");
 	for (std::size_t i = 0; i < (p1->getHand()).size(); i++) {
 		std::cout << "\t Name: " + p1->getHand().at(i)->getName() << std::endl;
@@ -72,11 +71,29 @@ int main() {
 	
 	// For testing
 	vector<Card*> hand1;
+	hand1.push_back(new Card("Colonel Mustard", SUSPECT));
+	hand1.push_back(new Card("Wrench", WEAPON));
+	hand1.push_back(new Card("Lounge", ROOM));
 	vector<Card*> hand2;
+	hand2.push_back(new Card("Mr. Green", SUSPECT));
+	hand2.push_back(new Card("Knife", WEAPON));
+	hand2.push_back(new Card("Hall", ROOM));
 	vector<Card*> hand3;
+	hand3.push_back(new Card("Mrs. Peacock", SUSPECT));
+	hand3.push_back(new Card("Lead Pipe", WEAPON));
+	hand3.push_back(new Card("Ballroom", ROOM));
 	vector<Card*> hand4;
+	hand4.push_back(new Card("Professor Plum", SUSPECT));
+	hand4.push_back(new Card("Revolver", WEAPON));
+	hand4.push_back(new Card("Study", ROOM));
 	vector<Card*> hand5;
+	hand5.push_back(new Card("Miss Scarlet", SUSPECT));
+	hand5.push_back(new Card("Candlestick", WEAPON));
+	hand5.push_back(new Card("Library", ROOM));
 	vector<Card*> hand6;
+	hand6.push_back(new Card("Mrs. White", SUSPECT));
+	hand6.push_back(new Card("Rope", WEAPON));
+	hand6.push_back(new Card("Billiard Room", ROOM));
 
 	tuple<int, int> pos1;
 	tuple<int, int> pos2;
@@ -110,35 +127,42 @@ int main() {
 	vector<Card*> player5hand = players[4].getHand();
 	vector<Card*> player6hand = players[5].getHand();
 
+	std::cout << "Player hands:\n===" << std::endl;
 	for (int i = 0; i < player1hand.size(); i++)
 	{
-		cout << "Player 1 has " << player1hand[i]->getName() << endl;
+		cout << players[0].getName() << " has " << player1hand[i]->getName() << endl;
 	}
+	cout << endl;
 		
 	for (int i = 0; i < player2hand.size(); i++)
 	{
-		cout << "Player 2 has " << player2hand[i]->getName() << endl;
+		cout << players[1].getName() << " has " << player2hand[i]->getName() << endl;
 	}
+	cout << endl;
 
 	for (int i = 0; i < player3hand.size(); i++)
 	{
-		cout << "Player 3 has " << player3hand[i]->getName() << endl;
+		cout << players[2].getName() << " has " << player3hand[i]->getName() << endl;
 	}
+	cout << endl;
 
 	for (int i = 0; i < player4hand.size(); i++)
 	{
-		cout << "Player 4 has " << player4hand[i]->getName() << endl;
+		cout << players[3].getName() << " has " << player4hand[i]->getName() << endl;
 	}
+	cout << endl;
 
 	for (int i = 0; i < player5hand.size(); i++)
 	{
-		cout << "Player 5 has " << player5hand[i]->getName() << endl;
+		cout << players[4].getName() << " has " << player5hand[i]->getName() << endl;
 	}
+	cout << endl;
 
 	for (int i = 0; i < player6hand.size(); i++)
 	{
-		cout << "Player 6 has " << player6hand[i]->getName() << endl;
+		cout << players[5].getName() << " has " << player6hand[i]->getName() << endl;
 	}
+	cout << endl;
 	
 	// Suggestion test
 	vector<string> player1suggest;
@@ -147,6 +171,22 @@ int main() {
 	cout << "Player 1 has suggested:" << endl;
 	cout << player1suggest[0] << " with the " << player1suggest[1] << " in the " << player1suggest[2] << endl;
 	
+	for (int i = 1; i < players.size(); i++) {			//currently hardcoded to start at 1 to ignore Player 1's hand, but we may want to return which player made the suggestion in the vector so we can skip them
+		if (players[i].containsCard(player1suggest)) {
+			//cout << players[i].getName() << " had at least one of the cards from Player 1's suggestion" << endl;
+			//the point of view stuff below is somewhat trivial as all of this is global right now, but
+			//minimally we have the ability to prompt a user to show a card after verifying that they have at least one card from the suggestion
+			cout << "\n" << players[i].getName() << "\'s point of view: " << endl;
+			string shownCard = players[i].showCard(player1suggest);
+			cout << "\n==Returning from " << players[i].getName() << "\'s point of view: " << endl;			 
+			cout << "The card that was shown to the player was: " << shownCard << endl;
+			cout << endl;
+		}
+		else {
+			//cout << players[i].getName() << " didn't have any cards from Player 1's suggestion" << endl;
+		}
+	}
+
 	/* Game class test---not really working rn
 	vector<string> player1suggest = { "Mrs. White", "Revolver", "Lounge" };
 	Game newGame = Game();
