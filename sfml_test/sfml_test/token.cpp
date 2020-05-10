@@ -51,8 +51,8 @@ token::token(std::string name, double width, double height)
 		color = sf::Color(139, 0, 0);
 		row_start = 155 + (width * 24);
 		col_start = 165 + (height * 16);
-		row = 25;
-		col = 17;
+		row = 17;
+		col = 25;
 	}
 
 	if (name == "green")
@@ -60,8 +60,8 @@ token::token(std::string name, double width, double height)
 		color = sf::Color(0, 128, 0);
 		row_start = 155 + (width * 0);
 		col_start = 165 + (height * 9);
-		row = 1;
-		col = 10;
+		row = 10;
+		col = 1;
 	}
 
 	if (name == "plum")
@@ -69,8 +69,8 @@ token::token(std::string name, double width, double height)
 		color = sf::Color(221, 160, 221);
 		row_start = 155 + (width * 19);
 		col_start = 165 + (height * 0);
-		row = 20;
-		col = 1;
+		row = 1;
+		col = 20;
 	}
 
 	if (name == "peacock")
@@ -78,8 +78,8 @@ token::token(std::string name, double width, double height)
 		color = sf::Color(0, 0, 255);
 		row_start = 155 + (width * 6);
 		col_start = 165 + (height * 0);
-		row = 7;
-		col = 1;
+		row = 1;
+		col = 7;
 	}
 
 	if (name == "white")
@@ -87,8 +87,8 @@ token::token(std::string name, double width, double height)
 		color = sf::Color(128, 128, 128);
 		row_start = 155 + (width * 0);
 		col_start = 165 + (height * 14);
-		row = 1;
-		col = 15;
+		row = 15;
+		col = 1;
 	}
 	
 	player_token.setFillColor(color);

@@ -79,6 +79,18 @@ int main()
 	token peacock("peacock", width, height);
 	token white("white", width, height);
 
+	//making a container of players
+	vector<token*>players;
+	players.push_back(&scarlett);
+	players.push_back(&mustard);
+	players.push_back(&green);
+	players.push_back(&plum);
+	players.push_back(&peacock);
+	players.push_back(&white);
+
+	//control variables for changing player control
+	int current_player = 0;
+	int num_players = players.size() - 1;
 
 	while (window.isOpen())
 	{
@@ -94,37 +106,60 @@ int main()
 				window.close();
 				break;
 
-				// key pressed
 			case sf::Event::KeyReleased:
+				//move a piece right
 				if (event.key.code == sf::Keyboard::Right)
-					{
-						if (isValidMove(boardArray[mustard.get_row()][mustard.get_col()], boardArray[mustard.get_row()][mustard.get_col() + 1])) {
-							mustard.move_token(width, 0, 0, 1);
-						}
-					}
-
-				if (event.key.code == sf::Keyboard::Left)
-					{
-						if (isValidMove(boardArray[mustard.get_row()][mustard.get_col()], boardArray[mustard.get_row()][mustard.get_col() - 1])) {
-							mustard.move_token(-width, 0, 0, -1);
-						}
-					}
-
-					if (event.key.code == sf::Keyboard::Down)
-					{
-						if (isValidMove(boardArray[mustard.get_row()][mustard.get_col()], boardArray[mustard.get_row() + 1][mustard.get_col()])) {
-							mustard.move_token(0, height, 1, 0);
-						}
-					}
-
-					if (event.key.code == sf::Keyboard::Up)
-					{
-						if (isValidMove(boardArray[mustard.get_row()][mustard.get_col()], boardArray[mustard.get_row() - 1][mustard.get_col()])) {
-							mustard.move_token(0, -height, -1, 0);
-						}
+				{
+					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row()][players[current_player]->get_col() + 1])) {
+						players[current_player]->move_token(width, 0, 0, 1);
 					}
 
 					break;
+				}
+
+				//move a piece left
+				if (event.key.code == sf::Keyboard::Left)
+				{
+					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row()][players[current_player]->get_col() - 1])) {
+						players[current_player]->move_token(-width, 0, 0, -1);
+					}
+
+					break;
+				}
+
+				//movve a piece down
+				if (event.key.code == sf::Keyboard::Down)
+				{
+					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row() + 1][players[current_player]->get_col()])) {
+						players[current_player]->move_token(0, height, 1, 0);
+					}
+
+					break;
+				}
+
+				//move a piece up
+				if (event.key.code == sf::Keyboard::Up)
+				{
+					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()],
+						boardArray[players[current_player]->get_row() - 1][players[current_player]->get_col()])) {
+						players[current_player]->move_token(0, -height, -1, 0);
+					}
+
+					break;
+				}
+
+				//change player control
+				if (event.key.code == sf::Keyboard::Enter)
+				{
+					current_player++;
+
+					if (current_player > num_players)
+					{
+						current_player = 0;
+					}
+				}
+
+				break;
 
 			default:
 				break;
@@ -158,6 +193,10 @@ void writeToLog(string message, string variable) {
 }
 
 bool isValidMove(boardTile current_space, boardTile target_space) {
+	if (target_space.isOccupied())
+	{
+		return false;
+	}
 
 	if (target_space.isPassable()) {
 		if ((current_space.getTile_type() == Room && target_space.getTile_type() == Floor) || (current_space.getTile_type() == Floor && target_space.getTile_type() == Room)) {

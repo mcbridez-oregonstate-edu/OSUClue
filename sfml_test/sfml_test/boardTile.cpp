@@ -100,6 +100,7 @@ bool boardTile::hasDoor() {
 		return false;
 	}
 }
+
 void boardTile::setCoor(int row, int col) {
 	location = Point(row, col);
 }
