@@ -16,6 +16,7 @@ private:
 public:
 
 	token(sf::Color color, double row_start, double col_start, int row, int col);
+	token(std::string name, double width, double height);
 	sf::CircleShape get_token();
 	void move_token(double row, double col, int row_index, int col_index);
 	int get_row();
