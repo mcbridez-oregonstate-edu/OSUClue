@@ -10,19 +10,38 @@ boardTile::boardTile(string type, int row, int col) {
 		occupied = false;
 		room = false;
 		passable = false;
-		tileType = "Wall";
+		door = false;
+		tileType = Wall;
 	}
 	else if (type == "f") {
 		occupied = false;
 		room = false;
 		passable = true;
-		tileType = "Floor";
+		door = false;
+		tileType = Floor;
+	}
+	else if (type == "r") {
+		occupied = false;
+		room = true;
+		passable = true;
+		door = false;
+		tileType = Room;
+	}
+	else if (type == "o") {
+		occupied = false;
+		room = false;
+		passable = true;
+		door = true;
+		
+		tileType = Floor;
 	}
 	else {
 		occupied = false;
 		room = true;
 		passable = true;
-		tileType = "Room";
+		door = true;
+	
+		tileType = Room;
 	}
 }
 boardTile::boardTile(std::string type)
@@ -37,6 +56,7 @@ boardTile::boardTile(const boardTile& other)
 	passable = other.passable;
 	location = other.location;
 	tileType = other.tileType;
+	door = other.door;
 }
 
 
@@ -70,6 +90,17 @@ bool boardTile::isPassable() {
 		return false;
 	}
 }
+
+bool boardTile::hasDoor() {
+
+	if (door == true) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void boardTile::setCoor(int row, int col) {
 	location = Point(row, col);
 }
@@ -85,10 +116,11 @@ boardTile& boardTile::operator = (const boardTile& other) {
 	passable = other.passable;
 	location = other.location;
 	tileType = other.tileType;
+	door = other.door;
 
 	return *this;
 }
 
-char boardTile::charTile() {
-	return tileType[0];
+TILE_TYPE boardTile::getTile_type() {
+	return tileType;
 }

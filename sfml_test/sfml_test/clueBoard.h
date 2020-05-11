@@ -19,6 +19,6 @@ public:
 	//assignment
 
 	//declarations
-	void charBoard();
+	//void charBoard();
 };
 #endif
