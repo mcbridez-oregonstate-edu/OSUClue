@@ -175,8 +175,14 @@ int main()
 				break;
 			}
 
-		
+
+
 		}
+
+
+
+
+
 
 		window.clear();
 
@@ -188,14 +194,15 @@ int main()
 		window.draw(peacock.get_token());
 		window.draw(white.get_token());
 		window.display();
-	}
 
+	}
 	// free allocated memory
 
-		
+
+
 
 	
-		
+
 
 
 	for (int i = 0; i < 26; i++) {
