@@ -101,8 +101,69 @@ int main()
 			double x_position = 30.0 * i;
 			double y_position = 30.0 * j;
 
+<<<<<<< Updated upstream
 			//setting the origin of each sprite
 			rendered_board[i][j].move(sf::Vector2f(x_position, y_position));
+=======
+			switch (event.type)
+			{
+			case sf::Event::Closed:
+				window.close();
+				break;
+
+			case sf::Event::KeyReleased:
+				//move a piece right
+				if (event.key.code == sf::Keyboard::Right)
+				{
+					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row()][players[current_player]->get_col() + 1])) {
+						players[current_player]->move_token(width, 0, 0, 1);
+					}
+
+					break;
+				}
+
+				//move a piece left
+				if (event.key.code == sf::Keyboard::Left)
+				{
+					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row()][players[current_player]->get_col() - 1])) {
+						players[current_player]->move_token(-width, 0, 0, -1);
+					}
+
+					break;
+				}
+
+				//movve a piece down
+				if (event.key.code == sf::Keyboard::Down)
+				{
+					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row() + 1][players[current_player]->get_col()])) {
+						players[current_player]->move_token(0, height, 1, 0);
+					}
+
+					break;
+				}
+
+				//move a piece up
+				if (event.key.code == sf::Keyboard::Up)
+				{
+					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()],
+						boardArray[players[current_player]->get_row() - 1][players[current_player]->get_col()])) {
+						players[current_player]->move_token(0, -height, -1, 0);
+					}
+
+					break;
+				}
+
+				//change player control
+				if (event.key.code == sf::Keyboard::Enter)
+				{
+					current_player++;
+
+					if (current_player > num_players)
+					{
+						current_player = 0;
+					}
+				}
+>>>>>>> Stashed changes
 
 			char currentRoom = boardArray[i][j].charTile();
 
@@ -112,6 +173,7 @@ int main()
 			{
 				rendered_board[i][j].setTexture(room_texture);
 			}
+<<<<<<< Updated upstream
 
 			//wall
 			if (currentRoom == 'W')
@@ -200,6 +262,20 @@ int main()
 			{
 				triangle.move(sf::Vector2f(0, -10.0));
 			}
+=======
+		}
+
+		window.clear();
+
+		window.draw(rendered_board);
+		window.draw(mustard.get_token());
+		window.draw(scarlett.get_token());
+		window.draw(green.get_token());
+		window.draw(plum.get_token());
+		window.draw(peacock.get_token());
+		window.draw(white.get_token());
+		window.display();
+>>>>>>> Stashed changes
 		}
 
     }
@@ -211,4 +287,35 @@ void writeToLog(string message, string variable) {
 	log.open("log.txt", ios::app);
 	log << message << " " << variable << endl;
 	log.close();
+<<<<<<< Updated upstream
+=======
+}
+
+bool isValidMove(boardTile current_space, boardTile target_space) {
+	if (target_space.isOccupied())
+	{
+		return false;
+	}
+
+	if (target_space.isPassable()) {
+		if ((current_space.getTile_type() == Room && target_space.getTile_type() == Floor) || (current_space.getTile_type() == Floor && target_space.getTile_type() == Room)) {
+
+			if (current_space.hasDoor() && target_space.hasDoor()) {
+
+				return true;
+			}
+			else {
+
+				return false;
+			}
+		}
+		else {
+			return true;
+		}
+	}
+	else {
+		return false;
+	}
+
+>>>>>>> Stashed changes
 }
