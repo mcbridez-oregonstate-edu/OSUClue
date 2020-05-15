@@ -20,28 +20,36 @@ Client::Client(sf::IpAddress server, int serverPort)
     {
         cout << "Error: Could not connect to server" << endl;
     }
+    else
+    {
+        cout << "Connected to server" << endl;
+    }
 }
 
-void Client::sendData(char* data)
+void Client::sendData(sf::Packet packet)
 {
-    if (socket.send(data, 100) != sf::Socket::Done)
+    if (socket.send(packet) != sf::Socket::Done)
     {
         cout << "Error: Issue sending data" << endl;
     }
+    else
+    {
+        cout << "Data sent!" << endl;
+    }
 }
 
-char* Client::receiveData()
+string Client::receiveData()
 {
-    char* data = nullptr;
-    size_t bytesRecd;
+    string data;
+    sf::Packet packet;
 
-    if (socket.receive(data, 100, bytesRecd) != sf::Socket::Done)
+    if (socket.receive(packet) != sf::Socket::Done)
     {
         cout << "Error: Issue receiving data" << endl;
     }
-    else
+    else if (packet >> data)
     {
-        cout << "Received " << bytesRecd << " bytes" << endl;
+        cout << "Data received!" << endl;
     }
 
     return data;

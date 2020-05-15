@@ -15,19 +15,28 @@ int main()
 {
     // Set up
     int port = 3456;
-    sf::IpAddress myIP = "172.26.36.117";
+    sf::IpAddress myIP = sf::IpAddress::getLocalAddress();
     Server theServer(port);
     Client theClient(myIP, port);
+    theServer.acceptClient();
 
     // Test sending data from client to server and receiving data
-    char clientData[100] = "This is data from the client to the server";
-    theClient.sendData(clientData);
-    theServer.receiveData();
+    string clientData = "This is data from the client to the server";
+    sf::Packet clientPacket;
+    clientPacket << clientData;
+    theClient.sendData(clientPacket);
+    string serverRecd;
+    serverRecd = theServer.receiveData();
+    cout << "Data Received: " << serverRecd << endl;
 
     // Test sending data from server to client and receiving data
-    char serverData[100] = "This is data from the server to the client";
-    theServer.sendData(serverData);
-    theClient.receiveData();
+    string serverData = "This is data from the server to the client";
+    sf::Packet serverPacket;
+    serverPacket << serverData;
+    theServer.sendData(serverPacket);
+    string clientRecd;
+    clientRecd = theClient.receiveData();
+    cout << "Data Received: " << clientRecd << endl;
 
     return 0;
 }

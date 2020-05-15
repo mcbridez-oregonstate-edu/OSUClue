@@ -9,45 +9,62 @@
 #include <iostream>
 using std::cout;
 using std::endl;
-using std::size_t;
 
 Server::Server(int inPort)
 {
     port = inPort;
+  
     if (listener.listen(port) != sf::Socket::Done)
     {
         cout << "Error: Issue connecting to port" << endl;
     }
+    else
+    {
+        cout << "Connection to port " << port << " successful" << endl;
+    }
 }
 
-void Server::acceptClient(sf::TcpSocket client)
+void Server::acceptClient()
 {
     if (listener.accept(client) != sf::Socket::Done)
     {
         cout << "Error: Issue accepting client" << endl;
     }
+    else
+    {
+        selector.add(client);
+        cout << "Client accepted" << endl;
+    }
 }
 
-void Server::sendData(char* data)
+void Server::sendData(sf::Packet packet)
 {
-    if (socket.send(data, 100) != sf::Socket::Done)
+    if (client.send(packet) != sf::Socket::Done)
     {
         cout << "Error: Issue sending data" << endl;
     }
+    else
+    {
+        cout << "Data sent!" << endl;
+    }
 }
 
-char* Server::receiveData()
+string Server::receiveData()
 {
-    char* data = nullptr;
-    size_t bytesRecd;
+    string data;
+    sf::Packet packet;
 
-    if (socket.receive(data, 100, bytesRecd) != sf::Socket::Done)
+    if (selector.wait(sf::seconds(10.f)))
     {
-        cout << "Error: Issue receiving data" << endl;
+        client.receive(packet);
+        if (packet >> data)
+        {
+            cout << "Data received!" << endl;
+        }
     }
     else
     {
-        cout << "Received " << bytesRecd << " bytes" << endl;
+        cout << "Error: Issue receiving data" << endl;
     }
 
     return data;

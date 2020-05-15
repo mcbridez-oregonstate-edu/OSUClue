@@ -6,21 +6,23 @@
 ********************************************************************************/
 #ifndef SERVER_HPP
 #define SERVER_HPP
+
 #include <SFML/Network.hpp>
+#include <string>
+using std::string;
 
 class Server {
     private:
         int port;
         sf::TcpListener listener;
-        sf::TcpSocket socket;
-        // sf::TcpSocket clients[6];        Do I need this?
+        sf::TcpSocket client;        
         sf::SocketSelector selector;
 
     public:
         Server(int);
-        void acceptClient(sf::TcpSocket);
-        void sendData(char*);
-        char* receiveData();
+        void acceptClient();
+        void sendData(sf::Packet);
+        string receiveData();
 };
 
 #endif

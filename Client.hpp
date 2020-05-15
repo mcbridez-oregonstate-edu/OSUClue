@@ -8,6 +8,8 @@
 #define CLIENT_HPP
 
 #include <SFML/Network.hpp>
+#include <string>
+using std::string;
 
 class Client
 {
@@ -18,8 +20,8 @@ class Client
 
     public:
         Client(sf::IpAddress, int);
-        void sendData(char*);
-        char* receiveData();
+        void sendData(sf::Packet);
+        string receiveData();
 };
 
 #endif
