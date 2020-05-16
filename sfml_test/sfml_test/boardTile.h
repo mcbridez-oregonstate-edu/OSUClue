@@ -9,6 +9,7 @@ class boardTile {
 private:
 
 	TILE_TYPE tileType;
+	std::string roomName;
 	bool occupied;
 	bool room;
 	bool passable;
@@ -31,6 +32,7 @@ public:
 	bool isPassable();
 	bool hasDoor();
 	
+	std::string getName();
 	void setOccupied(int);
 	TILE_TYPE getTile_type();
 };

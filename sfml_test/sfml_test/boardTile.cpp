@@ -5,28 +5,28 @@ using namespace std;
 
 boardTile::boardTile(string type, int row, int col) {
 	
-	if (type == "w") {
+	if (type.at(0) == 'w') {
 		occupied = false;
 		room = false;
 		passable = false;
 		door = false;
 		tileType = Wall;
 	}
-	else if (type == "f") {
+	else if (type.at(0) == 'f') {
 		occupied = false;
 		room = false;
 		passable = true;
 		door = false;
 		tileType = Floor;
 	}
-	else if (type == "r") {
+	else if (type.at(0) == 'r') {
 		occupied = false;
 		room = true;
 		passable = true;
 		door = false;
 		tileType = Room;
 	}
-	else if (type == "o") {
+	else if (type.at(0) == 'o') {
 		occupied = false;
 		room = false;
 		passable = true;
@@ -39,8 +39,39 @@ boardTile::boardTile(string type, int row, int col) {
 		room = true;
 		passable = true;
 		door = true;
-	
 		tileType = Room;
+	}
+
+	// set tile names
+	if (type.at(1) == 'c') {
+		roomName = "Conservatory";
+	}
+	else if (type.at(1) == 'p') {
+		roomName = "Billiard Room";
+	}
+	else if (type.at(1) == 'l') {
+		roomName = "Library";
+	}
+	else if (type.at(1) == 's') {
+		roomName = "Study";
+	}
+	else if (type.at(1) == 'b') {
+		roomName = "Ballroom";
+	}
+	else if (type.at(1) == 'h') {
+		roomName = "Hall";
+	}
+	else if (type.at(1) == 'k') {
+		roomName = "Kitchen";
+	}
+	else if (type.at(1) == 'd') {
+		roomName = "Dining Room";
+	}
+	else if (type.at(1) == 'L') {
+		roomName = "Lounge";
+	}
+	else {
+		roomName = "Ground Floor";
 	}
 }
 boardTile::boardTile(std::string type)
@@ -118,4 +149,12 @@ void boardTile::setOccupied(int choice) {
 		occupied = false;
 	}
 
+}
+
+/*******************************************************************************************************************
+**	Name: string getName()
+**	Descrition: Returns the name of the room
+********************************************************************************************************************/
+std::string boardTile::getName() {
+	return roomName;
 }

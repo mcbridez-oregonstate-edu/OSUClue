@@ -6,6 +6,7 @@
 #include <vector>
 #include <sstream>
 #include "token.hpp"
+#include "boardTile.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -127,7 +128,9 @@ int main()
 			has_rolled = 1;
 		}
 
-		stepCounterString = "Player " + std::to_string(current_player + 1) + "\n Steps: " + std::to_string(steps);
+		stepCounterString = "Player " + std::to_string(current_player + 1) +
+			"\nSteps: " + std::to_string(steps) +
+			"\nLocation: " + players[current_player]->get_space()->getName();
 		stepCounterText.setString(stepCounterString);
 		while (window.pollEvent(event))
 		{
@@ -289,7 +292,7 @@ bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCou
 	
 	if (target_space->isPassable()) {
 
-		// player is moving between hall and room
+		// player is moving between floor and room
 		if ((current_space->getTile_type() == Room && target_space->getTile_type() == Floor) || (current_space->getTile_type() == Floor && target_space->getTile_type() == Room)) {
 
 
@@ -309,18 +312,18 @@ bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCou
 				return true;
 			}
 
-			// hall and/or room tile does not have a door to pass through
+			// floor and/or room tile does not have a door to pass through
 			else {
 				
 				return false;
 			}
 		}
-			// user is moving from hall->hall or room->room
+			// user is moving from floor->floor or room->room
 		else {
 			if (!room_movement) {
 				(stepCount)--;
 				current_space->setOccupied(0); // set the space being left to unoccupied
-				target_space->setOccupied(1); // set the target space to occupied if moving to a hall tile
+				target_space->setOccupied(1); // set the target space to occupied if moving to a floor tile
 			}
 			else {
 				current_space->setOccupied(0); // movement in room should not block other players
