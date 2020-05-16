@@ -3,12 +3,30 @@
 C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Deck.cpp(91,14): warning C4244: 'initializing': conversion from 'time_t' to 'int', possible loss of data
 C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Deck.cpp(141,14): warning C4244: 'initializing': conversion from 'time_t' to 'int', possible loss of data
   Game.cpp
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Game.cpp(83,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Game.cpp(115,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Game.cpp(130,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Game.cpp(142,29): warning C4018: '<': signed/unsigned mismatch
   main.cpp
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\main.cpp(131,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\main.cpp(137,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\main.cpp(143,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\main.cpp(149,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\main.cpp(155,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\main.cpp(161,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\main.cpp(174,20): warning C4018: '<': signed/unsigned mismatch
   Player.cpp
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Player.cpp(133,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Player.cpp(167,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Player.cpp(168,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Player.cpp(352,11): warning C4244: 'initializing': conversion from 'time_t' to 'int', possible loss of data
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Player.cpp(411,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Player.cpp(427,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Player.cpp(435,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Player.cpp(440,51): warning C4018: '>': signed/unsigned mismatch
   Token.cpp
   Generating code
   Previous IPDB not found, fall back to full compilation.
   All 557 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
-  OSUClue.vcxproj -> C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\x64\Release\OSUClue.exe
+  OSUClue.vcxproj -> C:\Users\Jonathan\Desktop\OSUClue-1.0beta\OSUClue-1.0beta\Release\OSUClue.exe
