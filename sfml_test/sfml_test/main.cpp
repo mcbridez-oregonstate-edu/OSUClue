@@ -13,8 +13,8 @@
 
 using namespace std;
 void writeToLog(string message, string variable);
-bool isValidMove(boardTile current_space, boardTile target_space, int* stepCount);
-bool isRoom(boardTile current_space);
+bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount);
+bool isRoom(boardTile* current_space);
 int main()
 {
 	//random seed
@@ -26,9 +26,9 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
 
 	//making a matrix representing the board
-	boardTile** boardArray = new boardTile * [26];
+	boardTile*** boardArray = new boardTile** [26];
 	for (int i = 0; i < 26; i++) {
-		boardArray[i] = new boardTile[27];
+		boardArray[i] = new boardTile*[27];
 	}
 
 
@@ -50,9 +50,9 @@ int main()
 		getline(dataSource, line);
 		stringstream tempstream(line);
 		while (getline(tempstream, word, ',')) {
-			boardTile tempTile(word, row, col);
-			writeToLog("Grabbed tile type:", word);
-			boardArray[row][col] = tempTile;
+			//boardTile tempTile(word, row, col);
+			//writeToLog("Grabbed tile type:", word);
+			boardArray[row][col] = new boardTile(word, row, col);
 			col++;
 		}
 		row++;
@@ -123,6 +123,7 @@ int main()
 			int die_1 = (rand() % 6) + 1;
 			int die_2 = (rand() % 6) + 1;
 			steps = die_1 + die_2;
+			system("cls");
 			std::cout << "Player " << current_player + 1 << " rolled a " << die_1 << " and a " << die_2 << std::endl;
 			std::cout << "They can move " << steps << " spaces" << std::endl;
 			std::cout << "Move with the arrow keys. Press 'Enter' when you are done moving." << std::endl;
@@ -146,14 +147,11 @@ int main()
 					if (event.key.code == sf::Keyboard::Right)
 					{
 						if (steps > 0) {
-							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row()][players[current_player]->get_col() + 1], &steps)) {
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row()][players[current_player]->get_col() + 1], steps)) {
+								
 								players[current_player]->move_token(width, 0, 0, 1, boardArray);
-								
-								// decrement step counter only if player has moved into 
-								if (!isRoom(players[current_player]->get_space())) {
-									
-								}
-								
+							
+															
 							}
 						}
 
@@ -164,8 +162,10 @@ int main()
 					if (event.key.code == sf::Keyboard::Left)
 					{
 						if (steps > 0) {
-							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row()][players[current_player]->get_col() - 1], &steps)) {
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row()][players[current_player]->get_col() - 1], steps)) {
+							
 								players[current_player]->move_token(-width, 0, 0, -1, boardArray);
+							
 								
 								
 							}
@@ -179,8 +179,10 @@ int main()
 					{
 
 						if (steps > 0) {
-							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() + 1][players[current_player]->get_col()], &steps)) {
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() + 1][players[current_player]->get_col()], steps)) {
+								
 								players[current_player]->move_token(0, height, 1, 0, boardArray);
+								
 							
 								
 							}
@@ -192,8 +194,10 @@ int main()
 					if (event.key.code == sf::Keyboard::Up)
 					{
 						if (steps > 0) {
-							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() - 1][players[current_player]->get_col()], &steps)) {
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() - 1][players[current_player]->get_col()], steps)) {
+							
 								players[current_player]->move_token(0, -height, -1, 0, boardArray);
+							
 								
 							}
 						}
@@ -244,11 +248,15 @@ int main()
 
 
 
-	
+
 
 
 
 	for (int i = 0; i < 26; i++) {
+
+		for (int j = 0; j < 27; j++) {
+			delete boardArray[i][j];
+		}
 		delete[] boardArray[i];
 	}
 	delete[] boardArray;
@@ -268,31 +276,43 @@ void writeToLog(string message, string variable) {
 **				 false otherwise. Takes as arguments the boardTile of the current
 **				 space and the space being moved to
 ************************************************************************************/
-bool isValidMove(boardTile current_space, boardTile target_space, int* stepCount) {
-	bool room_movement = 0; 
+bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount) {
+	bool room_movement = 0;
 
-	if (current_space.getTile_type() == Room && target_space.getTile_type() == Room) {
+	if (current_space->getTile_type() == Room && target_space->getTile_type() == Room) {
 		room_movement = 1;
+		
 	}
 
-	if (target_space.isOccupied())
+	if (target_space->isOccupied())
 	{
 		return false;
 	}
 
+	
+	if (target_space->isPassable()) {
 
-	if (target_space.isPassable()) {
-		if ((current_space.getTile_type() == Room && target_space.getTile_type() == Floor) || (current_space.getTile_type() == Floor && target_space.getTile_type() == Room)) {
+		// player is moving between hall and room
+		if ((current_space->getTile_type() == Room && target_space->getTile_type() == Floor) || (current_space->getTile_type() == Floor && target_space->getTile_type() == Room)) {
 
 
-			if (current_space.hasDoor() && target_space.hasDoor()) {
+			if (current_space->hasDoor() && target_space->hasDoor()) {
+				
+				current_space->setOccupied(0);// set the space being left to unoccupied
 
-				if (!room_movement) {
-					(*stepCount)--;
+				// set the target space to occupied if the user is moving out of room
+				if (target_space->getTile_type() == Floor){
+					
+					target_space->setOccupied(1);
+					stepCount--;
+				}
+				else { // player is moving into a room which ends movement
+					stepCount = 0;
 				}
 				return true;
 			}
-				// hall and/or room tile does not have a door to pass through
+
+			// hall and/or room tile does not have a door to pass through
 			else {
 				
 				return false;
@@ -301,7 +321,12 @@ bool isValidMove(boardTile current_space, boardTile target_space, int* stepCount
 			// user is moving from hall->hall or room->room
 		else {
 			if (!room_movement) {
-				(*stepCount)--;
+				(stepCount)--;
+				current_space->setOccupied(0); // set the space being left to unoccupied
+				target_space->setOccupied(1); // set the target space to occupied if moving to a hall tile
+			}
+			else {
+				current_space->setOccupied(0); // movement in room should not block other players
 			}
 			return true;
 		}
@@ -318,6 +343,6 @@ bool isValidMove(boardTile current_space, boardTile target_space, int* stepCount
 **	Description: Check if the tile the token is on is a room tile or not. Returns 1 if
 **				 the tile is a room, and 0 otherwise.
 ************************************************************************************/
-bool isRoom(boardTile current_space) {
-	return current_space.isRoom();
+bool isRoom(boardTile* current_space) {
+	return current_space->isRoom();
 }

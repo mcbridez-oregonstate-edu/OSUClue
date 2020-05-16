@@ -29,7 +29,7 @@ token::token(sf::Color color, double row_start, double col_start, int row, int c
 **	Descrition: Constructor for the token class. Takes a string as an argument. It will initialize the color
                 and the starting location based on the string.
 ********************************************************************************************************************/
-token::token(std::string name, double width, double height, boardTile** board)
+token::token(std::string name, double width, double height, boardTile*** board)
 {
 	sf::Color color;
 	double row_start = 0;
@@ -97,6 +97,7 @@ token::token(std::string name, double width, double height, boardTile** board)
 	tile_row = row;
 	tile_col = col;
 	current_space = board[tile_row][tile_col];
+	current_space->setOccupied(1);
 }
 
 /*******************************************************************************************************************
@@ -108,7 +109,7 @@ sf::CircleShape token::get_token()
 	return player_token;
 }
 
-void token::move_token(double row, double col, int row_index, int col_index, boardTile** board)
+void token::move_token(double row, double col, int row_index, int col_index, boardTile*** board)
 {
 	sf::Vector2f pos = player_token.getPosition();
 	player_token.setPosition(pos.x + row, pos.y + col);
@@ -130,7 +131,7 @@ int token::get_col() {
 **	Name: boardTile get_space()
 **	Descrition: returns the player's current space
 ********************************************************************************************************************/
-boardTile token::get_space() {
+boardTile* token::get_space() {
 	
 	return current_space;
 }

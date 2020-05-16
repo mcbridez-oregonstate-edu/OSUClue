@@ -104,7 +104,7 @@ bool boardTile::hasDoor() {
 void boardTile::setCoor(int row, int col) {
 	location = Point(row, col);
 }
-
+/*
 boardTile& boardTile::operator = (const boardTile& other) {
 	if (this == &other)
 	{
@@ -120,7 +120,21 @@ boardTile& boardTile::operator = (const boardTile& other) {
 
 	return *this;
 }
-
+*/
 TILE_TYPE boardTile::getTile_type() {
 	return tileType;
+}
+
+/*******************************************************************************************************************
+**	Name: setOccupied(int choice)
+**	Descrition:  Sets the tile to either occupied or unoccupied
+********************************************************************************************************************/
+void boardTile::setOccupied(int choice) {
+	if (choice == 1) {
+		occupied = true;
+	}
+	else {
+		occupied = false;
+	}
+
 }

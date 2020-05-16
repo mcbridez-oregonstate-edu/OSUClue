@@ -27,13 +27,14 @@ public:
 	//destructor
 
 	//assignment
-	boardTile& operator = (const boardTile& other);
+	//boardTile& operator = (const boardTile& other);
 	//declarations
 	bool isOccupied();
 	bool isRoom();
 	bool isPassable();
 	bool hasDoor();
 	void setCoor(int row, int col);
+	void setOccupied(int);
 	TILE_TYPE getTile_type();
 };
 #endif
