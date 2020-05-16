@@ -1,11 +1,10 @@
 #include <iostream>
-#include "Point.h"
 #include "boardTile.h"
 
 using namespace std;
 
 boardTile::boardTile(string type, int row, int col) {
-	location = Point(row, col);
+	
 	if (type == "w") {
 		occupied = false;
 		room = false;
@@ -54,14 +53,14 @@ boardTile::boardTile(const boardTile& other)
 	occupied = other.occupied;
 	room = other.room;
 	passable = other.passable;
-	location = other.location;
+	
 	tileType = other.tileType;
 	door = other.door;
 }
 
 
 boardTile::boardTile() {
-	location = Point(0, 0);
+	
 	occupied = false;
 	room = false;
 	passable = false;
@@ -101,26 +100,8 @@ bool boardTile::hasDoor() {
 	}
 }
 
-void boardTile::setCoor(int row, int col) {
-	location = Point(row, col);
-}
-/*
-boardTile& boardTile::operator = (const boardTile& other) {
-	if (this == &other)
-	{
-		return *this;
-	}
 
-	occupied = other.occupied;
-	room = other.room;
-	passable = other.passable;
-	location = other.location;
-	tileType = other.tileType;
-	door = other.door;
 
-	return *this;
-}
-*/
 TILE_TYPE boardTile::getTile_type() {
 	return tileType;
 }

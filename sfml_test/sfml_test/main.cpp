@@ -5,16 +5,14 @@
 #include <ostream>
 #include <vector>
 #include <sstream>
-#include "clueBoard.h"
 #include "token.hpp"
-
 #include <stdlib.h>
 #include <time.h>
 
 using namespace std;
-void writeToLog(string message, string variable);
+
 bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount);
-bool isRoom(boardTile* current_space);
+
 int main()
 {
 	//random seed
@@ -50,8 +48,7 @@ int main()
 		getline(dataSource, line);
 		stringstream tempstream(line);
 		while (getline(tempstream, word, ',')) {
-			//boardTile tempTile(word, row, col);
-			//writeToLog("Grabbed tile type:", word);
+			
 			boardArray[row][col] = new boardTile(word, row, col);
 			col++;
 		}
@@ -338,11 +335,3 @@ bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCou
 
 }
 
-/************************************************************************************
-**	Name:bool isRooom(boardTile current_space)
-**	Description: Check if the tile the token is on is a room tile or not. Returns 1 if
-**				 the tile is a room, and 0 otherwise.
-************************************************************************************/
-bool isRoom(boardTile* current_space) {
-	return current_space->isRoom();
-}

@@ -2,7 +2,6 @@
 #define BOARDTILE_H
 #include <iostream>
 #include <string>
-#include "Point.h"
 
 enum TILE_TYPE {Floor, Wall, Room};
 
@@ -14,7 +13,7 @@ private:
 	bool room;
 	bool passable;
 	bool door;
-	Point location;
+	
 
 public:
 
@@ -26,14 +25,12 @@ public:
 
 	//destructor
 
-	//assignment
-	//boardTile& operator = (const boardTile& other);
-	//declarations
+	
 	bool isOccupied();
 	bool isRoom();
 	bool isPassable();
 	bool hasDoor();
-	void setCoor(int row, int col);
+	
 	void setOccupied(int);
 	TILE_TYPE getTile_type();
 };
