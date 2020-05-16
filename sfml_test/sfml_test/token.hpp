@@ -6,19 +6,22 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 #include <SFML/Graphics.hpp>
+#include "boardTile.h"
 
 class token {
 private:
 	sf::CircleShape player_token;
+	boardTile current_space;
 	int tile_row;
 	int tile_col;
 		
 public:
 
 	token(sf::Color color, double row_start, double col_start, int row, int col);
-	token(std::string name, double width, double height);
+	token(std::string name, double width, double height, boardTile** board);
 	sf::CircleShape get_token();
-	void move_token(double row, double col, int row_index, int col_index);
+	void move_token(double row, double col, int row_index, int col_index, boardTile** board);
+	boardTile get_space();
 	int get_row();
 	int get_col();
 	

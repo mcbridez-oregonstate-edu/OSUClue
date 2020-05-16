@@ -13,10 +13,15 @@
 
 using namespace std;
 void writeToLog(string message, string variable);
-bool isValidMove(boardTile current_space, boardTile target_space);
+bool isValidMove(boardTile current_space, boardTile target_space, int* stepCount);
+bool isRoom(boardTile current_space);
 int main()
 {
-//graphical output section
+	//random seed
+	srand(time(0));
+
+
+	//graphical output section
 	//creating a render window with SFML
 	sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
 
@@ -72,12 +77,12 @@ int main()
 	double width = 19.75;
 
 	//making mustard colored test piece
-	token mustard("mustard", width, height);
-	token scarlett("scarlett", width, height);
-	token green("green", width, height);
-	token plum("plum", width, height);
-	token peacock("peacock", width, height);
-	token white("white", width, height);
+	token mustard("mustard", width, height, boardArray);
+	token scarlett("scarlett", width, height, boardArray);
+	token green("green", width, height, boardArray);
+	token plum("plum", width, height, boardArray);
+	token peacock("peacock", width, height, boardArray);
+	token white("white", width, height, boardArray);
 
 	//making a container of players
 	vector<token*>players;
@@ -92,14 +97,43 @@ int main()
 	int current_player = 0;
 	int num_players = players.size() - 1;
 
+	//player step count for moving
+	int steps;
+	bool has_rolled = 0;
+	bool move_state = 1;
+
+	//making text for step counter
+	sf::Font font;
+	if (!font.loadFromFile("res/fonts/Stabillo Medium.ttf")) {
+		std::cout << "Font not loaded" << std::endl;
+	}
+	sf::Text stepCounterText;
+	string stepCounterString;
+	stepCounterText.setFont(font);
+	
+	
+
+	// game loop
 	while (window.isOpen())
 	{
 		sf::Time move_delay = sf::seconds(0.1f);
 		sf::Event event;
 
+		if (!has_rolled) {
+			int die_1 = (rand() % 6) + 1;
+			int die_2 = (rand() % 6) + 1;
+			steps = die_1 + die_2;
+			std::cout << "Player " << current_player + 1 << " rolled a " << die_1 << " and a " << die_2 << std::endl;
+			std::cout << "They can move " << steps << " spaces" << std::endl;
+			std::cout << "Move with the arrow keys. Press 'Enter' when you are done moving." << std::endl;
+			has_rolled = 1;
+		}
+
+		stepCounterString = "Player " + std::to_string(current_player + 1) + "\n Steps: " + std::to_string(steps);
+		stepCounterText.setString(stepCounterString);
 		while (window.pollEvent(event))
 		{
-
+		
 			switch (event.type)
 			{
 			case sf::Event::Closed:
@@ -107,70 +141,82 @@ int main()
 				break;
 
 			case sf::Event::KeyReleased:
-				//move a piece right
-				if (event.key.code == sf::Keyboard::Right)
-				{
-					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row()][players[current_player]->get_col() + 1])) {
-						players[current_player]->move_token(width, 0, 0, 1);
-					}
-
-					break;
-				}
-
-				//move a piece left
-				if (event.key.code == sf::Keyboard::Left)
-				{
-
-					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row()][players[current_player]->get_col() - 1])) {
-						players[current_player]->move_token(-width, 0, 0, -1);
-
-					}
-
-					break;
-				}
-
-				//movve a piece down
-				if (event.key.code == sf::Keyboard::Down)
-				{
-
-
-					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()], boardArray[players[current_player]->get_row() + 1][players[current_player]->get_col()])) {
-						players[current_player]->move_token(0, height, 1, 0);
-
-					}
-
-					break;
-				}
-
-				//move a piece up
-				if (event.key.code == sf::Keyboard::Up)
-				{
-
-					if (isValidMove(boardArray[players[current_player]->get_row()][players[current_player]->get_col()],
-						boardArray[players[current_player]->get_row() - 1][players[current_player]->get_col()])) {
-						players[current_player]->move_token(0, -height, -1, 0);
-
-					}
-
-					break;
-				}
-
-				//change player control
-				if (event.key.code == sf::Keyboard::Enter)
-				{
-
-
-					current_player++;
-
-					if (current_player > num_players)
+				if (move_state) {
+					//move a piece right
+					if (event.key.code == sf::Keyboard::Right)
 					{
-						current_player = 0;
+						if (steps > 0) {
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row()][players[current_player]->get_col() + 1], &steps)) {
+								players[current_player]->move_token(width, 0, 0, 1, boardArray);
+								
+								// decrement step counter only if player has moved into 
+								if (!isRoom(players[current_player]->get_space())) {
+									
+								}
+								
+							}
+						}
 
+						break;
 					}
+
+					//move a piece left
+					if (event.key.code == sf::Keyboard::Left)
+					{
+						if (steps > 0) {
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row()][players[current_player]->get_col() - 1], &steps)) {
+								players[current_player]->move_token(-width, 0, 0, -1, boardArray);
+								
+								
+							}
+						}
+
+						break;
+					}
+
+					//movve a piece down
+					if (event.key.code == sf::Keyboard::Down)
+					{
+
+						if (steps > 0) {
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() + 1][players[current_player]->get_col()], &steps)) {
+								players[current_player]->move_token(0, height, 1, 0, boardArray);
+							
+								
+							}
+						}
+						break;
+					}
+
+					//move a piece up
+					if (event.key.code == sf::Keyboard::Up)
+					{
+						if (steps > 0) {
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() - 1][players[current_player]->get_col()], &steps)) {
+								players[current_player]->move_token(0, -height, -1, 0, boardArray);
+								
+							}
+						}
+						break;
+					}
+
+					//change player control
+					if (event.key.code == sf::Keyboard::Enter)
+					{
+
+
+						current_player++;
+						has_rolled = 0;
+
+						if (current_player > num_players)
+						{
+							current_player = 0;
+
+						}
+					}
+
+					break;
 				}
-
-				break;
-
 			default:
 				break;
 			}
@@ -178,10 +224,6 @@ int main()
 
 
 		}
-
-
-
-
 
 
 		window.clear();
@@ -193,6 +235,7 @@ int main()
 		window.draw(plum.get_token());
 		window.draw(peacock.get_token());
 		window.draw(white.get_token());
+		window.draw(stepCounterText);
 		window.display();
 
 	}
@@ -225,12 +268,18 @@ void writeToLog(string message, string variable) {
 **				 false otherwise. Takes as arguments the boardTile of the current
 **				 space and the space being moved to
 ************************************************************************************/
-bool isValidMove(boardTile current_space, boardTile target_space) {
+bool isValidMove(boardTile current_space, boardTile target_space, int* stepCount) {
+	bool room_movement = 0; 
+
+	if (current_space.getTile_type() == Room && target_space.getTile_type() == Room) {
+		room_movement = 1;
+	}
 
 	if (target_space.isOccupied())
 	{
 		return false;
 	}
+
 
 	if (target_space.isPassable()) {
 		if ((current_space.getTile_type() == Room && target_space.getTile_type() == Floor) || (current_space.getTile_type() == Floor && target_space.getTile_type() == Room)) {
@@ -238,16 +287,22 @@ bool isValidMove(boardTile current_space, boardTile target_space) {
 
 			if (current_space.hasDoor() && target_space.hasDoor()) {
 
+				if (!room_movement) {
+					(*stepCount)--;
+				}
 				return true;
 			}
 				// hall and/or room tile does not have a door to pass through
 			else {
-
+				
 				return false;
 			}
 		}
 			// user is moving from hall->hall or room->room
 		else {
+			if (!room_movement) {
+				(*stepCount)--;
+			}
 			return true;
 		}
 	}
@@ -256,4 +311,13 @@ bool isValidMove(boardTile current_space, boardTile target_space) {
 		return false;
 	}
 
+}
+
+/************************************************************************************
+**	Name:bool isRooom(boardTile current_space)
+**	Description: Check if the tile the token is on is a room tile or not. Returns 1 if
+**				 the tile is a room, and 0 otherwise.
+************************************************************************************/
+bool isRoom(boardTile current_space) {
+	return current_space.isRoom();
 }
