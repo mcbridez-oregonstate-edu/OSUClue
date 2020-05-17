@@ -26,38 +26,32 @@ using std::ifstream;
 bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount) {
 	bool room_movement = 0;
 
-	if (current_space->getTile_type() == Room && target_space->getTile_type() == Room) {
-		room_movement = 1;
 
-	}
-
+	// check if space is occupied or not
 	if (!target_space->isOccupied()) {
 
-		// player is moving between floor and room
+		// check if player is moving into/out of a room through a door
 		if ((current_space->getTile_type() == Room && target_space->getTile_type() == Floor) || (current_space->getTile_type() == Floor && target_space->getTile_type() == Room)) {
 
-
+			// check if both tiles are connected through a door
 			if (current_space->hasDoor() && target_space->hasDoor()) {
 
 				current_space->setOccupied(0);// set the space being left to unoccupied
 
-				// set the target space to occupied if the user is moving out of room
+				// set the target space to occupied if the user is moving out of room, and decrement step counter
 				if (target_space->getTile_type() == Floor) {
 
 					target_space->setOccupied(1);
 					stepCount--;
 				}
-				else { // player is moving into a room which ends movement
+				// player is moving into a room which ends movement, does not occupy the space because multple tokens can be in the room
+				else {
 					stepCount = 0;
 				}
 				return true;
 			}
 
-			// floor and/or room tile does not have a door to pass through
-			else {
-
-				return false;
-			}
+			
 		}
 		// user is moving from floor->floor or room->room
 		else {
@@ -72,10 +66,9 @@ bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCou
 			return true;
 		}
 	}
+
 	// user cannot move through wall
-	else {
-		return false;
-	}
+	return false;
 
 }
 
