@@ -33,7 +33,7 @@ int main()
 
 	//opening csv file to fill board data
 	ifstream dataSource;
-	dataSource.open("NewClueBoardCSV.csv");
+	dataSource.open("res/NewClueBoardCSV.csv");
 	if (dataSource.fail()) {
 		cout << "Failed to open csv." << endl;
 		return 0;
@@ -58,7 +58,7 @@ int main()
 
 
 	sf::Texture board_texture;
-	if (!board_texture.loadFromFile("clueboard.png", sf::IntRect(0, 0, 500, 487)))
+	if (!board_texture.loadFromFile("res/images/clueboard.png", sf::IntRect(0, 0, 500, 487)))
 	{
 		cout << "Cannot open clueboard.png" << endl;
 	}
