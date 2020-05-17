@@ -12,7 +12,7 @@
 using std::string;
 
 class Server {
-    private:
+    protected:
         int port;
         sf::TcpListener listener;
         sf::TcpSocket clients[6];        
