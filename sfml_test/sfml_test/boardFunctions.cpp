@@ -31,12 +31,6 @@ bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCou
 
 	}
 
-	if (target_space->isOccupied())
-	{
-		return false;
-	}
-
-
 	if (!target_space->isOccupied()) {
 
 		// player is moving between floor and room
@@ -67,7 +61,7 @@ bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCou
 		}
 		// user is moving from floor->floor or room->room
 		else {
-			if (!room_movement) {
+			if (!(current_space->getTile_type() == Room && target_space->getTile_type() == Room)) {
 				(stepCount)--;
 				current_space->setOccupied(0); // set the space being left to unoccupied
 				target_space->setOccupied(1); // set the target space to occupied if moving to a floor tile
