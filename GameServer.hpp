@@ -1,32 +1,35 @@
-/****************************************************************************************
+/********************************************************************************
  * Program Name: GameServer.hpp
  * Author: Abigail Minchella
- * Date: 5/17/2020
- * Description: The header file for the GameServer class. Inherits from the Server class
-****************************************************************************************/
+ * Date: 5/14/20
+ * Description: The header file for GameServer
+********************************************************************************/
 #ifndef GAMESERVER_HPP
 #define GAMESERVER_HPP
 
-#include "Server.hpp"
 #include "Deck.hpp"
 #include "Card.hpp"
 #include <vector>
+#include <SFML/Network.hpp>
+#include <string>
+using std::string;
 
-struct serverPlayer
-{
-    string character;
-    int clientNum;
-    // Point pos;       (will uncomment once the GUI functionality gets added in, I just want to have this here as a reminder
-};
-
-class GameServer : public Server
-{
+class GameServer {
     private:
+        int port;
+        sf::TcpListener listener;
+        sf::TcpSocket clients[6];        
+        sf::SocketSelector selector;
+        int numClients;
         Deck theDeck;
         vector<Card*> solution;
 
     public:
         GameServer(int);
+        void acceptClient();
+        void sendOne(sf::Packet, int);
+        void sendAll(sf::Packet);
+        sf::Packet receiveData();
 };
 
 #endif
