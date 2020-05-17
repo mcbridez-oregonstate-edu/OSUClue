@@ -12,7 +12,6 @@ private:
 	std::string roomName;
 	bool occupied;
 	bool room;
-	bool passable;
 	bool door;
 	
 
@@ -29,7 +28,6 @@ public:
 	
 	bool isOccupied();
 	bool isRoom();
-	bool isPassable();
 	bool hasDoor();
 	
 	std::string getName();

@@ -48,7 +48,7 @@ int main()
 	double width = 19.75;
 
 	
-
+	// create the player tokens
 	vector<token*> players = playerTokens(width, height, boardArray);
 
 	//control variables for changing player control
@@ -109,9 +109,7 @@ int main()
 						if (steps > 0) {
 							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row()][players[current_player]->get_col() + 1], steps)) {
 								
-								players[current_player]->move_token(width, 0, 0, 1, boardArray);
-							
-															
+								players[current_player]->move_token(width, 0, 0, 1, boardArray);										
 							}
 						}
 
@@ -124,10 +122,7 @@ int main()
 						if (steps > 0) {
 							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row()][players[current_player]->get_col() - 1], steps)) {
 							
-								players[current_player]->move_token(-width, 0, 0, -1, boardArray);
-							
-								
-								
+								players[current_player]->move_token(-width, 0, 0, -1, boardArray);																				
 							}
 						}
 
@@ -139,12 +134,9 @@ int main()
 					{
 
 						if (steps > 0) {
-							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() + 1][players[current_player]->get_col()], steps)) {
-								
-								players[current_player]->move_token(0, height, 1, 0, boardArray);
-								
-							
-								
+							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() + 1][players[current_player]->get_col()], steps)) {		
+
+								players[current_player]->move_token(0, height, 1, 0, boardArray);								
 							}
 						}
 						break;
@@ -155,10 +147,8 @@ int main()
 					{
 						if (steps > 0) {
 							if (isValidMove(players[current_player]->get_space(), boardArray[players[current_player]->get_row() - 1][players[current_player]->get_col()], steps)) {
-							
-								players[current_player]->move_token(0, -height, -1, 0, boardArray);
-							
-								
+
+								players[current_player]->move_token(0, -height, -1, 0, boardArray);													
 							}
 						}
 						break;
@@ -167,8 +157,6 @@ int main()
 					//change player control
 					if (event.key.code == sf::Keyboard::Enter)
 					{
-
-
 						current_player++;
 						has_rolled = 0;
 
@@ -184,34 +172,23 @@ int main()
 			default:
 				break;
 			}
-
-
-
 		}
 
 
 		window.clear();
 
+		// draw sprites
 		window.draw(rendered_board);
-
 		for (int i = 0; i < players.size(); i++) {
 			window.draw(players[i]->get_token());
 		}
-
-		
-		/*window.draw(mustard.get_token());
-		window.draw(scarlett.get_token());
-		window.draw(green.get_token());
-		window.draw(plum.get_token());
-		window.draw(peacock.get_token());
-		window.draw(white.get_token());*/
 		window.draw(stepCounterText);
 		window.display();
 
 	}
+
+
 	// free allocated memory
-
-
 	for (int i = 0; i < 26; i++) {
 
 		for (int j = 0; j < 27; j++) {
@@ -228,71 +205,4 @@ int main()
 }
 
 
-///************************************************************************************
-//**	Name:bool isValidMove(boardTile current_space, boardTile target_space)
-//**	Description: Check if the tile being moved to is valid. Returns true if valid,
-//**				 false otherwise. Takes as arguments the boardTile of the current
-//**				 space and the space being moved to
-//************************************************************************************/
-//bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount) {
-//	bool room_movement = 0;
-//
-//	if (current_space->getTile_type() == Room && target_space->getTile_type() == Room) {
-//		room_movement = 1;
-//		
-//	}
-//
-//	if (target_space->isOccupied())
-//	{
-//		return false;
-//	}
-//
-//	
-//	if (target_space->isPassable()) {
-//
-//		// player is moving between floor and room
-//		if ((current_space->getTile_type() == Room && target_space->getTile_type() == Floor) || (current_space->getTile_type() == Floor && target_space->getTile_type() == Room)) {
-//
-//
-//			if (current_space->hasDoor() && target_space->hasDoor()) {
-//				
-//				current_space->setOccupied(0);// set the space being left to unoccupied
-//
-//				// set the target space to occupied if the user is moving out of room
-//				if (target_space->getTile_type() == Floor){
-//					
-//					target_space->setOccupied(1);
-//					stepCount--;
-//				}
-//				else { // player is moving into a room which ends movement
-//					stepCount = 0;
-//				}
-//				return true;
-//			}
-//
-//			// floor and/or room tile does not have a door to pass through
-//			else {
-//				
-//				return false;
-//			}
-//		}
-//			// user is moving from floor->floor or room->room
-//		else {
-//			if (!room_movement) {
-//				(stepCount)--;
-//				current_space->setOccupied(0); // set the space being left to unoccupied
-//				target_space->setOccupied(1); // set the target space to occupied if moving to a floor tile
-//			}
-//			else {
-//				current_space->setOccupied(0); // movement in room should not block other players
-//			}
-//			return true;
-//		}
-//	}
-//	// user cannot move through wall
-//	else {
-//		return false;
-//	}
-//
-//}
-//
+

@@ -37,7 +37,7 @@ bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCou
 	}
 
 
-	if (target_space->isPassable()) {
+	if (!target_space->isOccupied()) {
 
 		// player is moving between floor and room
 		if ((current_space->getTile_type() == Room && target_space->getTile_type() == Floor) || (current_space->getTile_type() == Floor && target_space->getTile_type() == Room)) {
