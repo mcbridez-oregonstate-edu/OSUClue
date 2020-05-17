@@ -1,5 +1,5 @@
 /*******************************************************************************************************************
-**	Descrition: This is the header file for the token class. Represents the player's token. Holds the sprite for
+**	Description: This is the header file for the token class. Represents the player's token. Holds the sprite for
 **				the player's token as well as the indexes of the row/col of the tile the token is on. Has methods
 **				to move the token and to return the position of it's location
 ********************************************************************************************************************/

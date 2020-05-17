@@ -7,12 +7,13 @@
 #include <sstream>
 #include "token.hpp"
 #include "boardTile.h"
+#include "boardFunctions.hpp"
 #include <stdlib.h>
 #include <time.h>
 
 using namespace std;
 
-bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount);
+//bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount);
 
 int main()
 {
@@ -24,39 +25,12 @@ int main()
 	//creating a render window with SFML
 	sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
 
-	//making a matrix representing the board
-	boardTile*** boardArray = new boardTile** [26];
-	for (int i = 0; i < 26; i++) {
-		boardArray[i] = new boardTile*[27];
-	}
+	
+	// create the logical tiles of the board
+	boardTile*** boardArray = createBoardArray();
 
 
-	//opening csv file to fill board data
-	ifstream dataSource;
-	dataSource.open("res/NewClueBoardCSV.csv");
-	if (dataSource.fail()) {
-		cout << "Failed to open csv." << endl;
-		return 0;
-	}
-	string line, word, temp;
-	int row = 0;
-	int col = 0;
-
-	//filling the board based on data from the CSV
-	while (!dataSource.eof()) {
-		string tempStringArray[24];
-		col = 0;
-		getline(dataSource, line);
-		stringstream tempstream(line);
-		while (getline(tempstream, word, ',')) {
-			
-			boardArray[row][col] = new boardTile(word, row, col);
-			col++;
-		}
-		row++;
-	}
-
-
+	// create the visual representation of the board
 	sf::Texture board_texture;
 	if (!board_texture.loadFromFile("res/images/clueboard.png", sf::IntRect(0, 0, 500, 487)))
 	{
@@ -69,27 +43,13 @@ int main()
 	rendered_board.move(sf::Vector2f(155, 161.5));
 	rendered_board.setTexture(board_texture);
 
-
 	// dimensions of each tile on the map
 	double height = 20;
 	double width = 19.75;
 
-	//making mustard colored test piece
-	token mustard("mustard", width, height, boardArray);
-	token scarlett("scarlett", width, height, boardArray);
-	token green("green", width, height, boardArray);
-	token plum("plum", width, height, boardArray);
-	token peacock("peacock", width, height, boardArray);
-	token white("white", width, height, boardArray);
+	
 
-	//making a container of players
-	vector<token*>players;
-	players.push_back(&scarlett);
-	players.push_back(&mustard);
-	players.push_back(&green);
-	players.push_back(&plum);
-	players.push_back(&peacock);
-	players.push_back(&white);
+	vector<token*> players = playerTokens(width, height, boardArray);
 
 	//control variables for changing player control
 	int current_player = 0;
@@ -233,23 +193,23 @@ int main()
 		window.clear();
 
 		window.draw(rendered_board);
-		window.draw(mustard.get_token());
+
+		for (int i = 0; i < players.size(); i++) {
+			window.draw(players[i]->get_token());
+		}
+
+		
+		/*window.draw(mustard.get_token());
 		window.draw(scarlett.get_token());
 		window.draw(green.get_token());
 		window.draw(plum.get_token());
 		window.draw(peacock.get_token());
-		window.draw(white.get_token());
+		window.draw(white.get_token());*/
 		window.draw(stepCounterText);
 		window.display();
 
 	}
 	// free allocated memory
-
-
-
-
-
-
 
 
 	for (int i = 0; i < 26; i++) {
@@ -260,81 +220,79 @@ int main()
 		delete[] boardArray[i];
 	}
 	delete[] boardArray;
+
+	for (int i = 0; i < players.size(); i++) {
+		delete players[i];
+	}
 	return 0;
 }
 
-void writeToLog(string message, string variable) {
-	ofstream log;
-	log.open("log.txt", ios::app);
-	log << message << " " << variable << endl;
-	log.close();
-}
 
-/************************************************************************************
-**	Name:bool isValidMove(boardTile current_space, boardTile target_space)
-**	Description: Check if the tile being moved to is valid. Returns true if valid,
-**				 false otherwise. Takes as arguments the boardTile of the current
-**				 space and the space being moved to
-************************************************************************************/
-bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount) {
-	bool room_movement = 0;
-
-	if (current_space->getTile_type() == Room && target_space->getTile_type() == Room) {
-		room_movement = 1;
-		
-	}
-
-	if (target_space->isOccupied())
-	{
-		return false;
-	}
-
-	
-	if (target_space->isPassable()) {
-
-		// player is moving between floor and room
-		if ((current_space->getTile_type() == Room && target_space->getTile_type() == Floor) || (current_space->getTile_type() == Floor && target_space->getTile_type() == Room)) {
-
-
-			if (current_space->hasDoor() && target_space->hasDoor()) {
-				
-				current_space->setOccupied(0);// set the space being left to unoccupied
-
-				// set the target space to occupied if the user is moving out of room
-				if (target_space->getTile_type() == Floor){
-					
-					target_space->setOccupied(1);
-					stepCount--;
-				}
-				else { // player is moving into a room which ends movement
-					stepCount = 0;
-				}
-				return true;
-			}
-
-			// floor and/or room tile does not have a door to pass through
-			else {
-				
-				return false;
-			}
-		}
-			// user is moving from floor->floor or room->room
-		else {
-			if (!room_movement) {
-				(stepCount)--;
-				current_space->setOccupied(0); // set the space being left to unoccupied
-				target_space->setOccupied(1); // set the target space to occupied if moving to a floor tile
-			}
-			else {
-				current_space->setOccupied(0); // movement in room should not block other players
-			}
-			return true;
-		}
-	}
-	// user cannot move through wall
-	else {
-		return false;
-	}
-
-}
-
+///************************************************************************************
+//**	Name:bool isValidMove(boardTile current_space, boardTile target_space)
+//**	Description: Check if the tile being moved to is valid. Returns true if valid,
+//**				 false otherwise. Takes as arguments the boardTile of the current
+//**				 space and the space being moved to
+//************************************************************************************/
+//bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount) {
+//	bool room_movement = 0;
+//
+//	if (current_space->getTile_type() == Room && target_space->getTile_type() == Room) {
+//		room_movement = 1;
+//		
+//	}
+//
+//	if (target_space->isOccupied())
+//	{
+//		return false;
+//	}
+//
+//	
+//	if (target_space->isPassable()) {
+//
+//		// player is moving between floor and room
+//		if ((current_space->getTile_type() == Room && target_space->getTile_type() == Floor) || (current_space->getTile_type() == Floor && target_space->getTile_type() == Room)) {
+//
+//
+//			if (current_space->hasDoor() && target_space->hasDoor()) {
+//				
+//				current_space->setOccupied(0);// set the space being left to unoccupied
+//
+//				// set the target space to occupied if the user is moving out of room
+//				if (target_space->getTile_type() == Floor){
+//					
+//					target_space->setOccupied(1);
+//					stepCount--;
+//				}
+//				else { // player is moving into a room which ends movement
+//					stepCount = 0;
+//				}
+//				return true;
+//			}
+//
+//			// floor and/or room tile does not have a door to pass through
+//			else {
+//				
+//				return false;
+//			}
+//		}
+//			// user is moving from floor->floor or room->room
+//		else {
+//			if (!room_movement) {
+//				(stepCount)--;
+//				current_space->setOccupied(0); // set the space being left to unoccupied
+//				target_space->setOccupied(1); // set the target space to occupied if moving to a floor tile
+//			}
+//			else {
+//				current_space->setOccupied(0); // movement in room should not block other players
+//			}
+//			return true;
+//		}
+//	}
+//	// user cannot move through wall
+//	else {
+//		return false;
+//	}
+//
+//}
+//
