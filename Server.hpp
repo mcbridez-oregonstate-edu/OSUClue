@@ -15,14 +15,16 @@ class Server {
     private:
         int port;
         sf::TcpListener listener;
-        sf::TcpSocket client;        
+        sf::TcpSocket clients[6];        
         sf::SocketSelector selector;
+        int numClients;
 
     public:
         Server(int);
         void acceptClient();
-        void sendData(sf::Packet);
-        string receiveData();
+        void sendOne(sf::Packet, int);
+        void sendAll(sf::Packet);
+        sf::Packet receiveData();
 };
 
 #endif

@@ -21,7 +21,7 @@ class Client
     public:
         Client(sf::IpAddress, int);
         void sendData(sf::Packet);
-        string receiveData();
+        sf::Packet receiveData();
 };
 
 #endif

@@ -8,8 +8,12 @@
 #include <iostream>
 using std::cout;
 using std::endl;
-using std::size_t;
 
+/**************************************************************************************
+                   Client::Client(sf::IpAddress server, int serverPort)
+ * Description: The constructor for the client class. Takes the server's IP and port
+ * as arguments.
+**************************************************************************************/
 Client::Client(sf::IpAddress server, int serverPort)
 {
     serverIP = server;
@@ -26,6 +30,10 @@ Client::Client(sf::IpAddress server, int serverPort)
     }
 }
 
+/**************************************************************************************
+                        void Client::sendData(sf::Packet packet)
+ * Description: Sends the passed packet to the server
+**************************************************************************************/
 void Client::sendData(sf::Packet packet)
 {
     if (socket.send(packet) != sf::Socket::Done)
@@ -38,19 +46,22 @@ void Client::sendData(sf::Packet packet)
     }
 }
 
-string Client::receiveData()
+/***************************************************************************************
+                            sf::Packet Client::receiveData()
+ * Description: Receives a packet from the server
+***************************************************************************************/
+sf::Packet Client::receiveData()
 {
-    string data;
     sf::Packet packet;
 
     if (socket.receive(packet) != sf::Socket::Done)
     {
         cout << "Error: Issue receiving data" << endl;
     }
-    else if (packet >> data)
+    else
     {
         cout << "Data received!" << endl;
     }
 
-    return data;
+    return packet;
 }
