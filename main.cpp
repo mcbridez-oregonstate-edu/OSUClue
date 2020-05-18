@@ -152,7 +152,7 @@ int main()
 			has_rolled = 1;
 		}
 
-		stepCounterString = "Player " + std::to_string(current_player + 1) +
+		stepCounterString = players[current_player]->getName() +
 			"\nSteps: " + std::to_string(steps) +
 			"\nLocation: " + tokensVect[current_player]->get_space()->getName();
 		stepCounterText.setString(stepCounterString);
