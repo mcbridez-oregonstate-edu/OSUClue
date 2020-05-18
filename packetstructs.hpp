@@ -17,21 +17,15 @@ using std::string;
 struct ServerPlayer
 {
     string name;
-    string character;
+    string character;       // Type on this can be changed if necessary, mainly useful for printing/testing
     int clientNum;
     // Point pos            (uncomment once the GUI functionality gets added in--be sure to add into 
     //                      the operator overrides below)
 };
 
 // Packet operator overrides for ServerPlayer
-sf::Packet& operator <<(sf::Packet& packet, const ServerPlayer& player)
-{
-    return packet << player.name << player.character << player.clientNum;
-}
+sf::Packet& operator <<(sf::Packet&, const ServerPlayer&);
 
-sf::Packet& operator >>(sf::Packet& packet, ServerPlayer& player)
-{
-    return packet >> player.name >> player.character >> player.clientNum;
-}
+sf::Packet& operator >>(sf::Packet&, ServerPlayer&);
 
 #endif

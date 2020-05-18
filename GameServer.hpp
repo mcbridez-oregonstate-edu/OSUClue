@@ -7,6 +7,7 @@
 #ifndef GAMESERVER_HPP
 #define GAMESERVER_HPP
 
+#include "Server.hpp"
 #include "Deck.hpp"
 #include "Card.hpp"
 #include "packetstructs.hpp"
@@ -15,25 +16,18 @@
 #include <string>
 using std::string;
 
-class GameServer {
+class GameServer : public Server
+{
     private:
-        int port;
-        sf::TcpListener listener;
-        int numClients;
-        sf::TcpSocket clients[6];        
-        sf::SocketSelector selector;
         ServerPlayer players[6];
         Deck theDeck;
         vector<Card*> solution;
+        void receivePlayerInfo();
 
     public:
+        GameServer();
         GameServer(int);
-        void acceptClient();
-        void sendOne(sf::Packet, int);
-        void sendAll(sf::Packet);
-        sf::Packet receiveData();
         void acceptPlayers();
-
 };
 
 #endif

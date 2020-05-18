@@ -13,7 +13,7 @@ using std::string;
 
 class Client
 {
-    private:
+    protected:
         sf::TcpSocket socket;
         int port;
         sf::IpAddress serverIP;

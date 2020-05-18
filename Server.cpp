@@ -10,16 +10,13 @@ using std::cout;
 using std::endl;
 
 /******************************************************************************
-                            Server::Server(int inPort)
- * Description: Sets up a server. Takes an int for the port it should 
- * connect to. Will print success or failure to the console (mainly meant for
- * debugging--can be removed)
+                            Server::Server()
+ * Description: The default constructor. Has a hardcoded port value. 
 ******************************************************************************/
-Server::Server(int inPort)
+Server::Server()
 {
-    port = inPort;
+    port = 3456;
     numClients = 0;
-  
     if (listener.listen(port) != sf::Socket::Done)
     {
         cout << "Error: Issue connecting to port" << endl;
@@ -29,6 +26,25 @@ Server::Server(int inPort)
         cout << "Connection to port " << port << " successful" << endl;
     }
 }
+
+/***************************************************************************************
+                                    Server::Server(int inPort)
+ * Description: Another constructor for the Server class. Takes a port number.
+***************************************************************************************/
+Server::Server(int inPort)
+{
+    port = inPort;
+    numClients = 0;
+    if (listener.listen(port) != sf::Socket::Done)
+    {
+        cout << "Error: Issue connecting to port" << endl;
+    }
+    else
+    {
+        cout << "Connection to port " << port << " successful" << endl;
+    }
+}
+
 
 /*******************************************************************************
                          void Server::acceptClient()
@@ -109,7 +125,7 @@ sf::Packet Server::receiveData()
 {
     sf::Packet packet;
 
-    if (selector.wait(sf::seconds(10.f)))
+    if (selector.wait())
     {
         for (int i = 0; i < 6; i++)
         {

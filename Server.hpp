@@ -11,7 +11,8 @@
 #include <string>
 using std::string;
 
-class Server {
+class Server 
+{
     protected:
         int port;
         sf::TcpListener listener;
@@ -20,6 +21,7 @@ class Server {
         int numClients;
 
     public:
+        Server();
         Server(int);
         void acceptClient();
         void sendOne(sf::Packet, int);
