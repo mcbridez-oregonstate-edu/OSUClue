@@ -1,20 +1,20 @@
 /**************************************************************************************
- * Program Name: Client.cpp
+ * Program Name: GameClient.cpp
  * Author: Abigail Minchella
  * Date: 5/15/20
- * Description: Sets up a client.... maybe?
+ * Description: Sets up a GameClient.... maybe?
 **************************************************************************************/
-#include "Client.hpp"
+#include "GameClient.hpp"
 #include <iostream>
 using std::cout;
 using std::endl;
 
 /**************************************************************************************
-                   Client::Client(sf::IpAddress server, int serverPort)
- * Description: The constructor for the client class. Takes the server's IP and port
+                 GameClient::GameClient(sf::IpAddress server, int serverPort)
+ * Description: The constructor for the GameClient class. Takes the server's IP and port
  * as arguments.
 **************************************************************************************/
-Client::Client(sf::IpAddress server, int serverPort)
+GameClient::GameClient(sf::IpAddress server, int serverPort)
 {
     serverIP = server;
     port = serverPort;
@@ -31,10 +31,10 @@ Client::Client(sf::IpAddress server, int serverPort)
 }
 
 /**************************************************************************************
-                        void Client::sendData(sf::Packet packet)
+                        void GameClient::sendData(sf::Packet packet)
  * Description: Sends the passed packet to the server
 **************************************************************************************/
-void Client::sendData(sf::Packet packet)
+void GameClient::sendData(sf::Packet packet)
 {
     if (socket.send(packet) != sf::Socket::Done)
     {
@@ -47,10 +47,10 @@ void Client::sendData(sf::Packet packet)
 }
 
 /***************************************************************************************
-                            sf::Packet Client::receiveData()
+                            sf::Packet GameClient::receiveData()
  * Description: Receives a packet from the server
 ***************************************************************************************/
-sf::Packet Client::receiveData()
+sf::Packet GameClient::receiveData()
 {
     sf::Packet packet;
 

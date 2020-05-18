@@ -9,6 +9,7 @@
 
 #include "Deck.hpp"
 #include "Card.hpp"
+#include "packetstructs.hpp"
 #include <vector>
 #include <SFML/Network.hpp>
 #include <string>
@@ -18,9 +19,10 @@ class GameServer {
     private:
         int port;
         sf::TcpListener listener;
+        int numClients;
         sf::TcpSocket clients[6];        
         sf::SocketSelector selector;
-        int numClients;
+        ServerPlayer players[6];
         Deck theDeck;
         vector<Card*> solution;
 
@@ -30,6 +32,8 @@ class GameServer {
         void sendOne(sf::Packet, int);
         void sendAll(sf::Packet);
         sf::Packet receiveData();
+        void acceptPlayers();
+
 };
 
 #endif

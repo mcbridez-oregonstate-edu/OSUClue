@@ -33,11 +33,10 @@ Player::Player()
 }
 
 //An overloaded constructor for the Player class to set its attributes
-Player::Player(std::string name, PlayerToken token, std::vector<Card*> hand, std::tuple<int, int> position)
+Player::Player(std::string name, PlayerToken token, std::tuple<int, int> position)
 {
 	this->name = name;
 	this->token = token;
-	this->hand = hand;
 	this->position = position;
 	// -1 is empty, 0 is an "No", and 1 is a "Yes"; The initial layout is all empty
 	std::vector<std::vector<int>> initialNotebook{	{-1, -1, -1, -1, -1},			//Green

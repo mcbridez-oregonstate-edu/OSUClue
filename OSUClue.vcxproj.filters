@@ -18,9 +18,6 @@
     <ClInclude Include="Client.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Server.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameServer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -30,14 +27,14 @@
     <ClInclude Include="Card.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="packetstructs.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,6 +42,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Clue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -22,15 +22,16 @@
     <ClInclude Include="Card.hpp" />
     <ClInclude Include="Client.hpp" />
     <ClInclude Include="Deck.hpp" />
+    <ClInclude Include="GameClient.hpp" />
     <ClInclude Include="GameServer.hpp" />
-    <ClInclude Include="Server.hpp" />
+    <ClInclude Include="packetstructs.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
-    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Clue.cpp" />
     <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="GameServer.cpp" />
-    <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sfml-graphics-d-2.dll" />
