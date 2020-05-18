@@ -1,0 +1,11 @@
+﻿  main.cpp
+C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\sfml_test\sfml_test\main.cpp(21): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\sfml_test\sfml_test\main.cpp(182): warning C4018: '<': signed/unsigned mismatch
+C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\sfml_test\sfml_test\main.cpp(201): warning C4018: '<': signed/unsigned mismatch
+  boardFunctions.cpp
+  token.cpp
+C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\sfml_test\sfml_test\token.cpp(22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\sfml_test\sfml_test\token.cpp(96): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\sfml_test\sfml_test\token.cpp(115): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+  sfml_test.vcxproj -> C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\sfml_test\Debug\sfml_test.exe
