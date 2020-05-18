@@ -23,7 +23,7 @@ public:
     Deck();
     ~Deck();
     void shuffle();
-    void deal(vector<Player>);
+    void deal(vector<Player*>);
     vector<Card*> getSolution();
 };
 

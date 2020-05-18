@@ -1,35 +1,34 @@
-/********************************************************************************
-** Created by: Devin Mourrain
-** Date: 4/26/2020
-** Description: This is the Token class header file. It establishes the 
-				attributes that a Token can have. It essentially the same as the card class
-********************************************************************************/
+/*******************************************************************************************************************
+**	Description: This is the header file for the token class. Represents the player's token. Holds the sprite for
+**				the player's token as well as the indexes of the row/col of the tile the token is on. Has methods
+**				to move the token and to return the position of it's location
+********************************************************************************************************************/
+#ifndef TOKEN_H
+#define TOKEN_H
+#include <SFML/Graphics.hpp>
+#include "boardTile.h"
+#include <string>
 
-#ifndef TOKEN_HPP
-#define TOKEN_HPP
-
-#include<string>
-#include<string>
-#include<vector>
-#include<tuple>
-
-enum TokenType { WEAPON_T, SUSPECT_T, PLACE_T };
-
-class Token {
+class token {
 private:
+	sf::CircleShape piece;
 	std::string name;
-	TokenType type;
-	std::tuple<int, int> position;				//the player's token's current (x,y) coordinate
-
+	boardTile* current_space;
+	int tile_row;
+	int tile_col;
+		
 public:
-	Token();
-	Token(std::string tokenName, TokenType tokenType, std::tuple<int, int> position);
-	std::string getName();
-	TokenType getType();
-	std::tuple<int, int> getPosition();
-	void updatePosition(std::tuple<int, int>);
-};
 
+	token(sf::Color color, double row_start, double col_start, int row, int col);
+	token(std::string name, double width, double height, boardTile*** board);
+	sf::CircleShape get_token();
+	void move_token(double row, double col, int row_index, int col_index, boardTile*** board);
+	boardTile* get_space();
+	int get_row();
+	int get_col();
+	std::string getName();
+	
+};
 
 
 #endif

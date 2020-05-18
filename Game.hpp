@@ -16,13 +16,13 @@ using std::string;
 
 class Game {
     private:
-        vector<Player> players;
+        vector<Player*> players;
         vector<Card*> solution;
         Deck gameDeck;
 
     public:
         Game();
-        void checkSuggestion(PlayerToken, vector<string>);      // Need to implement server-client architecture to make this private b/w players
+        void checkSuggestion(token*, vector<string>);      // Need to implement server-client architecture to make this private b/w players
         //void play();                  // Implement later with a turn system involving the player class
 };
 

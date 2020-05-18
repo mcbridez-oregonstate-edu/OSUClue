@@ -112,7 +112,7 @@ vector<Card*> Deck::getSolution()
  * Description: Continues to deal cards to the players and remove them from the deck until
  * the deck is empty
 ******************************************************************************************/
-void Deck::deal(vector<Player> players)
+void Deck::deal(vector<Player*> players)
 {
     int playerNum = 0;
     vector<Card*>::reverse_iterator itr = deck.rbegin();
@@ -122,7 +122,7 @@ void Deck::deal(vector<Player> players)
         {
             playerNum = 0;
         }
-        players[playerNum].addCard(*itr);
+        players[playerNum]->addCard(*itr);
         playerNum++;
         itr++;
     }
