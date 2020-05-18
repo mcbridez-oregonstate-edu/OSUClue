@@ -1,7 +1,0 @@
-﻿  main.cpp
-C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\main.cpp(30): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\main.cpp(96): warning C4018: '<': signed/unsigned mismatch
-C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\main.cpp(97): warning C4018: '<': signed/unsigned mismatch
-C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\main.cpp(303): warning C4018: '<': signed/unsigned mismatch
-C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\main.cpp(322): warning C4018: '<': signed/unsigned mismatch
-  OSUClue.vcxproj -> C:\Users\adpha\OneDrive\Desktop\School\Terms\Spring 2020\CS 361\Clue\OSUClue\Debug\OSUClue.exe
