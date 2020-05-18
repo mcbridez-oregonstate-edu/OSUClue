@@ -133,7 +133,7 @@ int main()
 	string stepCounterString;
 	stepCounterText.setFont(font);
 
-
+	std::cout << "Move with the arrow keys. Press 'Enter' when you are done moving." << std::endl;
 
 	// game loop
 	while (window.isOpen())
@@ -146,9 +146,9 @@ int main()
 			int die_2 = (rand() % 6) + 1;
 			steps = die_1 + die_2;
 			//system("cls");
-			std::cout << "Player " << current_player + 1 << " rolled a " << die_1 << " and a " << die_2 << std::endl;
-			std::cout << "They can move " << steps << " spaces" << std::endl;
-			std::cout << "Move with the arrow keys. Press 'Enter' when you are done moving." << std::endl;
+			//std::cout << "Player " << current_player + 1 << " rolled a " << die_1 << " and a " << die_2 << std::endl;
+			//std::cout << "They can move " << steps << " spaces" << std::endl;
+			//std::cout << "Move with the arrow keys. Press 'Enter' when you are done moving." << std::endl;
 			has_rolled = 1;
 		}
 
@@ -178,6 +178,7 @@ int main()
 					cout << "\n==Returning from " << players[revealingPlayer]->getName() << "\'s point of view: " << endl;
 					cout << "The card that was shown to the player was: " << shownCard << endl;
 					cout << endl;
+					break;
 				}
 				else {
 					cout << players[revealingPlayer]->getName() << " didn't have any cards from Player 1's suggestion" << endl;
