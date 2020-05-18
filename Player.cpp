@@ -33,7 +33,7 @@ Player::Player()
 }
 
 //An overloaded constructor for the Player class to set its attributes
-Player::Player(std::string name, token* inputToken, std::vector<Card*> hand, std::tuple<int, int> position)
+Player::Player(std::string name, token* inputToken, std::tuple<int, int> position)
 {
 	this->name = name;
 	this->playerToken = inputToken;
