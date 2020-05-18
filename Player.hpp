@@ -33,7 +33,7 @@ private:
 
 public:
 	Player();
-	Player(std::string, PlayerToken, std::vector<Card*>, std::tuple<int, int>);
+	Player(std::string, PlayerToken, std::tuple<int, int>);
 	std::string getName();
 	PlayerToken getToken();
 	std::string getTokenName();
