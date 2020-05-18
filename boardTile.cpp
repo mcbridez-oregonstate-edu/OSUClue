@@ -1,28 +1,10 @@
 #include <iostream>
-<<<<<<< HEAD
-#include "Point.h"
-=======
->>>>>>> nguyen-pham
 #include "boardTile.h"
 
 using namespace std;
 
 boardTile::boardTile(string type, int row, int col) {
-<<<<<<< HEAD
-	location = Point(row, col);
-	if (type == "w") {
-		occupied = false;
-		room = false;
-		passable = false;
-		tileType = "Wall";
-	}
-	else if (type == "f") {
-		occupied = false;
-		room = false;
-		passable = true;
-		tileType = "Floor";
-=======
-	
+
 	if (type.at(0) == 'w') {
 		occupied = true;
 		room = false;
@@ -33,7 +15,7 @@ boardTile::boardTile(string type, int row, int col) {
 	else if (type.at(0) == 'f') {
 		occupied = false;
 		room = false;
-	//	passable = true;
+		//	passable = true;
 		door = false;
 		tileType = Floor;
 	}
@@ -47,19 +29,14 @@ boardTile::boardTile(string type, int row, int col) {
 	else if (type.at(0) == 'o') {
 		occupied = false;
 		room = false;
-	//	passable = true;
+		//	passable = true;
 		door = true;
-		
+
 		tileType = Floor;
->>>>>>> nguyen-pham
 	}
 	else {
 		occupied = false;
 		room = true;
-<<<<<<< HEAD
-		passable = true;
-		tileType = "Room";
-=======
 		//passable = true;
 		door = true;
 		tileType = Room;
@@ -95,7 +72,6 @@ boardTile::boardTile(string type, int row, int col) {
 	}
 	else {
 		roomName = "Ground Floor";
->>>>>>> nguyen-pham
 	}
 }
 boardTile::boardTile(std::string type)
@@ -107,31 +83,18 @@ boardTile::boardTile(const boardTile& other)
 {
 	occupied = other.occupied;
 	room = other.room;
-<<<<<<< HEAD
-	passable = other.passable;
-	location = other.location;
-	tileType = other.tileType;
-=======
 	//passable = other.passable;
-	
+
 	tileType = other.tileType;
 	door = other.door;
->>>>>>> nguyen-pham
 }
 
 
 boardTile::boardTile() {
-<<<<<<< HEAD
-	location = Point(0, 0);
-	occupied = false;
-	room = false;
-	passable = false;
-=======
-	
+
 	occupied = false;
 	room = false;
 	//passable = false;
->>>>>>> nguyen-pham
 }
 bool boardTile::isOccupied() {
 	if (occupied == true) {
@@ -149,10 +112,7 @@ bool boardTile::isRoom() {
 		return false;
 	}
 }
-<<<<<<< HEAD
-=======
 /*
->>>>>>> nguyen-pham
 bool boardTile::isPassable() {
 	if (passable) {
 		return true;
@@ -161,29 +121,6 @@ bool boardTile::isPassable() {
 		return false;
 	}
 }
-<<<<<<< HEAD
-void boardTile::setCoor(int row, int col) {
-	location = Point(row, col);
-}
-
-boardTile& boardTile::operator = (const boardTile& other) {
-	if (this == &other)
-	{
-		return *this;
-	}
-
-	occupied = other.occupied;
-	room = other.room;
-	passable = other.passable;
-	location = other.location;
-	tileType = other.tileType;
-
-	return *this;
-}
-
-char boardTile::charTile() {
-	return tileType[0];
-=======
 */
 bool boardTile::hasDoor() {
 
@@ -221,5 +158,4 @@ void boardTile::setOccupied(int choice) {
 ********************************************************************************************************************/
 std::string boardTile::getName() {
 	return roomName;
->>>>>>> nguyen-pham
 }
