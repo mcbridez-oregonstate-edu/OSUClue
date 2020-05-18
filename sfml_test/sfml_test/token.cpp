@@ -16,10 +16,10 @@
 ********************************************************************************************************************/
 token::token(sf::Color color, double row_start, double col_start, int row, int col)
 {
-	player_token.setFillColor(color);
-	player_token.setRadius(9);
-	player_token.setPointCount(4);
-	player_token.setPosition(row_start, col_start);
+	piece.setFillColor(color);
+	piece.setRadius(9);
+	piece.setPointCount(4);
+	piece.setPosition(row_start, col_start);
 	tile_row = row;
 	tile_col = col;
 }
@@ -90,10 +90,10 @@ token::token(std::string name, double width, double height, boardTile*** board)
 		col = 1;
 	}
 	
-	player_token.setFillColor(color);
-	player_token.setRadius(9);
-	player_token.setPointCount(4);
-	player_token.setPosition(row_start, col_start);
+	piece.setFillColor(color);
+	piece.setRadius(9);
+	piece.setPointCount(4);
+	piece.setPosition(row_start, col_start);
 	tile_row = row;
 	tile_col = col;
 	current_space = board[tile_row][tile_col];
@@ -106,13 +106,13 @@ token::token(std::string name, double width, double height, boardTile*** board)
 ********************************************************************************************************************/
 sf::CircleShape token::get_token()
 {
-	return player_token;
+	return piece;
 }
 
 void token::move_token(double row, double col, int row_index, int col_index, boardTile*** board)
 {
-	sf::Vector2f pos = player_token.getPosition();
-	player_token.setPosition(pos.x + row, pos.y + col);
+	sf::Vector2f pos = piece.getPosition();
+	piece.setPosition(pos.x + row, pos.y + col);
 	tile_row += row_index;
 	tile_col += col_index;
 	current_space = board[tile_row][tile_col];

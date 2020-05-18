@@ -10,7 +10,7 @@
 
 class token {
 private:
-	sf::CircleShape player_token;
+	sf::CircleShape piece;
 	boardTile* current_space;
 	int tile_row;
 	int tile_col;

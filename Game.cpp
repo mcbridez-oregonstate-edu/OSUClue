@@ -19,34 +19,34 @@ using std::tuple;
 **************************************************************************************************/
 Game::Game()
 {
-	// Initialize players
-	vector<Card*> hand1;
-	vector<Card*> hand2;
-	vector<Card*> hand3;
-	vector<Card*> hand4;
-	vector<Card*> hand5;
-	vector<Card*> hand6;
+	//// Initialize players
+	//vector<Card*> hand1;
+	//vector<Card*> hand2;
+	//vector<Card*> hand3;
+	//vector<Card*> hand4;
+	//vector<Card*> hand5;
+	//vector<Card*> hand6;
 
-	tuple<int, int> pos1;
-	tuple<int, int> pos2;
-	tuple<int, int> pos3;
-	tuple<int, int> pos4;
-	tuple<int, int> pos5;
-	tuple<int, int> pos6;
+	//tuple<int, int> pos1;
+	//tuple<int, int> pos2;
+	//tuple<int, int> pos3;
+	//tuple<int, int> pos4;
+	//tuple<int, int> pos5;
+	//tuple<int, int> pos6;
 
-	Player player1 = Player("Player 1", MUSTARD, hand1, pos1);
-	Player player2 = Player("Player 2", SCARLET, hand2, pos2);
-	Player player3 = Player("Player 3", PEACOCK, hand3, pos3);
-	Player player4 = Player("Player 4", GREEN, hand4, pos4);
-	Player player5 = Player("Player 5", WHITE, hand5, pos5);
-	Player player6 = Player("Player 6", PLUM, hand6, pos6);
-	players = { player1, player2, player3, player4, player5, player6 };
+	//Player* player1 = new Player("Player 1", MUSTARD, hand1, pos1);
+	//Player* player2 = new Player("Player 2", SCARLET, hand2, pos2);
+	//Player* player3 = new Player("Player 3", PEACOCK, hand3, pos3);
+	//Player* player4 = new Player("Player 4", GREEN, hand4, pos4);
+	//Player* player5 = new Player("Player 5", WHITE, hand5, pos5);
+	//Player* player6 = new Player("Player 6", PLUM, hand6, pos6);
+	//players = { player1, player2, player3, player4, player5, player6 };
 
-	// Initialize deck
-	gameDeck = Deck();
-	solution = gameDeck.getSolution();
-	gameDeck.shuffle();
-	gameDeck.deal(players);
+	//// Initialize deck
+	//gameDeck = Deck();
+	//solution = gameDeck.getSolution();
+	//gameDeck.shuffle();
+	//gameDeck.deal(players);
 }
 
 /*************************************************************************************************
@@ -54,13 +54,13 @@ Game::Game()
  * Description: Takes a suggestion that a player made and checks it against the other players' 
  * hands. Prompts a player who has a matching card to show what they have to the other player.
 *************************************************************************************************/
-void Game::checkSuggestion(PlayerToken player, vector<string> suggestion)
+void Game::checkSuggestion(token* player, vector<string> suggestion)
 {
 	// Figure out which player is the one who made the suggestion
 	int playerPos;
 	for (int i = 0; i < 6; i++)
 	{
-		PlayerToken thisPlayer = players[i].getToken();
+		token* thisPlayer = players[i]->getToken();
 		if (thisPlayer == player)
 		{
 			playerPos = i;
@@ -79,7 +79,7 @@ void Game::checkSuggestion(PlayerToken player, vector<string> suggestion)
 		}
 		
 		// Get that player's hand and compare to the suggestion items
-		vector<Card*> nextHand = players[nextPlayer].getHand();
+		vector<Card*> nextHand = players[nextPlayer]->getHand();
 		for (int i = 0; i < nextHand.size(); i++)
 		{
 			string cardName = nextHand[i]->getName();
@@ -110,7 +110,7 @@ void Game::checkSuggestion(PlayerToken player, vector<string> suggestion)
 	// Otherwise, get the hand and push the possible cards to a vector
 	else
 	{
-		vector<Card*> proofHand = players[nextPlayer].getHand();
+		vector<Card*> proofHand = players[nextPlayer]->getHand();
 		vector<Card*> possibleCards;
 		for (int i = 0; i < proofHand.size(); i++)
 		{
@@ -123,8 +123,8 @@ void Game::checkSuggestion(PlayerToken player, vector<string> suggestion)
 
 		// Replace with nice client-server code that only prompts one player and doesn't print to the console
 		// Prompt player to choose a card to show
-		cout << players[nextPlayer].getName() << ", you have cards that match the suggestion. "
-			<< "Which card would you like to show " << players[playerPos].getName() << "?" 
+		cout << players[nextPlayer]->getName() << ", you have cards that match the suggestion. "
+			<< "Which card would you like to show " << players[playerPos]->getName() << "?"
 			<< "(Enter the number of the card)" << endl;
 		// Output the matching cards
 		for (int i = 0; i < possibleCards.size(); i++)
@@ -151,7 +151,7 @@ void Game::checkSuggestion(PlayerToken player, vector<string> suggestion)
 		}
 
 		// Replace with some sort of nice client-server code that only shows the player making the suggestion
-		cout << players[playerPos].getName() << ", " << players[nextPlayer].getName()
+		cout << players[playerPos]->getName() << ", " << players[nextPlayer]->getName()
 			<< " has chosen to show you that they have " << possibleCards[choice]->getName()
 			<< " in their hand" << endl;
 	}

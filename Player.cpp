@@ -33,10 +33,10 @@ Player::Player()
 }
 
 //An overloaded constructor for the Player class to set its attributes
-Player::Player(std::string name, PlayerToken token, std::vector<Card*> hand, std::tuple<int, int> position)
+Player::Player(std::string name, token* inputToken, std::vector<Card*> hand, std::tuple<int, int> position)
 {
 	this->name = name;
-	this->token = token;
+	this->playerToken = inputToken;
 	this->hand = hand;
 	this->position = position;
 	// -1 is empty, 0 is an "No", and 1 is a "Yes"; The initial layout is all empty
@@ -72,36 +72,16 @@ std::string Player::getName()
 }
 
 //Gets the player's token (represented as a number)
-PlayerToken Player::getToken()
+token* Player::getToken()
 {
-	return this->token;
+	return this->playerToken;
 }
 
 //Gets the player's token (represented as text)
 //If the token isn't set or is another unexpected value, returns "Unknown Character"
 std::string Player::getTokenName()
 {
-	if (this->token == GREEN) {
-		return "Mr. Green";
-	}
-	else if (this->token == MUSTARD) {
-		return "Colonel Mustard";
-	}
-	else if (this->token == PEACOCK) {
-		return "Mrs. Peacock";
-	}
-	else if (this->token == PLUM) {
-		return "Professor Plum";
-	}
-	else if (this->token == SCARLET) {
-		return "Miss Scarlet";
-	}
-	else if (this->token == WHITE) {
-		return "Mrs. White";
-	}
-	else {
-		return  "Unknown Character";
-	}
+	return playerToken->getName();
 }
 
 //Removes the first instance of a card from a player's hand given its name
@@ -349,7 +329,9 @@ vector<string> Player::makeSuggestion()
 
 	// Pick a random room to make the suggestion out of since we don't have positional info yet and 
 	// the player doesn't get to choose this
-	int seed = time(0);
+
+	suggestion.push_back(playerToken->get_space()->getName());
+	/*int seed = time(0);
 	srand(seed);
 	int choice3;
 	choice3 = (rand() % 9) + 1;
@@ -400,7 +382,7 @@ vector<string> Player::makeSuggestion()
 			suggestion.push_back("Dining Room");
 			break;
 		}
-	}
+	}*/
 
 	return suggestion;
 }

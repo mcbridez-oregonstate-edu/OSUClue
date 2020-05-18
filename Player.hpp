@@ -9,13 +9,15 @@
 #define PLAYER_HPP
 
 #include"Card.hpp"
+#include <SFML/Graphics.hpp>
+#include "token.hpp"
 #include<string>
 #include<vector>
 #include<tuple>
 using std::string;
 using std::vector;
 
-enum PlayerToken {GREEN, MUSTARD, PEACOCK, PLUM, SCARLET, WHITE};
+
 
 enum NotebookEntities {
 	GREEN_N, MUSTARD_N, PEACOCK_N, PLUM_N, SCARLET_N, WHITE_N,
@@ -26,16 +28,16 @@ enum NotebookEntities {
 class Player {
 private:
 	std::string name;							//the name of the player
-	PlayerToken token;							//the token that the player has chosen; see PlayerToken for the choices
+	token* playerToken;							//the token that the player has chosen; see PlayerToken for the choices
 	std::vector<Card*> hand;
 	std::tuple<int, int> position;				//the player's token's current (x,y) coordinate
 	std::vector<std::vector<int>> notebook;
 
 public:
 	Player();
-	Player(std::string, PlayerToken, std::vector<Card*>, std::tuple<int, int>);
+	Player(std::string, token*, std::vector<Card*>, std::tuple<int, int>);
 	std::string getName();
-	PlayerToken getToken();
+	token* getToken();
 	std::string getTokenName();
 	void removeCard(std::string);
 	void addCard(Card*);
