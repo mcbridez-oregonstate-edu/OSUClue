@@ -39,27 +39,27 @@ Player::Player(std::string name, token* inputToken, std::tuple<int, int> positio
 	this->playerToken = inputToken;
 	this->position = position;
 	// -1 is empty, 0 is an "No", and 1 is a "Yes"; The initial layout is all empty
-	std::vector<std::vector<int>> initialNotebook{	{-1, -1, -1, -1, -1},			//Green
-													{-1, -1, -1, -1, -1},			//Mustard
-													{-1, -1, -1, -1, -1},			//Peacock
-													{-1, -1, -1, -1, -1},			//Plum
-													{-1, -1, -1, -1, -1},			//Scarlet
-													{-1, -1, -1, -1, -1},			//White
-													{-1, -1, -1, -1, -1},			//Candlestick
-													{-1, -1, -1, -1, -1},			//Knife
-													{-1, -1, -1, -1, -1},			//Revolver
-													{-1, -1, -1, -1, -1},			//Lead Pipe
-													{-1, -1, -1, -1, -1},			//Rope
-													{-1, -1, -1, -1, -1},			//Wrench
-													{-1, -1, -1, -1, -1},			//Conservatory
-													{-1, -1, -1, -1, -1},			//Ballroom
-													{-1, -1, -1, -1, -1},			//Kitchen
-													{-1, -1, -1, -1, -1},			//Dining Room
-													{-1, -1, -1, -1, -1},			//Lounge
-													{-1, -1, -1, -1, -1},			//Hall
-													{-1, -1, -1, -1, -1},			//Study
-													{-1, -1, -1, -1, -1},			//Library
-													{-1, -1, -1, -1, -1},			//Billiard Room
+	std::vector<std::vector<int>> initialNotebook{	{-1, -1, -1, -1, -1},					//0Green
+													{-1, -1, -1, -1, -1},			//1Mustard
+													{-1, -1, -1, -1, -1},			//2Peacock
+													{-1, -1, -1, -1, -1},			//3Plum
+													{-1, -1, -1, -1, -1},			//4Scarlet
+													{-1, -1, -1, -1, -1},			//5White
+													{-1, -1, -1, -1, -1},			//6Candlestick
+													{-1, -1, -1, -1, -1},			//7Knife
+													{-1, -1, -1, -1, -1},			//8Revolver
+													{-1, -1, -1, -1, -1},			//9Lead Pipe
+													{-1, -1, -1, -1, -1},			//10Rope
+													{-1, -1, -1, -1, -1},			//11Wrench
+													{-1, -1, -1, -1, -1},			//12Conservatory
+													{-1, -1, -1, -1, -1},			//13Ballroom
+													{-1, -1, -1, -1, -1},			//14Kitchen
+													{-1, -1, -1, -1, -1},			//15Dining Room
+													{-1, -1, -1, -1, -1},			//16Lounge
+													{-1, -1, -1, -1, -1},			//17Hall
+													{-1, -1, -1, -1, -1},			//18Study
+													{-1, -1, -1, -1, -1},			//19Library
+													{-1, -1, -1, -1, -1},			//20Billiard Room
 	};
 	this->notebook = initialNotebook;
 }
@@ -135,10 +135,152 @@ std::vector<std::vector<int>> Player::getNotebook()
 	
 }
 
+//Returns notebook entity name for updating notebook
+NotebookEntities Player::nCard(std::string cardName) {
+	if (cardName == "Mr. Green") {
+		return GREEN_N;
+	}
+	else if (cardName == "Colonel Mustard") {
+		return MUSTARD_N;
+	}
+	else if (cardName == "Mrs. Peacock") {
+		return PEACOCK_N;
+	}
+	else if (cardName == "Professor Plum") {
+		return PLUM_N;
+	}
+	else if (cardName == "Miss Scarlet") {
+		return SCARLET_N;
+	}
+	else if (cardName == "Mrs. White") {
+		return WHITE_N;
+	}
+	else if (cardName == "Candlestick") {
+		return CANDLESTICK_N;
+	}
+	else if (cardName == "Knife") {
+		return KNIFE_N;
+	}
+	else if (cardName == "Revolver") {
+		return REVOLVER_N;
+	}
+	else if (cardName == "Lead Pipe") {
+		return PIPE_N;
+	}
+	else if (cardName == "Rope") {
+		return ROPE_N;
+	}
+	else if (cardName == "Wrench") {
+		return WRENCH_N;
+	}
+	else if (cardName == "Conservatory") {
+		return CONSERVATORY_N;
+	}
+	else if (cardName == "Ballroom") {
+		return BALLROOM_N;
+	}
+	else if (cardName == "Kitchen") {
+		return KITCHEN_N;
+	}
+	else if (cardName == "Dining Room") {
+		return DINING_N;
+	}
+	else if (cardName == "Lounge") {
+		return LOUNGE_N;
+	}
+	else if (cardName == "Hall") {
+		return HALL_N;
+	}
+	else if (cardName == "Study") {
+		return STUDY_N;
+	}
+	else if (cardName == "Library") {
+		return LIBRARY_N;
+	}
+	else if (cardName == "Billiard Room") {
+		return BILLIARD_N;
+	}
+	else {
+		std::cout << "Something went wrong trying to return nName." << std::endl;
+		std::cout << cardName << std::endl;
+	}
+}
+
+//returns row number of journal array for corresponding Notebook Entity
+int Player::notebookRowNum(NotebookEntities input) {
+	if (input == GREEN_N) {
+		return 0;
+	}
+	else if (input == MUSTARD_N) {
+		return 1;
+	}
+	else if (input == PEACOCK_N) {
+		return 2;
+	}
+	else if (input == PLUM_N) {
+		return 3;
+	}
+	else if (input == SCARLET_N) {
+		return 4;
+	}
+	else if (input == WHITE_N) {
+		return 5;
+	}
+	else if (input == CANDLESTICK_N) {
+		return 6;
+	}
+	else if (input == KNIFE_N) {
+		return 7;
+	}
+	else if (input == REVOLVER_N) {
+		return 8;
+	}
+	else if (input == PIPE_N) {
+		return 9;
+	}
+	else if (input == ROPE_N) {
+		return 10;
+	}
+	else if (input == WRENCH_N) {
+		return 11;
+	}
+	else if (input == CONSERVATORY_N) {
+		return 12;
+	}
+	else if (input == BALLROOM_N) {
+		return 13;
+	}
+	else if (input == KITCHEN_N) {
+		return 14;
+	}
+	else if (input == DINING_N) {
+		return 15;
+	}
+	else if (input == LOUNGE_N) {
+		return 16;
+	}
+	else if (input == HALL_N) {
+		return 17;
+	}
+	else if (input == STUDY_N) {
+		return 18;
+	}
+	else if (input == LIBRARY_N) {
+		return 19;
+	}
+	else if (input == BILLIARD_N) {
+		return 20;
+	}
+	else {
+		std::cout << "Something went wrong with rowNum." << std::endl;
+	}
+}
+
 //Adds an entry to the notebook, delimited by a newline and a "-"
 void Player::updateNotebook(NotebookEntities row, int col, int change)
 {
-	this->notebook[row][col] = change;
+	int numRow = this->notebookRowNum(row);
+	this->notebook[numRow][col] = change;
 }
 
 //debug function; not likely for game use
@@ -157,9 +299,18 @@ string Player::sNotebook() {
 	string rowNames[] = { "Green", "Mustard", "Peacock", "Plum", "Scarlet", "White", "Candlestick", "Knife", "Revolver", "Lead Pipe", "Rope", "Wrench", "Conservatory", "Ballroom", "Kitchen", "Dining Room", "Lounge", "Hall", "Study", "Library", "Billiard Room" };
 		for (int i = 0; i < this->notebook.size(); i++) {
 			output += rowNames[i];
-			output += " ";
+			output += '\t';
 		for (int j = 0; j < this->notebook[i].size(); j++) {
-			output += std::to_string(this->notebook[i][j]);
+			//output += std::to_string(this->notebook[i][j]);
+			if (this->notebook[i][j] == -1) {
+				output += " ";
+			}
+			else if (this->notebook[i][j] == 0) {
+				output += "No";
+			}
+			else {
+				output += "Yes";
+			}
 			output += " ";
 		}
 		output += '\n';

@@ -118,6 +118,14 @@ int main()
 		cout << endl;
 	}
 
+	// update notebook with cards in hand
+	for (int i = 0; i < players.size(); i++) {
+		for (int j = 0; j < players[i]->getHand().size(); j++) {
+			NotebookEntities nCard = players[i]->nCard(players[i]->getHand()[j]->getName());
+			players[i]->updateNotebook(nCard, 0, 0);
+		}
+	}
+
 	//control variables for changing player control
 	int current_player = 0;
 	int num_players = players.size() - 1;
@@ -294,6 +302,13 @@ int main()
 					cout << "\n==Returning from " << players[revealingPlayer]->getName() << "\'s point of view: " << endl;
 					cout << "The card that was shown to the player was: " << shownCard << endl;
 					cout << endl;
+
+					//updating all player notebooks
+					for (int i = 0; i < players.size(); i++) {				
+						NotebookEntities nCard = players[i]->nCard(shownCard);
+						players[i]->updateNotebook(nCard, 0, 0);						
+					}
+
 					break;
 				}
 				else {

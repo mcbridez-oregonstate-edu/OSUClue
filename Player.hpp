@@ -22,7 +22,7 @@ using std::vector;
 
 enum NotebookEntities {
 	GREEN_N, MUSTARD_N, PEACOCK_N, PLUM_N, SCARLET_N, WHITE_N,
-	CANDLESTICK_N, KNIFE_N, REVOLVER_N, PIPE_N, WRENCH_N,
+	CANDLESTICK_N, KNIFE_N, REVOLVER_N, ROPE_N, PIPE_N, WRENCH_N,
 	CONSERVATORY_N, BALLROOM_N, KITCHEN_N, DINING_N, LOUNGE_N, HALL_N, STUDY_N, LIBRARY_N, BILLIARD_N
 };
 
@@ -47,6 +47,8 @@ public:
 	std::tuple<int, int> getPosition();
 	void updatePosition(std::tuple<int, int>);
 	std::vector<std::vector<int>> getNotebook();
+	NotebookEntities nCard(std::string cardName);
+	int notebookRowNum(NotebookEntities input);
 	void updateNotebook(NotebookEntities, int, int);
 	void printNotebook();
 	string sNotebook();
