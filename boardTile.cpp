@@ -8,28 +8,28 @@ boardTile::boardTile(string type, int row, int col) {
 	if (type.at(0) == 'w') {
 		occupied = true;
 		room = false;
-		//passable = false;
+		
 		door = false;
 		tileType = Wall;
 	}
 	else if (type.at(0) == 'f') {
 		occupied = false;
 		room = false;
-	//	passable = true;
+
 		door = false;
 		tileType = Floor;
 	}
 	else if (type.at(0) == 'r') {
 		occupied = false;
 		room = true;
-		//passable = true;
+		
 		door = false;
 		tileType = Room;
 	}
 	else if (type.at(0) == 'o') {
 		occupied = false;
 		room = false;
-	//	passable = true;
+	
 		door = true;
 		
 		tileType = Floor;
@@ -37,7 +37,7 @@ boardTile::boardTile(string type, int row, int col) {
 	else {
 		occupied = false;
 		room = true;
-		//passable = true;
+		
 		door = true;
 		tileType = Room;
 	}
@@ -83,7 +83,7 @@ boardTile::boardTile(const boardTile& other)
 {
 	occupied = other.occupied;
 	room = other.room;
-	//passable = other.passable;
+	
 	
 	tileType = other.tileType;
 	door = other.door;
@@ -112,16 +112,7 @@ bool boardTile::isRoom() {
 		return false;
 	}
 }
-/*
-bool boardTile::isPassable() {
-	if (passable) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-*/
+
 bool boardTile::hasDoor() {
 
 	if (door == true) {

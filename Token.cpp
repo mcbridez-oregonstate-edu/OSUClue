@@ -39,7 +39,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 	if (name == "Colonel Mustard")
 	{
 		color = sf::Color(225, 173, 1);
-		row_start = 155 + (width * 17);
+		row_start = 390 + (width * 17);
 		col_start = 165 + (height * 23);
 		row = 24;
 		col = 18;
@@ -48,7 +48,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 	if (name == "Miss Scarlet")
 	{
 		color = sf::Color(139, 0, 0);
-		row_start = 155 + (width * 24);
+		row_start = 390 + (width * 24);
 		col_start = 165 + (height * 16);
 		row = 17;
 		col = 25;
@@ -57,7 +57,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 	if (name == "Mr. Green")
 	{
 		color = sf::Color(0, 128, 0);
-		row_start = 155 + (width * 0);
+		row_start = 390 + (width * 0);
 		col_start = 165 + (height * 9);
 		row = 10;
 		col = 1;
@@ -66,7 +66,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 	if (name == "Professor Plum")
 	{
 		color = sf::Color(221, 160, 221);
-		row_start = 155 + (width * 19);
+		row_start = 390 + (width * 19);
 		col_start = 165 + (height * 0);
 		row = 1;
 		col = 20;
@@ -75,7 +75,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 	if (name == "Mrs. Peacock")
 	{
 		color = sf::Color(0, 0, 255);
-		row_start = 155 + (width * 6);
+		row_start = 390 + (width * 6);
 		col_start = 165 + (height * 0);
 		row = 1;
 		col = 7;
@@ -84,7 +84,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 	if (name == "Mrs. White")
 	{
 		color = sf::Color(128, 128, 128);
-		row_start = 155 + (width * 0);
+		row_start = 390 + (width * 0);
 		col_start = 165 + (height * 14);
 		row = 15;
 		col = 1;

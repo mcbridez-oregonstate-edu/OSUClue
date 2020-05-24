@@ -13,7 +13,6 @@
 
 
 #include "player.hpp"
-// "token.hpp"
 #include "deck.hpp"
 #include "game.hpp"
 #include <iomanip>
@@ -32,7 +31,7 @@ int main()
 
 	
 	//creating a render window with SFML
-	sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(1280, 960), "Clue!", sf::Style::Default);
 
 
 	// create the logical tiles of the board
@@ -47,7 +46,8 @@ int main()
 	}
 
 	sf::Sprite rendered_board;
-	rendered_board.move(sf::Vector2f(155, 161.5));
+	
+	rendered_board.move(sf::Vector2f(390, 161.5));
 	rendered_board.setTexture(board_texture);
 
 	// dimensions of each tile on the map
@@ -92,6 +92,24 @@ int main()
 	newDeck.shuffle();
 	newDeck.deal(players);
 
+	// for each card in player hand, set card position for display
+	for (int i = 0; i < 6; i++) {
+
+		
+		for (int j = 0; j < 3; j++) {
+			if (j == 0) {
+				players[i]->getHand()[j]->setCardPos(sf::Vector2f(375, 680));
+			}
+			else if (j == 1) {
+				players[i]->getHand()[j]->setCardPos(sf::Vector2f(575, 680));
+			}
+			else if (j == 2) {
+				players[i]->getHand()[j]->setCardPos(sf::Vector2f(775, 680));
+			}
+		}
+
+	}
+
 	// printing out player hands
 	for (int i = 0; i < players.size(); i++) {
 		for (int j = 0; j < players[i]->getHand().size(); j++) {
@@ -122,7 +140,7 @@ int main()
 	stepCounterText.setFont(font);
 
 	std::cout << "Move with the arrow keys. Press 'Enter' when you are done moving." << std::endl;
-
+	
 	// game loop
 	while (window.isOpen())
 	{
@@ -304,6 +322,12 @@ int main()
 			window.draw(tokensVect[i]->get_token());
 		}
 		window.draw(stepCounterText);
+
+
+		// draw player hands
+		for (int i = 0; i < 3; i++) {
+			window.draw(players[current_player]->getHand()[i]->getSprite());
+		}
 		window.display();
 
 	}
