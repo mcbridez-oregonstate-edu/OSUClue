@@ -9,6 +9,8 @@
 #include <time.h>
 #include <iostream>
 #include "Deck.hpp"
+#include <SFML/Graphics.hpp>
+
 using std::srand;
 using std::rand;
 using std::cout;
@@ -107,6 +109,7 @@ vector<Card*> Deck::getSolution()
     return solution;
 }
 
+
 /******************************************************************************************
                                     void Deck::deal(vector<Player> players)
  * Description: Continues to deal cards to the players and remove them from the deck until
@@ -160,7 +163,7 @@ void Deck::pickSolution()
 
     // Pick a room at random, add to solution, and remove from the main deck
     int roomVal = (rand() % 9) + 10;        // Gives a number 10-19 (current room positions after removal of weapon and suspect)
-    Card* room = new Card(deck[roomVal]->getName(), deck[weapVal]->getType());
+    Card* room = new Card(deck[roomVal]->getName(), deck[roomVal]->getType());
     solution.push_back(room);
     itr = deck.begin();
     advance(itr, roomVal);
