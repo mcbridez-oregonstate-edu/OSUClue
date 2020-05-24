@@ -147,6 +147,10 @@ int main()
 		sf::Time move_delay = sf::seconds(0.1f);
 		sf::Event event;
 
+		//print journal on right side of window
+		sf::Text journal(players[current_player]->sNotebook(), font, 20);
+		journal.setPosition(window.getSize().x - (window.getSize().x / 4), 0.05);
+
 		// roll for movement
 		if (!has_rolled) {
 			int die_1 = (rand() % 6) + 1;
@@ -328,6 +332,7 @@ int main()
 		for (int i = 0; i < 3; i++) {
 			window.draw(players[current_player]->getHand()[i]->getSprite());
 		}
+		window.draw(journal);
 		window.display();
 
 	}

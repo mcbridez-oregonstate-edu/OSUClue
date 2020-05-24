@@ -49,6 +49,7 @@ public:
 	std::vector<std::vector<int>> getNotebook();
 	void updateNotebook(NotebookEntities, int, int);
 	void printNotebook();
+	string sNotebook();
 	vector<string> makeSuggestion();
 	bool containsCard(vector<string>);
 	string showCard(vector<string>);

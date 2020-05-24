@@ -151,6 +151,22 @@ void Player::printNotebook() {
 	}
 }
 
+//takes Notebook and outputs a useful string
+string Player::sNotebook() {
+	string output;
+	string rowNames[] = { "Green", "Mustard", "Peacock", "Plum", "Scarlet", "White", "Candlestick", "Knife", "Revolver", "Lead Pipe", "Rope", "Wrench", "Conservatory", "Ballroom", "Kitchen", "Dining Room", "Lounge", "Hall", "Study", "Library", "Billiard Room" };
+		for (int i = 0; i < this->notebook.size(); i++) {
+			output += rowNames[i];
+			output += " ";
+		for (int j = 0; j < this->notebook[i].size(); j++) {
+			output += std::to_string(this->notebook[i][j]);
+			output += " ";
+		}
+		output += '\n';
+	}
+	return output;
+}
+
 /*******************************************************************************************
 							vector<string> Player::makeSuggestion()
 * Description: Prompts the player for suggestion input and returns their answers for
