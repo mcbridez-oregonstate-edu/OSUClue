@@ -9,6 +9,7 @@
 #define PLAYER_HPP
 
 #include"Card.hpp"
+#include "Token.hpp"
 #include <SFML/Graphics.hpp>
 #include "token.hpp"
 #include<string>
