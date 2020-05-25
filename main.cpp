@@ -156,6 +156,8 @@ int main()
 		sf::Event event;
 
 		//print journal on right side of window
+		sf::Font journalFont;
+
 		sf::Text journal(players[current_player]->sNotebook(), font, 20);
 		journal.setPosition(window.getSize().x - (window.getSize().x / 4), 0.05);
 

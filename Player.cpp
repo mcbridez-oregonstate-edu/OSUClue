@@ -296,10 +296,30 @@ void Player::printNotebook() {
 //takes Notebook and outputs a useful string
 string Player::sNotebook() {
 	string output;
-	string rowNames[] = { "Green", "Mustard", "Peacock", "Plum", "Scarlet", "White", "Candlestick", "Knife", "Revolver", "Lead Pipe", "Rope", "Wrench", "Conservatory", "Ballroom", "Kitchen", "Dining Room", "Lounge", "Hall", "Study", "Library", "Billiard Room" };
-		for (int i = 0; i < this->notebook.size(); i++) {
-			output += rowNames[i];
-			output += '\t';
+	string rowNames[] = { 
+		"Green_____________", 
+		"Mustard___________", 
+		"Peacock___________", 
+		"Plum______________", 
+		"Scarlet___________", 
+		"White_____________", 
+		"Candlestick_______", 
+		"Knife_____________", 
+		"Revolver__________", 
+		"Lead Pipe_________", 
+		"Rope______________", 
+		"Wrench____________", 
+		"Conservatory______", 
+		"Ballroom__________", 
+		"Kitchen___________", 
+		"Dining Room_______", 
+		"Lounge____________", 
+		"Hall______________", 
+		"Study_____________", 
+		"Library___________", 
+		"Billiard Room_____" };
+	for (int i = 0; i < this->notebook.size(); i++) {
+		output += rowNames[i];
 		for (int j = 0; j < this->notebook[i].size(); j++) {
 			//output += std::to_string(this->notebook[i][j]);
 			if (this->notebook[i][j] == -1) {
