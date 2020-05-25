@@ -16,6 +16,7 @@ const int PORT = 3456;
 
 int main()
 {
+    sf::RenderWindow window(sf::VideoMode(810, 810), "Clue!", sf::Style::Default);
     // Print welcome and choices--to be replaced with GUI
     cout << "Welcome to Clue. Please choose from the following options: " << endl;
     cout << "1. Set up a server" << endl;

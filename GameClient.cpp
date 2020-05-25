@@ -5,6 +5,7 @@
  * Description: Sets up a GameClient.... maybe?
 **************************************************************************************/
 #include "GameClient.hpp"
+#include "boardFunctions.hpp"
 #include <iostream>
 using std::cin;
 using std::cout;
@@ -44,48 +45,54 @@ void GameClient::getPlayerData()
     cout << "5. Mrs. Peacock" << endl;
     cout << "6. Mr. Green" << endl;
     int choice;
-    PlayerToken token;
+
+    // This is kinda a placeholder just so I can make the tokens
+    boardTile*** clueBoard = createBoardArray();
+    double height = 20;
+    double width = 19.75;
+    string character;
     cin >> choice;
     switch (choice)
     {
         case 1:
         {
-            token = SCARLET;
+            character = "Miss Scarlet";
             break;
         }
 
         case 2:
         {
-            token = PLUM;
+            character = "Professor Plum";
             break;
         }
 
         case 3:
         {
-            token = WHITE;
+            character = "Mrs. White";
             break;
         }
 
         case 4:
         {
-            token = MUSTARD;
+            character = "Colonel Mustard";
             break;
         }
 
         case 5:
         {
-            token = PEACOCK;
+            character = "Mrs. Peacock";
             break;
         }
 
         case 6:
         {
-            token = GREEN;
+            character = "Mr. Green";
             break;
         }
     }
     tuple<int, int> placeholder;
-    thisPlayer = Player(name, token, placeholder);
+    token* playerToken = new token(character, width, height, clueBoard);
+    thisPlayer = Player(name, playerToken, placeholder);
 }
 
 /**************************************************************************************
@@ -97,6 +104,7 @@ void GameClient::sendPlayerData()
 {
     string name = thisPlayer.getName();
     string character = thisPlayer.getTokenName();
+    cout << character << endl;
     int notClientPos = -1;
     ServerPlayer playerData = { name, character, notClientPos };
     sf::Packet packet;

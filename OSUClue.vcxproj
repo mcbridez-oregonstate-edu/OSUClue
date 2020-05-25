@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="boardFunctions.hpp" />
+    <ClInclude Include="boardTile.h" />
     <ClInclude Include="Card.hpp" />
     <ClInclude Include="Client.hpp" />
     <ClInclude Include="Deck.hpp" />
@@ -27,8 +29,11 @@
     <ClInclude Include="packetstructs.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Server.hpp" />
+    <ClInclude Include="Token.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="boardFunctions.cpp" />
+    <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Clue.cpp" />
@@ -38,6 +43,7 @@
     <ClCompile Include="packetstructs.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sfml-graphics-d-2.dll" />
@@ -137,7 +143,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\abiga\Documents\SFML\SFML-2.5.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\abiga\OneDrive\Documents\SFML\SFML-2.5.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

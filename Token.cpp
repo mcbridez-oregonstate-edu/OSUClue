@@ -43,6 +43,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 		col_start = 165 + (height * 23);
 		row = 24;
 		col = 18;
+		this->name = "Colonel Mustard";
 	}
 
 	if (name == "Miss Scarlet")
@@ -52,6 +53,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 		col_start = 165 + (height * 16);
 		row = 17;
 		col = 25;
+		this->name = "Miss Scarlet";
 	}
 
 	if (name == "Mr. Green")
@@ -61,6 +63,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 		col_start = 165 + (height * 9);
 		row = 10;
 		col = 1;
+		this->name = "Mr. Green";
 	}
 
 	if (name == "Professor Plum")
@@ -70,6 +73,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 		col_start = 165 + (height * 0);
 		row = 1;
 		col = 20;
+		this->name = "Professor Plum";
 	}
 
 	if (name == "Mrs. Peacock")
@@ -79,6 +83,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 		col_start = 165 + (height * 0);
 		row = 1;
 		col = 7;
+		this->name = "Mrs. Peacock";
 	}
 
 	if (name == "Mrs. White")
@@ -88,6 +93,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 		col_start = 165 + (height * 14);
 		row = 15;
 		col = 1;
+		this->name = "Mrs. White";
 	}
 	
 	piece.setFillColor(color);

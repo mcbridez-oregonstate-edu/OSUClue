@@ -28,7 +28,7 @@ enum NotebookEntities {
 class Player {
 private:
 	std::string name;							//the name of the player
-	token* playerToken;							//the token that the player has chosen; see PlayerToken for the choices
+	token* playerToken;							//the token that the player has chosen
 	std::vector<Card*> hand;
 	std::tuple<int, int> position;				//the player's token's current (x,y) coordinate
 	std::vector<std::vector<int>> notebook;
