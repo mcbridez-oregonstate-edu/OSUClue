@@ -92,7 +92,9 @@ Card::Card(std::string clueName, CardType clueType) {
 		texture.loadFromFile("res/images/locations/dining.jpg");	
 	}
 
+	
 	image.setTexture(texture);
+	
 }
 
 /********************************************************************************

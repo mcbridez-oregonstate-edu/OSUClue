@@ -15,6 +15,7 @@
 #include "player.hpp"
 #include "deck.hpp"
 #include "game.hpp"
+#include "CardButton.hpp"
 #include <iomanip>
 
 
@@ -127,7 +128,10 @@ int main()
 	bool has_rolled = 0;
 
 	// game state control variable,  1 = move state, 0 = suggestion state
-	bool game_state = 1;
+	int game_state = 1;
+	
+	// control variable for suggestion phase. 0 = picking people, 1 = picking weapon, 2 = revealing cards
+	int suggestion_phase = 0;
 	
 
 	//making text box for player/step counter
@@ -139,13 +143,77 @@ int main()
 	string stepCounterString;
 	stepCounterText.setFont(font);
 
+	sf::Text suggestionText;
+	suggestionText.setFont(font);
+
 	std::cout << "Move with the arrow keys. Press 'Enter' when you are done moving." << std::endl;
-	
+
+	CardButton testButton("Miss Scarlet", sf::Vector2f(0, 0));
+
+	// creating buttons for suggestion
+	CardButton b_scarlet("Miss Scarlet", sf::Vector2f(375, 140));
+	CardButton b_green("Mr. Green", sf::Vector2f(575, 140));
+	CardButton b_mustard("Colonel Mustard", sf::Vector2f(775, 140));
+	CardButton b_white("Mrs. White", sf::Vector2f(375, 480));
+	CardButton b_peacock("Mrs. Peacock", sf::Vector2f(575, 480));
+	CardButton b_plum("Professor Plum", sf::Vector2f(775, 480));
+
+	vector<CardButton> b_people;
+	b_people.push_back(b_scarlet);
+	b_people.push_back(b_green);
+	b_people.push_back(b_mustard);
+	b_people.push_back(b_white);
+	b_people.push_back(b_peacock);
+	b_people.push_back(b_plum);
+
+	CardButton b_rope("Rope", sf::Vector2f(375, 140));
+	CardButton b_wrench("Wrench", sf::Vector2f(575, 140));
+	CardButton b_pipe("Lead Pipe", sf::Vector2f(775, 140));
+	CardButton b_knife("Knife", sf::Vector2f(375, 480));
+	CardButton b_candlestick("Candlestick", sf::Vector2f(575, 480));
+	CardButton b_revolver("Revolver", sf::Vector2f(775, 480));
+
+	vector<CardButton> b_weapons;
+	b_weapons.push_back(b_rope);
+	b_weapons.push_back(b_wrench);
+	b_weapons.push_back(b_pipe);
+	b_weapons.push_back(b_knife);
+	b_weapons.push_back(b_candlestick);
+	b_weapons.push_back(b_revolver);
+
+	CardButton b_lounge("Lounge", sf::Vector2f(375, 80));
+	CardButton b_library("Library", sf::Vector2f(575, 80));
+	CardButton b_ballroom("Ballroom", sf::Vector2f(775, 80));
+	CardButton b_billiard("Billiard Room", sf::Vector2f(375, 380));
+	CardButton b_kitchen("Kitchen", sf::Vector2f(575, 380));
+	CardButton b_conservatory("Conservatory", sf::Vector2f(775, 380));
+	CardButton b_hall("Hall", sf::Vector2f(375, 680));
+	CardButton b_study("Study", sf::Vector2f(575, 680));
+	CardButton b_dining("Dining Room", sf::Vector2f(775, 680));
+
+	vector<CardButton> b_rooms;
+	b_rooms.push_back(b_lounge);
+	b_rooms.push_back(b_library);
+	b_rooms.push_back(b_ballroom);
+	b_rooms.push_back(b_billiard);
+	b_rooms.push_back(b_kitchen);
+	b_rooms.push_back(b_conservatory);
+	b_rooms.push_back(b_hall);
+	b_rooms.push_back(b_study);
+	b_rooms.push_back(b_dining);
+
+
+	// vector to hold the player's suggestion
+	vector<string> playerSuggest;
+	vector<string> choices;
+	vector<CardButton> choiceButtons;
+
 	// game loop
 	while (window.isOpen())
 	{
 		sf::Time move_delay = sf::seconds(0.1f);
 		sf::Event event;
+		sf::Vector2f mouse = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
 
 		// roll for movement
 		if (!has_rolled) {
@@ -167,172 +235,375 @@ int main()
 
 
 		// event handling for move state
-		while (window.pollEvent(event))
-		{
-			
-			switch (event.type)
+		if (game_state == 1) {
+			while (window.pollEvent(event))
 			{
-			case sf::Event::Closed:
-				window.close();
-				break;
 
-			case sf::Event::KeyReleased:
-				if (game_state == 1) {
-					//move a piece right
-					if (event.key.code == sf::Keyboard::Right)
-					{
-						if (steps > 0) {
-							if (isValidMove(players[current_player]->getToken()->get_space(), 
-								boardArray[players[current_player]->getToken()->get_row()][players[current_player]->getToken()->get_col() + 1], 
-								steps)) {
+				switch (event.type)
+				{
+				case sf::Event::Closed:
+					window.close();
+					break;
 
-								players[current_player]->getToken()->move_token(width, 0, 0, 1, boardArray);
-							}
-						}
-
-						break;
-					}
-
-					//move a piece left
-					if (event.key.code == sf::Keyboard::Left)
-					{
-						if (steps > 0) {
-							if (isValidMove(players[current_player]->getToken()->get_space(), 
-								boardArray[players[current_player]->getToken()->get_row()][players[current_player]->getToken()->get_col() - 1], 
-								steps)) {
-
-								players[current_player]->getToken()->move_token(-width, 0, 0, -1, boardArray);
-							}
-						}
-
-						break;
-					}
-
-					//movve a piece down
-					if (event.key.code == sf::Keyboard::Down)
-					{
-
-						if (steps > 0) {
-							if (isValidMove(players[current_player]->getToken()->get_space(), 
-								boardArray[players[current_player]->getToken()->get_row() + 1][players[current_player]->getToken()->get_col()], 
-								steps)) {
-
-								players[current_player]->getToken()->move_token(0, height, 1, 0, boardArray);
-							}
-						}
-						break;
-					}
-
-					//move a piece up
-					if (event.key.code == sf::Keyboard::Up)
-					{
-						if (steps > 0) {
-							if (isValidMove(players[current_player]->getToken()->get_space(), 
-								boardArray[players[current_player]->getToken()->get_row() - 1][players[current_player]->getToken()->get_col()], 
-								steps)) {
-
-								players[current_player]->getToken()->move_token(0, -height, -1, 0, boardArray);
-							}
-						}
-						break;
-					}
-
-					// end turn
-					if (event.key.code == sf::Keyboard::Enter)
-					{
-						// if player ends turn in a room, switch to suggestions state
-						if (players[current_player]->getToken()->get_space()->isRoom())
+				case sf::Event::KeyReleased:
+					if (game_state == 1) {
+						//move a piece right
+						if (event.key.code == sf::Keyboard::Right)
 						{
-							game_state = 0;
-						}
-						else {
+							if (steps > 0) {
+								if (isValidMove(players[current_player]->getToken()->get_space(),
+									boardArray[players[current_player]->getToken()->get_row()][players[current_player]->getToken()->get_col() + 1],
+									steps)) {
 
-
-							// change player
-							current_player++;
-							has_rolled = 0;
-
-							if (current_player > num_players)
-							{
-								current_player = 0;
-
+									players[current_player]->getToken()->move_token(width, 0, 0, 1, boardArray);
+								}
 							}
-						}
-						
-					}
 
+							break;
+						}
+
+						//move a piece left
+						if (event.key.code == sf::Keyboard::Left)
+						{
+							if (steps > 0) {
+								if (isValidMove(players[current_player]->getToken()->get_space(),
+									boardArray[players[current_player]->getToken()->get_row()][players[current_player]->getToken()->get_col() - 1],
+									steps)) {
+
+									players[current_player]->getToken()->move_token(-width, 0, 0, -1, boardArray);
+								}
+							}
+
+							break;
+						}
+
+						//movve a piece down
+						if (event.key.code == sf::Keyboard::Down)
+						{
+
+							if (steps > 0) {
+								if (isValidMove(players[current_player]->getToken()->get_space(),
+									boardArray[players[current_player]->getToken()->get_row() + 1][players[current_player]->getToken()->get_col()],
+									steps)) {
+
+									players[current_player]->getToken()->move_token(0, height, 1, 0, boardArray);
+								}
+							}
+							break;
+						}
+
+						//move a piece up
+						if (event.key.code == sf::Keyboard::Up)
+						{
+							if (steps > 0) {
+								if (isValidMove(players[current_player]->getToken()->get_space(),
+									boardArray[players[current_player]->getToken()->get_row() - 1][players[current_player]->getToken()->get_col()],
+									steps)) {
+
+									players[current_player]->getToken()->move_token(0, -height, -1, 0, boardArray);
+								}
+							}
+							break;
+						}
+
+						// end turn
+						if (event.key.code == sf::Keyboard::Enter)
+						{
+							// if player ends turn in a room, switch to suggestions state
+							if (players[current_player]->getToken()->get_space()->isRoom())
+							{
+								game_state = 0;
+							}
+							else {
+
+
+								// change player
+								current_player++;
+								has_rolled = 0;
+
+								if (current_player > num_players)
+								{
+									current_player = 0;
+
+								}
+							}
+
+						}
+
+						break;
+					}
+				default:
 					break;
 				}
-			default:
-				break;
 			}
 		}
-
 		// suggestion state
-		if (game_state == 0) {
+		else if (game_state == 0) {
+			// variable used to let user see their suggestion choices
+			int next_phase = 0;
+			std::string suggestionChoice;
 
-			vector<string> playerSuggest;
-			playerSuggest = players[current_player]->makeSuggestion();
 
-			cout << "Player " << current_player + 1 << " has suggested:" << endl;
-			cout << playerSuggest[0] << " with the " << playerSuggest[1] << " in the " << playerSuggest[2] << endl;
+			while (window.pollEvent(event)) {
+				switch (event.type) {
+				case sf::Event::Closed:
+					window.close();
+					break;
 
-			int revealingPlayer = current_player + 1;
-			if (revealingPlayer > num_players) {
-				revealingPlayer = 0;
-			}
+				case sf::Event::KeyReleased:
+					if (event.key.code == sf::Keyboard::Enter) {
+						next_phase = 1;
+					}
 
-			while (revealingPlayer != current_player) {
-				if (players[revealingPlayer]->containsCard(playerSuggest)) {
-
-					cout << "\n" << players[revealingPlayer]->getName() << "\'s point of view: " << endl;
-					string shownCard = players[revealingPlayer]->showCard(playerSuggest);
-					cout << "\n==Returning from " << players[revealingPlayer]->getName() << "\'s point of view: " << endl;
-					cout << "The card that was shown to the player was: " << shownCard << endl;
-					cout << endl;
+				default:
 					break;
 				}
-				else {
-					cout << players[revealingPlayer]->getName() << " didn't have any cards from Player 1's suggestion" << endl;
+
+
+				if (suggestion_phase == 0) {
+					suggestionText.setString("Suggestion: Choose a Suspect");
+					for (int i = 0; i < b_people.size(); i++) {
+						b_people[i].update(mouse);
+						if (b_people[i].isPressed()) {
+							suggestionChoice = b_people[i].getName();
+							suggestion_phase++;
+							playerSuggest.push_back(suggestionChoice);
+
+
+						}
+					}
 				}
-				revealingPlayer++;
-				if (revealingPlayer > num_players) {
-					revealingPlayer = 0;
+				else if (suggestion_phase == 1) {
+					suggestionText.setString("Suggestion: Choose a Weapon");
+					for (int i = 0; i < b_weapons.size(); i++) {
+						b_weapons[i].update(mouse);
+						if (b_weapons[i].isPressed()) {
+							suggestionChoice = b_weapons[i].getName();
+							suggestion_phase++;
+							playerSuggest.push_back(suggestionChoice);
+						}
+					}
+				}
+				else if (suggestion_phase == 2) {
+					suggestionChoice = players[current_player]->getToken()->get_space()->getName();
+					playerSuggest.push_back(suggestionChoice);
+					for (int i = 0; i < 3; i++) {
+						std::cout << playerSuggest[i] << std::endl;
+					}
+					suggestion_phase++;
+				}
+				else if (suggestion_phase == 3) {
+					suggestionText.setString("You have Suggested:\nPress 'Enter' to continue . . .");
+					if (next_phase == 1) {
+						suggestion_phase++;
+						next_phase = 0;
+					}
+				}
+				else if (suggestion_phase == 4) {
+				/*	for (int i = 0; i < b_people.size(); i++) {
+						b_people[i].update(mouse);
+						if (b_people[i].isPressed()) {
+							
+							suggestion_phase++;
+							
+						}
+					}*/
+
+			
+					/*for (int i = 0; i < b_weapons.size(); i++) {
+						b_weapons[i].update(mouse);
+						if (b_weapons[i].isPressed()) {
+							
+							suggestion_phase++;
+							
+						}
+					}*/
+					/*for (int i = 0; i < b_rooms.size(); i++) {
+						b_rooms[i].update(mouse);
+						if (b_rooms[i].isPressed()) {
+							
+							suggestion_phase++;
+							
+						}
+					}*/
+
+					if (next_phase == 1) {
+						suggestion_phase++;
+						next_phase = 0;
+					}
+
+				}
+
+				
+				// go back to move state
+
+				else if (suggestion_phase == 5) {
+					game_state = 1;
+					current_player++;
+					has_rolled = 0;
+
+					// reset player suggestion variables
+					playerSuggest.clear();
+					suggestion_phase = 0;
+
+					if (current_player > num_players)
+					{
+						current_player = 0;
+
+					}
 				}
 			}
-			// go back to move state
-			game_state = 1;
-			current_player++;
-			has_rolled = 0;
-
-			if (current_player > num_players)
-			{
-				current_player = 0;
-
-			}
-
 		}
 
 
 		window.clear();
 
 		// draw sprites
-		window.draw(rendered_board);
-		for (int i = 0; i < tokensVect.size(); i++) {
-			window.draw(tokensVect[i]->get_token());
-		}
-		window.draw(stepCounterText);
+		if (game_state == 1) {
+			window.draw(rendered_board);
+			for (int i = 0; i < tokensVect.size(); i++) {
+				window.draw(tokensVect[i]->get_token());
+			}
+			window.draw(stepCounterText);
 
 
-		// draw player hands
-		for (int i = 0; i < 3; i++) {
-			window.draw(players[current_player]->getHand()[i]->getSprite());
+
+
+			// draw player hands
+			for (int i = 0; i < 3; i++) {
+
+				window.draw(players[current_player]->getHand()[i]->getSprite());
+			}
+
+			//testButton.render(&window);
+			//testButton.update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
 		}
-		window.display();
+		else if (game_state == 0) {
+
+			if (suggestion_phase == 0) {
+				for (int i = 0; i < b_people.size(); i++) {
+					b_people[i].render(&window);
+					b_people[i].update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+				}
+			}
+			else if (suggestion_phase == 1) {
+				for (int i = 0; i < b_weapons.size(); i++) {
+					b_weapons[i].render(&window);
+					b_weapons[i].update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+				}
+			}
+			// suggestion phase 2 does not draw anything
+			else if (suggestion_phase == 3) {
+				for (int i = 0; i < b_people.size(); i++) {
+					if (b_people[i].getName() == playerSuggest[0]) {
+						b_people[i].setButtonPos(sf::Vector2f(375, 140));
+						b_people[i].update(mouse);
+						b_people[i].render(&window);
+						b_people[i].resetPos();
+					}
+				}
+				for (int i = 0; i < b_weapons.size(); i++) {
+					if (b_weapons[i].getName() == playerSuggest[1]) {
+						b_weapons[i].setButtonPos(sf::Vector2f(575, 140));
+						b_weapons[i].update(mouse);
+						b_weapons[i].render(&window);
+						b_weapons[i].resetPos();
+					}
+				}
+				for (int i = 0; i < b_rooms.size(); i++) {
+					if (b_rooms[i].getName() == playerSuggest[2]) {
+						b_rooms[i].setButtonPos(sf::Vector2f(775, 140));
+						b_rooms[i].update(mouse);
+						b_rooms[i].render(&window);
+						b_rooms[i].resetPos();
+					}
+				}
+			}
+			// player chooses which card to show
+			else if (suggestion_phase == 4) {
+
+				int revealingPlayer = current_player + 1;
+
+
+				if (revealingPlayer > num_players) {
+					revealingPlayer = 0;
+				}
+
+				while (revealingPlayer != current_player) {
+					if (players[revealingPlayer]->containsCard(playerSuggest)) {
+						suggestionText.setString(players[revealingPlayer]->getName() + " choose a card to reveal");
+
+						for (int i = 0; i < playerSuggest.size(); i++) {
+							for (int j = 0; j < players[revealingPlayer]->getHand().size(); j++) {
+
+								if (players[revealingPlayer]->getHand()[j]->getName() == playerSuggest[i]) {
+									choices.push_back(playerSuggest[i]);
+									
+								}
+							}
+						}
+
+
+						break;
+					}
+					revealingPlayer++;
+					if (revealingPlayer > num_players) {
+						revealingPlayer = 0;
+					}
+					
+					
+				}
+				if (revealingPlayer != current_player) {
+					for (int i = 0; i < choices.size(); i++) {
+						for (int j = 0; j < b_people.size(); j++) {
+							if (b_people[j].getName() == choices[i]) {
+								b_people[j].setButtonPos(sf::Vector2f(375, 140));
+								b_people[j].update(mouse);
+								if (b_people[j].isPressed()) {
+									suggestion_phase++;
+								}
+								b_people[j].render(&window);
+								b_people[j].resetPos();
+							}
+						}
+						for (int k = 0; k < b_weapons.size(); k++) {
+							if (b_weapons[k].getName() == choices[i]) {
+								b_weapons[k].setButtonPos(sf::Vector2f(575, 140));
+								b_weapons[k].update(mouse);
+								if (b_weapons[k].isPressed()) {
+									suggestion_phase++;
+								}
+								b_weapons[k].render(&window);
+								b_weapons[k].resetPos();
+							}
+						}
+						for (int h = 0; h < b_rooms.size(); h++) {
+							if (b_rooms[h].getName() == choices[i]) {
+								b_rooms[h].setButtonPos(sf::Vector2f(775, 140));
+								b_rooms[h].update(mouse);
+								if (b_rooms[h].isPressed()) {
+									suggestion_phase++;
+								}
+								b_rooms[h].render(&window);
+								b_rooms[h].resetPos();
+							}
+						}
+					}
+				}
+				else {
+					suggestionText.setString("No one had anything to show\n Press Enter to continue . . .");
+				}			
+
+				choices.clear();
+			}
+			window.draw(suggestionText);
+		}
+			window.display();
+
+		
+
 
 	}
-
-
 	// free allocated memory
 	for (int i = 0; i < 26; i++) {
 

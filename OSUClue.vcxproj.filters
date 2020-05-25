@@ -39,6 +39,9 @@
     <ClCompile Include="token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CardButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.hpp">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="token.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CardButton.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

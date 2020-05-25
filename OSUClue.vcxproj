@@ -153,6 +153,7 @@
     <ClCompile Include="boardFunctions.cpp" />
     <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CardButton.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="boardFunctions.hpp" />
     <ClInclude Include="boardTile.h" />
     <ClInclude Include="Card.hpp" />
+    <ClInclude Include="CardButton.hpp" />
     <ClInclude Include="Deck.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Player.hpp" />
