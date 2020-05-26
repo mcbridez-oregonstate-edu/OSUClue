@@ -61,6 +61,6 @@ void GameServer::acceptPlayers()
     for (int i = 0; i < 6; i++)
     {
         acceptClient();
-        receivePlayerInfo();
+        cout << "Client accepted" << endl;
     }
 }

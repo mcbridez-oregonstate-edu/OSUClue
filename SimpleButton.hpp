@@ -9,8 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
-
-enum simple_button_state { IDLE, HOVER, PRESSED };
+#include "buttonStates.hpp"
 
 class SimpleButton {
 

@@ -28,6 +28,7 @@
     <ClInclude Include="GameServer.hpp" />
     <ClInclude Include="CardButton.hpp" />
     <ClInclude Include="CharacterButton.hpp" />
+    <ClInclude Include="buttonStates.hpp" />
     <ClInclude Include="SimpleButton.hpp" />
     <ClInclude Include="packetstructs.hpp" />
     <ClInclude Include="Player.hpp" />

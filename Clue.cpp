@@ -7,15 +7,25 @@
 ********************************************************************************/
 #include "GameServer.hpp"
 #include "GameClient.hpp"
+#include "CharacterButton.hpp"
 #include "SimpleButton.hpp"
 #include <iostream>
 #include <thread>
 using std::cin;
 using std::cout;
 using std::endl;
+using std::thread;
 
 const int PORT = 3456;
 enum joinState { START, SERVER_CREATE, SERVER_SELECT, CHARACTER_SELECT, WAITING };
+
+// Test function to see if threading works.... this will get moved out to another file at some point,
+// much like a lot of this...
+void acceptPlayers(GameServer* server)
+{
+	cout << "We're accepting players?" << endl;
+	server->acceptPlayers();
+}
 
 int main()
 {
@@ -67,6 +77,19 @@ int main()
 	inputDisplay.setFont(font);
 	inputDisplay.setCharacterSize(60);
 	inputDisplay.setPosition(sf::Vector2f(500, 600));
+
+	// Character select items
+	sf::Text info;
+	info.setFont(font);
+	info.setCharacterSize(75);
+	info.setPosition(sf::Vector2f(350, 5));
+
+	CharacterButton scarlet("Miss Scarlet", sf::Vector2f(150, 120));
+	CharacterButton peacock("Mrs. Peacock", sf::Vector2f(500, 120));
+	CharacterButton white("Mrs. White", sf::Vector2f(850, 120));
+	CharacterButton green("Mr. Green", sf::Vector2f(150, 525));
+	CharacterButton mustard("Colonel Mustard", sf::Vector2f(500, 525));
+	CharacterButton plum("Professor Plum", sf::Vector2f(850, 525));
 
 	// Set up server and client pointers and bool to track creation
 	GameServer* server = nullptr;
@@ -214,7 +237,7 @@ int main()
 					case sf::Event::Closed:
 					{
 						window.close();
-break;
+						break;
 					}
 					case sf::Event::TextEntered:
 					{
@@ -316,7 +339,46 @@ break;
 		// Render character select screen
 		else if (state == CHARACTER_SELECT)
 		{
-			
+			// If a server was created on this machine, create a client and use threading
+			// to have the server wait for clients to connect
+			if (!clientCreated && serverCreated)
+			{
+				cout << "We made it to client creation" << endl;
+				client = new GameClient(serverIP, PORT);
+				clientCreated = true;
+				cout << "Client Created, about to try the threading thing...." << endl;
+				thread serverThread(acceptPlayers, server);
+			}
+			while (window.pollEvent(event))
+			{
+				switch (event.type)
+				{
+					case sf::Event::Closed:
+					{
+						window.close();
+						break;
+					}
+					default:
+					{
+						break;
+					}
+				}
+				scarlet.update(mouse);
+				peacock.update(mouse);
+				white.update(mouse);
+				green.update(mouse);
+				mustard.update(mouse);
+				plum.update(mouse);
+			}
+			window.clear();
+			window.draw(info);
+			scarlet.render(&window);
+			peacock.render(&window);
+			white.render(&window);
+			green.render(&window);
+			mustard.render(&window);
+			plum.render(&window);
+			window.display();
 		}
 	}
 

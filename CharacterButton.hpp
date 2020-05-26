@@ -9,31 +9,30 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
-
-enum character_button_state { IDLE, HOVER, PRESSED, DISABLED };
+#include "buttonStates.hpp"
 
 class CharacterButton {
 
-private:
-	sf::Sprite image;
-	sf::Texture texture;
-	sf::Color hoverColor;
+	private:
+		sf::Sprite image;
+		sf::Texture texture;
+		sf::Color hoverColor;
 
-	std::string name;
-	sf::Vector2f pos;
+		std::string name;
+		sf::Vector2f pos;
 
-	int buttonState;
+		int buttonState;
 
-public:
-	CharacterButton(std::string, sf::Vector2f);
+	public:
+		CharacterButton(std::string, sf::Vector2f);
 
-	void setButtonPos(sf::Vector2f);
-	void update(const sf::Vector2f);
-	void render(sf::RenderTarget*);
-	void resetPos();
-	bool isPressed();
-	std::string getName();
-	void setDisabled();
+		void setButtonPos(sf::Vector2f);
+		void update(const sf::Vector2f);
+		void render(sf::RenderTarget*);
+		void resetPos();
+		bool isPressed();
+		std::string getName();
+		void setDisabled();
 };
 
 #endif

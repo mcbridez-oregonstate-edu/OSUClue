@@ -60,12 +60,10 @@ bool Server::isSuccessful()
 }
 
 /*******************************************************************************
-                         int Server::acceptClient()
+                         void Server::acceptClient()
  * Description: Tells the server to accept a client. Will not accept a client
  * if there are already 6 clients accepted (i.e. the max number of players in
- * a game of Clue). Returns an int based on the status of client acceptance:
- * 0 indicates an error accepting the client, 1 indicates success, 2 indicates
- * the server is full
+ * a game of Clue).
 *******************************************************************************/
 void Server::acceptClient()
 {
