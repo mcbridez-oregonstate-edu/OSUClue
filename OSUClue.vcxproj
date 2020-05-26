@@ -37,11 +37,11 @@
   <ItemGroup>
     <ClCompile Include="boardFunctions.cpp" />
     <ClCompile Include="boardTile.cpp" />
-    <ClCompile Include="buttonTestMain.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardButton.cpp" />
     <ClCompile Include="CharacterButton.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Clue.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="GameServer.cpp" />

@@ -19,14 +19,14 @@ Client::Client(sf::IpAddress server, int serverPort)
     serverIP = server;
     port = serverPort;
 
-    sf::Socket::Status status = socket.connect(serverIP, port);
+    sf::Socket::Status status = socket.connect(serverIP, port, sf::seconds(5));
     if (status != sf::Socket::Done)
     {
-        cout << "Error: Could not connect to server" << endl;
+        success = false;
     }
     else
     {
-        cout << "Connected to server" << endl;
+        success = true;
     }
 }
 
@@ -64,4 +64,14 @@ sf::Packet Client::receiveData()
     }
 
     return packet;
+}
+
+/**************************************************************************
+                             bool isSuccessful()
+ * Description: Returns the value of "success" to indicated whether or not
+ * connection to the server was succcesful
+**************************************************************************/
+bool Client::isSuccessful()
+{
+    return success;
 }

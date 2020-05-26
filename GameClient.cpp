@@ -19,8 +19,6 @@ using std::tuple;
 **************************************************************************************/
 GameClient::GameClient(sf::IpAddress server, int serverPort) : Client(server, serverPort)
 {
-    getPlayerData();
-    sendPlayerData();
 }
 
 /**************************************************************************************

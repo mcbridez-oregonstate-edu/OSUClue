@@ -63,5 +63,4 @@ void GameServer::acceptPlayers()
         acceptClient();
         receivePlayerInfo();
     }
-
 }

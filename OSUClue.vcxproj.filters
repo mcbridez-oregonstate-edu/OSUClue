@@ -98,10 +98,10 @@
     <ClCompile Include="CharacterButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="buttonTestMain.cpp">
+    <ClCompile Include="SimpleButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleButton.cpp">
+    <ClCompile Include="Clue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,7 +11,9 @@ using std::endl;
 
 /******************************************************************************
                             Server::Server()
- * Description: The default constructor. Has a hardcoded port value. 
+ * Description: The default constructor. Has a hardcoded port value. Sets a 
+ * bool values based on the success of the server creation (false = failure, 
+ * true = success).
 ******************************************************************************/
 Server::Server()
 {
@@ -19,17 +21,19 @@ Server::Server()
     numClients = 0;
     if (listener.listen(port) != sf::Socket::Done)
     {
-        cout << "Error: Issue connecting to port" << endl;
+        success = false;
     }
     else
     {
-        cout << "Connection to port " << port << " successful" << endl;
+        success = true;
     }
 }
 
 /***************************************************************************************
                                     Server::Server(int inPort)
- * Description: Another constructor for the Server class. Takes a port number.
+ * Description: Another constructor for the Server class. Takes a port number. Sets a 
+ * bool values based on the success of the server creation (false = failure, true = 
+ * success).
 ***************************************************************************************/
 Server::Server(int inPort)
 {
@@ -37,21 +41,31 @@ Server::Server(int inPort)
     numClients = 0;
     if (listener.listen(port) != sf::Socket::Done)
     {
-        cout << "Error: Issue connecting to port" << endl;
+        success = false;
     }
     else
     {
-        cout << "Connection to port " << port << " successful" << endl;
+        success = true;
     }
 }
 
+/*******************************************************************************
+                            bool isSuccessful()
+ * Description: Returns the status of the server creation (false = failure, 
+ * true = success)
+*******************************************************************************/
+bool Server::isSuccessful()
+{
+    return success;
+}
 
 /*******************************************************************************
-                         void Server::acceptClient()
+                         int Server::acceptClient()
  * Description: Tells the server to accept a client. Will not accept a client
  * if there are already 6 clients accepted (i.e. the max number of players in
- * a game of Clue). Again, printed messages are mainly for debug (though I'd
- * like to see the max players message make it into the UI)
+ * a game of Clue). Returns an int based on the status of client acceptance:
+ * 0 indicates an error accepting the client, 1 indicates success, 2 indicates
+ * the server is full
 *******************************************************************************/
 void Server::acceptClient()
 {
@@ -59,19 +73,14 @@ void Server::acceptClient()
     {
         if (listener.accept(clients[numClients]) != sf::Socket::Done)
         {
-            cout << "Error: Issue accepting client" << endl;
+            cout << "Error accepting client" << endl;
         }
 
         else
         {
             selector.add(clients[numClients]);
             numClients++;
-            cout << "Client accepted" << endl;
         }
-    }
-    else
-    {
-        cout << "Maximum number of players reached" << endl;
     }
 }
 

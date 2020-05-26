@@ -19,7 +19,16 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1280, 960), "Clue!", sf::Style::Default);
 
-	SimpleButton button("This is a simple button", sf::Vector2f(200, 200));
+	sf::Sprite logo;
+	sf::Texture texture;
+	texture.loadFromFile("res/images/logo.jpg");
+	logo.setTexture(texture);
+	logo.setColor(sf::Color(255, 255, 255));
+	logo.setPosition(sf::Vector2f(250, 150));
+	logo.setScale(4, 4);
+
+	SimpleButton makeServer("Create a Server", sf::Vector2f(440, 580), 75);
+	SimpleButton joinServer("Join a Server", sf::Vector2f(475, 700), 75);
 
 	while (window.isOpen())
 	{
@@ -42,8 +51,11 @@ int main()
 			}	
 		}
 		window.clear();
-		button.update(mouse);
-		button.render(&window);
+		makeServer.update(mouse);
+		joinServer.update(mouse);
+		makeServer.render(&window);
+		joinServer.render(&window);
+		window.draw(logo);
 		window.display();
 	}
 

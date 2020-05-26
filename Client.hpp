@@ -17,11 +17,13 @@ class Client
         sf::TcpSocket socket;
         int port;
         sf::IpAddress serverIP;
+        bool success;
 
     public:
         Client(sf::IpAddress, int);
         void sendData(sf::Packet);
         sf::Packet receiveData();
+        bool isSuccessful();
 };
 
 #endif

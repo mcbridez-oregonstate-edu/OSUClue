@@ -1,29 +1,32 @@
-/*****************************************************************************
+/******************************************************************************************
  * Program Name: SimpleButton.hpp
  * Date: 5/25/2020
  * Author: Abigail Minchella
  * Description: A class to make a simple text button. Sets the size of the 
  * rectangle to fit the size of the text. Based on CardButton by Adam Pham
-*****************************************************************************/
+******************************************************************************************/
 #include "SimpleButton.hpp"
 #include <SFML/Graphics/Rect.hpp>
 #include <iostream>
 
-/*****************************************************************************
-	SimpleButton::SimpleButton(std::string text, sf::Vector2f targetPos)
+/******************************************************************************************
+	SimpleButton::SimpleButton(std::string text, sf::Vector2f targetPos, int textSize)
  * Description: The constructor for the simple button class. Takes a string
- * for the label and a target position. Gets the dimensions of the box around
- * the text and makes the backing rectangle slightly bigger
-*****************************************************************************/
-SimpleButton::SimpleButton(std::string text, sf::Vector2f targetPos)
+ * for the label, a target position, and an int for the text size. Gets the dimensions of 
+ * the box around the text and makes the backing rectangle slightly bigger
+******************************************************************************************/
+SimpleButton::SimpleButton(std::string text, sf::Vector2f targetPos, int textSize)
 {
-	if (!font.loadFromFile("res/fonts/Stabillo Medium.ttf")) {
+	if (!font.loadFromFile("res/fonts/Stabillo Medium.ttf")) 
+	{
 		std::cout << "Font not loaded" << std::endl;
 	}
 
 	buttonLabel.setFont(font);
 	buttonLabel.setString(text);
-	
+	fontSize = textSize;
+	buttonLabel.setCharacterSize(fontSize);
+
 	sf::FloatRect textbox = buttonLabel.getLocalBounds();
 	float textWidth = textbox.width;
 	float textHeight = textbox.height;
@@ -42,7 +45,27 @@ SimpleButton::SimpleButton(std::string text, sf::Vector2f targetPos)
 	// Set the position of the text to account for the offset
 	// of the rectangle padding
 	float buttonX = targetPos.x + 10;
-	float buttonY = targetPos.y + 5;
+
+	// Set the height offset based on the size of the font
+	int heightOffset = 0;
+	if (fontSize < 35)
+	{
+		heightOffset = 7;
+	}
+	else if (fontSize >= 35 && fontSize < 50)
+	{
+		heightOffset = 0;
+	}
+	else if (fontSize >= 50 && fontSize < 75)
+	{
+		heightOffset = -7;
+	}
+	else
+	{
+		heightOffset = -17;
+	}
+
+	float buttonY = targetPos.y + heightOffset;
 	buttonLabel.setPosition(sf::Vector2f(buttonX, buttonY));
 
 	boxHoverColor = sf::Color::White;
@@ -71,27 +94,35 @@ void SimpleButton::setButtonPos(sf::Vector2f targetPos)
 void SimpleButton::update(const sf::Vector2f mousePos)
 {
 	buttonState = IDLE;
-	if (buttonBox.getGlobalBounds().contains(mousePos)) {
+	if (buttonBox.getGlobalBounds().contains(mousePos)) 
+	{
 		buttonState = HOVER;
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+		{
 			buttonState = PRESSED;
 		}
 	}
 
 	switch (buttonState) {
-	case IDLE:
-		buttonBox.setFillColor(sf::Color::Black);
-		buttonLabel.setFillColor(sf::Color::White);
-		break;
-	case HOVER:
-		buttonBox.setFillColor(boxHoverColor);
-		buttonLabel.setFillColor(textHoverColor);
-		break;
-	default:
-		// turn green on click
-		buttonBox.setFillColor(sf::Color(36, 94, 36, 255));
-		break;
+		case IDLE:
+		{
+			buttonBox.setFillColor(sf::Color::Black);
+			buttonLabel.setFillColor(sf::Color::White);
+			break;
+		}
+		case HOVER:
+		{
+			buttonBox.setFillColor(boxHoverColor);
+			buttonLabel.setFillColor(textHoverColor);
+			break;
+		}
+		default:
+		{
+			// turn green on click
+			buttonBox.setFillColor(sf::Color(36, 94, 36, 255));
+			break;
+		}
 	}
 }
 

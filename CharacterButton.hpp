@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-enum button_state { IDLE, HOVER, PRESSED };
+enum character_button_state { IDLE, HOVER, PRESSED, DISABLED };
 
 class CharacterButton {
 
@@ -24,8 +24,6 @@ private:
 
 	int buttonState;
 
-
-
 public:
 	CharacterButton(std::string, sf::Vector2f);
 
@@ -35,9 +33,7 @@ public:
 	void resetPos();
 	bool isPressed();
 	std::string getName();
+	void setDisabled();
 };
-
-
-
 
 #endif

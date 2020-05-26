@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-enum button_state { IDLE, HOVER, PRESSED };
+enum simple_button_state { IDLE, HOVER, PRESSED };
 
 class SimpleButton {
 
@@ -18,13 +18,14 @@ class SimpleButton {
 		sf::RectangleShape buttonBox;
 		sf::Text buttonLabel;
 		sf::Font font;
+		int fontSize;
 		sf::Color boxHoverColor;
 		sf::Color textHoverColor;
 		sf::Vector2f pos;
 		int buttonState;
 
 	public:
-		SimpleButton(std::string, sf::Vector2f);
+		SimpleButton(std::string, sf::Vector2f, int);
 		void setButtonPos(sf::Vector2f);
 		void update(const sf::Vector2f);
 		void render(sf::RenderTarget*);

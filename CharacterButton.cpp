@@ -57,28 +57,42 @@ void CharacterButton::setButtonPos(sf::Vector2f targetpos)
 ********************************************************************************/
 void CharacterButton::update(const sf::Vector2f mousePos)
 {
-	buttonState = IDLE;
-
-	if (image.getGlobalBounds().contains(mousePos)) {
-		buttonState = HOVER;
-
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			buttonState = PRESSED;
-		}
+	if (buttonState == DISABLED)
+	{
+		image.setColor(sf::Color(0, 0, 0, 100));
 	}
+	else
+	{
+		buttonState = IDLE;
 
-	switch (buttonState) {
-	case IDLE:
-		// set color to original
-		image.setColor(sf::Color(255, 255, 255));
-		break;
-	case HOVER:
-		image.setColor(hoverColor);
-		break;
-	default:
-		// turn white on click
-		image.setColor(sf::Color(255, 255, 255, 200));
-		break;
+		if (image.getGlobalBounds().contains(mousePos)) {
+			buttonState = HOVER;
+
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				buttonState = PRESSED;
+			}
+		}
+
+		switch (buttonState) 
+		{
+			case IDLE:
+			{
+				// set color to original
+				image.setColor(sf::Color(255, 255, 255));
+				break;
+			}
+			case HOVER:
+			{
+				image.setColor(hoverColor);
+				break;
+			}
+			default:
+			{
+				// turn white on click
+				image.setColor(sf::Color(255, 255, 255, 200));
+				break;
+			}
+		}
 	}
 }
 
@@ -119,4 +133,14 @@ bool CharacterButton::isPressed()
 std::string CharacterButton::getName()
 {
 	return name;
+}
+
+/********************************************************************************
+						void CharacterButton::setDisabled()
+ * Description: Sets the button state to disabled, deactivating it from being
+ * clicked on.
+********************************************************************************/
+void CharacterButton::setDisabled()
+{
+	buttonState = DISABLED;
 }

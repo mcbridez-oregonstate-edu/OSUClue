@@ -19,10 +19,12 @@ class Server
         sf::TcpSocket clients[6];        
         sf::SocketSelector selector;
         int numClients;
+        bool success;
 
     public:
         Server();
         Server(int);
+        bool isSuccessful();
         void acceptClient();
         void sendOne(sf::Packet, int);
         void sendAll(sf::Packet);
