@@ -13,12 +13,11 @@
 using std::string;
 
 // A structure for keeping track of which client is which player, what character they're
-// playing, and what their chosen name is (also later position once this gets integrated
+// playing, and what their chosen name is (also later position once this gets integrated)
 struct ServerPlayer
 {
     string name;
     string character;       // Type on this can be changed if necessary, mainly useful for printing/testing
-    int clientNum;
     // Point pos            (uncomment once the GUI functionality gets added in--be sure to add into 
     //                      the operator overrides below)
 };

@@ -20,6 +20,7 @@ class GameServer : public Server
 {
     private:
         ServerPlayer players[6];
+        int playersCreated;
         Deck theDeck;
         vector<Card*> solution;
         void receivePlayerInfo();
@@ -28,6 +29,7 @@ class GameServer : public Server
         GameServer();
         GameServer(int);
         void acceptPlayers();
+        void sendTakenCharacters();
 };
 
 #endif

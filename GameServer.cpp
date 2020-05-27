@@ -18,6 +18,7 @@ using std::endl;
 GameServer::GameServer() : Server()
 {
     solution = theDeck.getSolution();
+    playersCreated = 0;
 }
 
 /**************************************************************************
@@ -28,6 +29,7 @@ GameServer::GameServer() : Server()
 GameServer::GameServer(int inport) : Server(inport)
 {
     solution = theDeck.getSolution();
+    playersCreated = 0;
 }
 
 /**************************************************************************
@@ -38,18 +40,21 @@ GameServer::GameServer(int inport) : Server(inport)
 void GameServer::receivePlayerInfo()
 {
     sf::Packet playerInfo;
+    //cout << "Server: Checking if player data is sent" << endl;
     playerInfo = receiveData();
     string playerName;
     string character;
-    int clientNum;              // This is just a bogus value sent by the client
-    playerInfo >> playerName >> character >> clientNum;
-    // Using -1 here b/c numClients is incremented when the client is accepted.
-    players[numClients - 1].name = playerName;
-    players[numClients - 1].character = character;
-    players[numClients - 1].clientNum = numClients - 1;
-    cout << "Data received: Name: " << playerName << endl;
-    cout << "Character: " << character << endl;
-    cout << "Client number: " << numClients << endl;
+    if (playerInfo >> playerName)
+    {
+        playerInfo >> character;
+        cout << "About to assign player info in GameServer::receivePlayerInfo" << endl;
+        players[playersCreated].name = playerName;
+        players[playersCreated].character = character;
+        playersCreated++;
+        cout << "Data received: Name: " << playerName << endl;
+        cout << "Character: " << character << endl;
+        cout << "Players Created: " << playersCreated << endl;
+    }
 }
 
 /*********************************************************************************
@@ -58,9 +63,27 @@ void GameServer::receivePlayerInfo()
 *********************************************************************************/
 void GameServer::acceptPlayers()
 {
-    for (int i = 0; i < 6; i++)
+    while(numClients != 6)
     {
         acceptClient();
-        cout << "Client accepted" << endl;
+        sendTakenCharacters();
+        receivePlayerInfo();
     }
+}
+
+/**********************************************************************************
+                            void GameServer::sendTakenCharacters()
+ * Description: Checks the list of currently accepted clients to see which 
+ * characters are in use and sends the info to the clients so that they can disable
+ * the proper characters from being selected
+**********************************************************************************/
+void GameServer::sendTakenCharacters()
+{
+    sf::Packet takenChars;
+    takenChars << playersCreated;
+    for (int i = 0; i < playersCreated; i++)
+    {
+        takenChars << players[i].character;
+    }
+    sendAll(takenChars);
 }

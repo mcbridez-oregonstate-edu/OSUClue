@@ -15,6 +15,7 @@ class Client
 {
     protected:
         sf::TcpSocket socket;
+        sf::SocketSelector selector;
         int port;
         sf::IpAddress serverIP;
         bool success;

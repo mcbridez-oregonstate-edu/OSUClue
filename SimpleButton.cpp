@@ -10,6 +10,18 @@
 #include <iostream>
 
 /******************************************************************************************
+								SimpleButton::SimpleButton()
+ * Description: The default constructor for SimpleButton... doesn't really do much
+******************************************************************************************/
+SimpleButton::SimpleButton()
+{
+	boxHoverColor = sf::Color::White;
+	textHoverColor = sf::Color::Black;
+	fontSize = 20;
+	buttonState = IDLE;
+}
+
+/******************************************************************************************
 	SimpleButton::SimpleButton(std::string text, sf::Vector2f targetPos, int textSize)
  * Description: The constructor for the simple button class. Takes a string
  * for the label, a target position, and an int for the text size. Gets the dimensions of 
@@ -93,35 +105,47 @@ void SimpleButton::setButtonPos(sf::Vector2f targetPos)
 ******************************************************************************/
 void SimpleButton::update(const sf::Vector2f mousePos)
 {
-	buttonState = IDLE;
-	if (buttonBox.getGlobalBounds().contains(mousePos)) 
+	if (buttonState == DISABLED)
 	{
-		buttonState = HOVER;
-
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
-		{
-			buttonState = PRESSED;
-		}
+		buttonBox.setOutlineColor(sf::Color(160, 160, 160, 100));
+		buttonLabel.setFillColor(sf::Color(160, 160, 160, 100));
 	}
+	else
+	{
+		buttonState = IDLE;
 
-	switch (buttonState) {
-		case IDLE:
+		if (buttonBox.getGlobalBounds().contains(mousePos)) 
 		{
-			buttonBox.setFillColor(sf::Color::Black);
-			buttonLabel.setFillColor(sf::Color::White);
-			break;
+			buttonState = HOVER;
+
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+			{
+				buttonState = PRESSED;
+			}
 		}
-		case HOVER:
+
+		switch (buttonState)
 		{
-			buttonBox.setFillColor(boxHoverColor);
-			buttonLabel.setFillColor(textHoverColor);
-			break;
-		}
-		default:
-		{
-			// turn green on click
-			buttonBox.setFillColor(sf::Color(36, 94, 36, 255));
-			break;
+			case IDLE:
+			{
+				// set color to original
+				buttonBox.setFillColor(sf::Color::Black);
+				buttonBox.setOutlineColor(sf::Color::White);
+				buttonLabel.setFillColor(sf::Color::White);
+				break;
+			}
+			case HOVER:
+			{
+				buttonBox.setFillColor(boxHoverColor);
+				buttonLabel.setFillColor(textHoverColor);
+				break;
+			}
+			default:
+			{
+				// turn white on click
+				buttonBox.setFillColor(sf::Color(36, 94, 36, 255));
+				break;
+			}
 		}
 	}
 }
@@ -134,6 +158,32 @@ void SimpleButton::render(sf::RenderTarget* target)
 {
 	target->draw(buttonBox);
 	target->draw(buttonLabel);
+}
+
+/**************************************************************************
+						void SimpleButton::disable()
+ * Description: Sets the button state to disabled, disallowing it from 
+ * being clicked on and graying it out
+**************************************************************************/
+void SimpleButton::disable()
+{
+	if (buttonState != DISABLED)
+	{
+		buttonState = DISABLED;
+	}
+}
+
+/**************************************************************************
+						void SimpleButton::enable()
+ * Description: Reenables the button if it was previously disabled, 
+ * allowing it to be clicked on
+**************************************************************************/
+void SimpleButton::enable()
+{
+	if (buttonState == DISABLED)
+	{
+		buttonState = IDLE;
+	}
 }
 
 /**************************************************************************
