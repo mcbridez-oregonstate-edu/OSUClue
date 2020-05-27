@@ -9,6 +9,8 @@
 #include "GameClient.hpp"
 #include "CharacterButton.hpp"
 #include "SimpleButton.hpp"
+#include "boardFunctions.hpp"
+#include "threadFunctions.hpp"
 #include <iostream>
 #include <thread>
 using std::cin;
@@ -18,14 +20,6 @@ using std::thread;
 
 const int PORT = 3456;
 enum joinState { START, SERVER_CREATE, SERVER_SELECT, CHARACTER_SELECT, WAITING };
-
-// Test function to see if threading works.... this will get moved out to another file at some point,
-// much like a lot of this...
-void acceptPlayers(GameServer* server)
-{
-	cout << "We're accepting players?" << endl;
-	server->acceptPlayers();
-}
 
 int main()
 {
@@ -53,30 +47,33 @@ int main()
 	SimpleButton makeServer("Create a Server", sf::Vector2f(440, 550), 75);
 	SimpleButton joinServer("Join a Server", sf::Vector2f(475, 670), 75);
 
-	// Create objects for create/join server screen
+	// Create objects for create server screen
 	sf::Text instructions;
 	instructions.setFont(font);
 	instructions.setCharacterSize(70);
 	instructions.setPosition(sf::Vector2f(500, 500));
 
+	sf::Text IP;
+	IP.setFont(font);
+	IP.setCharacterSize(60);
+	IP.setPosition(sf::Vector2f(455, 575));
+
+	SimpleButton back("Back", sf::Vector2f(750, 700), 75);
+	SimpleButton proceed("Continue", sf::Vector2f(400, 700), 75);
+	proceed.disable();
+
+	// Create objects for Server join screen
 	sf::Text clientInstructions;
 	clientInstructions.setFont(font);
 	clientInstructions.setCharacterSize(60);
 	clientInstructions.setString("Please enter the IP address of the server you want to join\n        and press Enter (this may take a few seconds):");
 	clientInstructions.setPosition(sf::Vector2f(90, 450));
 
-	sf::Text IP;
-	IP.setFont(font);
-	IP.setCharacterSize(60);
-
-	SimpleButton back("Back", sf::Vector2f(750, 700), 75);
-	SimpleButton proceed("Continue", sf::Vector2f(400, 700), 75);
-
 	sf::String input;
 	sf::Text inputDisplay;
 	inputDisplay.setFont(font);
 	inputDisplay.setCharacterSize(60);
-	inputDisplay.setPosition(sf::Vector2f(500, 600));
+	inputDisplay.setPosition(sf::Vector2f(500, 580));
 
 	// Character select items
 	sf::Text info;
@@ -85,16 +82,22 @@ int main()
 	info.setPosition(sf::Vector2f(100, 500));
 	info.setString("Enter a name you would like to be known by:");
 
-	CharacterButton scarlet("Miss Scarlet", sf::Vector2f(150, 120));
-	CharacterButton peacock("Mrs. Peacock", sf::Vector2f(500, 120));
-	CharacterButton white("Mrs. White", sf::Vector2f(850, 120));
-	CharacterButton green("Mr. Green", sf::Vector2f(150, 525));
-	CharacterButton mustard("Colonel Mustard", sf::Vector2f(500, 525));
-	CharacterButton plum("Professor Plum", sf::Vector2f(850, 525));
+	CharacterButton characters[6] =
+	{
+		CharacterButton("Miss Scarlet", sf::Vector2f(150, 120)),
+		CharacterButton("Mrs. Peacock", sf::Vector2f(500, 120)),
+		CharacterButton("Mrs. White", sf::Vector2f(850, 120)),
+		CharacterButton("Mr. Green", sf::Vector2f(150, 525)),
+		CharacterButton("Colonel Mustard", sf::Vector2f(500, 525)),
+		CharacterButton("Professor Plum", sf::Vector2f(850, 525))
+	};
 
 	string name;
 	string character;
 	bool nameEntered = false;
+
+	// Clue board
+	boardTile*** clueBoard = createBoardArray();
 
 	// Set up server and client pointers and bool to track creation
 	GameServer* server = nullptr;
@@ -114,7 +117,7 @@ int main()
 		sf::Event event;
 		sf::Vector2f mouse = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
 
-		// Render start screen
+/*******************************************RENDER START SCREEN********************************************/
 		if (state == START)
 		{
 			while (window.pollEvent(event))
@@ -155,7 +158,7 @@ int main()
 			window.display();
 		}
 
-		// Render server creation screen
+/************************************RENDER SERVER CREATION SCREEN*****************************************/
 		else if (state == SERVER_CREATE)
 		{
 			// Create server
@@ -165,6 +168,8 @@ int main()
 				server = new GameServer(PORT);
 				serverCreated = true;
 			}
+
+			// If the server was successful, get and print the IP address and enable the proceed button
 			bool serverStatus = server->isSuccessful();
 			if (serverStatus == true)
 			{
@@ -172,18 +177,19 @@ int main()
 				instructions.setString("Done! Share the IP address with your friends!");
 				instructions.setPosition(sf::Vector2f(140, 500));
 				IP.setString("Server IP: " + serverIP.toString());
-				IP.setPosition(sf::Vector2f(495, 575));
+				proceed.enable();
 			}
 			else if (serverStatus == false)
 			{
 				instructions.setString("Something went wrong! Please go back and try again");
+				instructions.setPosition(sf::Vector2f(75, 500));
+				proceed.disable();
 			}
-
-			proceed.update(mouse);
-			back.update(mouse);
 
 			while (window.pollEvent(event))
 			{
+				proceed.update(mouse);
+				back.update(mouse);
 				switch (event.type)
 				{
 					case sf::Event::Closed:
@@ -220,23 +226,19 @@ int main()
 			window.clear();
 			window.draw(logo);
 			back.render(&window);
-			// Only draw the continue button if server creation was successful
-			if (serverStatus == true)
-			{
-				proceed.render(&window);
-			}
+			proceed.render(&window);
 			window.draw(instructions);
 			window.draw(IP);
 			window.display();
 		}
 
-		// Render join server screen
+/*****************************************RENDER SERVER JOIN SCREEN****************************************/
 		else if (state == SERVER_SELECT)
 		{
-			back.update(mouse);
-			proceed.update(mouse);
 			while (window.pollEvent(event))
 			{
+				back.update(mouse);
+				proceed.update(mouse);
 				switch (event.type)
 				{
 					case sf::Event::Closed:
@@ -280,7 +282,6 @@ int main()
 					{
 						if (proceed.isPressed())
 						{
-							cout << "Continue pressed, state changing" << endl;
 							state = CHARACTER_SELECT;
 						}
 
@@ -310,12 +311,11 @@ int main()
 				bool clientStatus = client->isSuccessful();
 				if (clientStatus == true)
 				{
+					proceed.enable();
 					clientInstructions.setString("Connected to server! Press Continue to proceed");
-					clientInstructions.setPosition(sf::Vector2f(275, 450));
+					clientInstructions.setPosition(sf::Vector2f(250, 450));
 					input.clear();
-					inputDisplay.setString(input);
-					// Only render continue button if client is successful
-					proceed.render(&window);
+					inputDisplay.setString(input);		
 				}
 				else
 				{
@@ -330,36 +330,57 @@ int main()
 				}
 			}
 			window.draw(logo);
+			proceed.render(&window);
 			back.render(&window);
 			window.draw(clientInstructions);
 			window.draw(inputDisplay);
 			window.display();
 		}
 
-		// Render character select screen
+/***************************************RENDER CHARACTER SELECT SCREEN*************************************/
 		else if (state == CHARACTER_SELECT)
 		{
 			// If a server was created on this machine, create a client and use threading
 			// to have the server wait for clients to connect
 			if (!clientCreated && serverCreated)
 			{
-				cout << "We made it to client creation" << endl;
-				client = new GameClient(serverIP, PORT);
-				clientCreated = true;
-				cout << "Client Created, about to try the threading thing...." << endl;
 				serverThread = new thread(acceptPlayers, server);
-
 				// Going to detach the thread for now, plan on joining it in the next window
 				serverThread->detach();
+
+				client = new GameClient(serverIP, PORT);
+				clientCreated = true;
 			}
-			scarlet.update(mouse);
-			peacock.update(mouse);
-			white.update(mouse);
-			green.update(mouse);
-			mustard.update(mouse);
-			plum.update(mouse);
-			while (window.pollEvent(event))
+
+			// Get taken characters and disable the buttons
+			sf::Packet takenChars;
+			takenChars = client->receiveData();
+			int numTaken;
+			string taken;
+			takenChars >> numTaken;
+			for (int i = 0; i < numTaken; i++)
 			{
+				takenChars >> taken;
+				for (int j = 0; j < 6; j++)
+				{
+					if (characters[j].getName() == taken)
+					{
+						characters[j].setDisabled();
+						characters[j].update(mouse);
+					}
+				}
+			}
+			
+			if (nameEntered)
+			{
+				for (int i = 0; i < 6; i++)
+				{
+					characters[i].update(mouse);
+				}
+			}
+
+			while (window.pollEvent(event))
+			{	
 				switch (event.type)
 				{
 					case sf::Event::Closed:
@@ -386,42 +407,19 @@ int main()
 						{
 							name = input;
 							nameEntered = true;
-							cout << name << endl;
 							info.setString("Choose your character:");
 							info.setPosition(sf::Vector2f(350, 5));
 						}
 					}
 					case sf::Event::MouseButtonPressed:
 					{
-						if (scarlet.isPressed())
+						for (int i = 0; i < 6; i++)
 						{
-							character = scarlet.getName();
-							cout << character << endl;
-						}
-						else if (peacock.isPressed())
-						{
-							character = peacock.getName();
-							cout << character << endl;
-						}
-						else if (white.isPressed())
-						{
-							character = white.getName();
-							cout << character << endl;
-						}
-						else if (green.isPressed())
-						{
-							character = green.getName();
-							cout << character << endl;
-						}
-						else if (mustard.isPressed())
-						{
-							character = mustard.getName();
-							cout << character << endl;
-						}
-						else if (plum.isPressed())
-						{
-							character = plum.getName();
-							cout << character << endl;
+							if (characters[i].isPressed())
+							{
+								character = characters[i].getName();
+								client->getPlayerData(name, character, clueBoard);
+							}
 						}
 					}
 					default:
@@ -430,16 +428,17 @@ int main()
 					}
 				}
 			}
+
 			window.clear();
 			window.draw(info);
+
+			// If the name is entered, move on to the second phase of character selection
 			if (nameEntered)
 			{
-				scarlet.render(&window);
-				peacock.render(&window);
-				white.render(&window);
-				green.render(&window);
-				mustard.render(&window);
-				plum.render(&window);
+				for (int i = 0; i < 6; i++)
+				{
+					characters[i].render(&window);
+				}
 			}
 			else
 			{

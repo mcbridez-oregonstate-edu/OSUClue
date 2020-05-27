@@ -59,7 +59,7 @@ void CharacterButton::update(const sf::Vector2f mousePos)
 {
 	if (buttonState == DISABLED)
 	{
-		image.setColor(sf::Color(0, 0, 0, 100));
+		image.setColor(sf::Color(160, 160, 160, 100));
 	}
 	else
 	{

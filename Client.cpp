@@ -26,6 +26,7 @@ Client::Client(sf::IpAddress server, int serverPort)
     }
     else
     {
+        selector.add(socket);
         success = true;
     }
 }
@@ -38,11 +39,11 @@ void Client::sendData(sf::Packet packet)
 {
     if (socket.send(packet) != sf::Socket::Done)
     {
-        cout << "Error: Issue sending data" << endl;
+        cout << "Client Error: Issue sending data" << endl;
     }
     else
     {
-        cout << "Data sent!" << endl;
+        cout << "Client: Data sent!" << endl;
     }
 }
 
@@ -54,13 +55,13 @@ sf::Packet Client::receiveData()
 {
     sf::Packet packet;
 
-    if (socket.receive(packet) != sf::Socket::Done)
+    if (selector.wait(sf::microseconds(10.f)))
     {
-        cout << "Error: Issue receiving data" << endl;
-    }
-    else
-    {
-        cout << "Data received!" << endl;
+        if (selector.isReady(socket))
+        {
+            socket.receive(packet);
+            //cout << "Client: Data Received!" << endl;
+        }
     }
 
     return packet;

@@ -10,7 +10,7 @@ using std::cout;
 using std::endl;
 
 /******************************************************************************
-                            Server::Server()
+                                   Server::Server()
  * Description: The default constructor. Has a hardcoded port value. Sets a 
  * bool values based on the success of the server creation (false = failure, 
  * true = success).
@@ -27,6 +27,7 @@ Server::Server()
     {
         success = true;
     }
+    listener.setBlocking(false);
 }
 
 /***************************************************************************************
@@ -47,6 +48,7 @@ Server::Server(int inPort)
     {
         success = true;
     }
+    listener.setBlocking(false);
 }
 
 /*******************************************************************************
@@ -69,12 +71,7 @@ void Server::acceptClient()
 {
     if (numClients < 6)
     {
-        if (listener.accept(clients[numClients]) != sf::Socket::Done)
-        {
-            cout << "Error accepting client" << endl;
-        }
-
-        else
+        if (listener.accept(clients[numClients]) == sf::Socket::Done)
         {
             selector.add(clients[numClients]);
             numClients++;
@@ -93,11 +90,11 @@ void Server::sendOne(sf::Packet packet, int clientNum)
 {
     if (clients[clientNum].send(packet) != sf::Socket::Done)
     {
-        cout << "Error: Issue sending data" << endl;
+        cout << "Server Error: Issue sending data to client " << clientNum << endl;
     }
     else
     {
-        cout << "Data sent!" << endl;
+        cout << "Server: Data sent!" << endl;
     }
 }
 
@@ -113,11 +110,11 @@ void Server::sendAll(sf::Packet packet)
     {
         if (clients[i].send(packet) != sf::Socket::Done)
         {
-            cout << "Error: Issue sending data" << endl;
+            cout << "Server Error: Issue sending data" << endl;
         }
         else
         {
-            cout << "Data sent!" << endl;
+            //cout << "Server: Data sent!" << endl;
         }
     }
 }
@@ -125,26 +122,26 @@ void Server::sendAll(sf::Packet packet)
 /****************************************************************************
                           sf::Packet Server::receiveData()
  * Description: A general receive function that loops through the clients 
- * with the selector to see which is ready to receive things. TBH I don't
- * entirely understand how this works, but it does for right now...
+ * with the selector to see which is ready to receive things.
 ****************************************************************************/
 sf::Packet Server::receiveData()
 {
     sf::Packet packet;
 
-    if (selector.wait())
+    if (selector.wait(sf::microseconds(10.f)))
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < numClients; i++)
         {
             if (selector.isReady(clients[i]))
             {
+                cout << "Server: receiving packet" << endl;
                 clients[i].receive(packet);
             }
         }
     }
     else
     {
-        cout << "Error: Issue receiving data" << endl;
+        //cout << "Server: Nothing ready to receive" << endl;
     }
 
     return packet;
