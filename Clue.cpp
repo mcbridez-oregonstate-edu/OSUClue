@@ -179,7 +179,11 @@ int main()
 				instructions.setString("Something went wrong! Please go back and try again");
 			}
 
-			proceed.update(mouse);
+			// Don't allow the continue button to update if the server wasn't successful
+			if (serverStatus == true)
+			{
+				proceed.update(mouse);
+			}
 			back.update(mouse);
 
 			while (window.pollEvent(event))
@@ -352,12 +356,17 @@ int main()
 				// Going to detach the thread for now, plan on joining it in the next window
 				serverThread->detach();
 			}
-			scarlet.update(mouse);
-			peacock.update(mouse);
-			white.update(mouse);
-			green.update(mouse);
-			mustard.update(mouse);
-			plum.update(mouse);
+
+			// Don't allow character buttons to update if name has not been entered
+			if (nameEntered)
+			{
+				scarlet.update(mouse);
+				peacock.update(mouse);
+				white.update(mouse);
+				green.update(mouse);
+				mustard.update(mouse);
+				plum.update(mouse);
+			}
 			while (window.pollEvent(event))
 			{
 				switch (event.type)
