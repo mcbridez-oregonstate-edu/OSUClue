@@ -44,16 +44,18 @@ void GameServer::receivePlayerInfo()
     playerInfo = receiveData();
     string playerName;
     string character;
+    int clientNum;
     if (playerInfo >> playerName)
     {
-        playerInfo >> character;
+        playerInfo >> character >> clientNum;
         cout << "About to assign player info in GameServer::receivePlayerInfo" << endl;
         players[playersCreated].name = playerName;
         players[playersCreated].character = character;
+        players[playersCreated].clientNum = clientNum;
         playersCreated++;
         cout << "Data received: Name: " << playerName << endl;
         cout << "Character: " << character << endl;
-        cout << "Players Created: " << playersCreated << endl;
+        cout << "Client Num: " << clientNum << endl;
     }
 }
 
@@ -63,27 +65,50 @@ void GameServer::receivePlayerInfo()
 *********************************************************************************/
 void GameServer::acceptPlayers()
 {
-    while(numClients != 6)
+    int prevNumClients = numClients;
+    int prevNumPlayers = playersCreated;
+    while(playersCreated < 6)
     {
         acceptClient();
-        sendTakenCharacters();
+        // Only send if we have a new client or player
+        if (prevNumClients < numClients || prevNumPlayers < playersCreated)
+        {
+            sendTakenCharacters();
+            prevNumClients = numClients;
+            prevNumPlayers = playersCreated;
+        }
         receivePlayerInfo();
     }
 }
 
 /**********************************************************************************
-                            void GameServer::sendTakenCharacters()
+                          void GameServer::sendTakenCharacters()
  * Description: Checks the list of currently accepted clients to see which 
  * characters are in use and sends the info to the clients so that they can disable
- * the proper characters from being selected
+ * the proper characters from being selected. Also sends character names so they
+ * can be used on the waiting screen
 **********************************************************************************/
 void GameServer::sendTakenCharacters()
 {
     sf::Packet takenChars;
-    takenChars << playersCreated;
+    takenChars << playersCreated * 2;
     for (int i = 0; i < playersCreated; i++)
     {
+        takenChars << players[i].name;
         takenChars << players[i].character;
     }
     sendAll(takenChars);
+}
+
+/***********************************************************************************
+                            void GameServer::startGame()
+ * Description: Sends the client a signal that the game is starting (a randomly
+ * -generated string that would be nearly impossible to come up with and is too 
+ * long for the user to enter (limit on chars is 25))
+***********************************************************************************/
+void GameServer::startGame()
+{
+    sf::Packet startGame;
+    startGame << 1 << "d2WO8CBMC7b9KoMHh@@abO8ci!";
+    sendAll(startGame);
 }

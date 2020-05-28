@@ -63,7 +63,7 @@ bool Server::isSuccessful()
 
 /*******************************************************************************
                          void Server::acceptClient()
- * Description: Tells the server to accept a client. Will not accept a client
+ * Description: Tells the server to accept a client. Should not accept a client
  * if there are already 6 clients accepted (i.e. the max number of players in
  * a game of Clue).
 *******************************************************************************/
@@ -76,6 +76,10 @@ void Server::acceptClient()
             selector.add(clients[numClients]);
             numClients++;
         }
+    }
+    else if (numClients == 6)
+    {
+        listener.close();
     }
 }
 
@@ -134,8 +138,8 @@ sf::Packet Server::receiveData()
         {
             if (selector.isReady(clients[i]))
             {
-                cout << "Server: receiving packet" << endl;
                 clients[i].receive(packet);
+                packet << i;
             }
         }
     }

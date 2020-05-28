@@ -10,10 +10,10 @@
 // Packet operator overrides for ServerPlayer
 sf::Packet& operator <<(sf::Packet& packet, const ServerPlayer& player)
 {
-    return packet << player.name << player.character;
+    return packet << player.name << player.character << player.clientNum;
 }
 
 sf::Packet& operator >>(sf::Packet& packet, ServerPlayer& player)
 {
-    return packet >> player.name >> player.character;
+    return packet >> player.name >> player.character >> player.clientNum;
 }

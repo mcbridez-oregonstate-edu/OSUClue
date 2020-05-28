@@ -10,4 +10,5 @@
 void acceptPlayers(GameServer* server)
 {
 	server->acceptPlayers();
+    server->startGame();
 }

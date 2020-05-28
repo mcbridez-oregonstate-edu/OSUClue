@@ -19,14 +19,14 @@ Client::Client(sf::IpAddress server, int serverPort)
     serverIP = server;
     port = serverPort;
 
-    sf::Socket::Status status = socket.connect(serverIP, port, sf::seconds(5));
+    sf::Socket::Status status = socket.connect(serverIP, port, sf::milliseconds(5.f));
     if (status != sf::Socket::Done)
     {
         success = false;
     }
     else
     {
-        selector.add(socket);
+        socket.setBlocking(false);
         success = true;
     }
 }
@@ -54,15 +54,7 @@ void Client::sendData(sf::Packet packet)
 sf::Packet Client::receiveData()
 {
     sf::Packet packet;
-
-    if (selector.wait(sf::microseconds(10.f)))
-    {
-        if (selector.isReady(socket))
-        {
-            socket.receive(packet);
-            //cout << "Client: Data Received!" << endl;
-        }
-    }
+    socket.receive(packet);
 
     return packet;
 }

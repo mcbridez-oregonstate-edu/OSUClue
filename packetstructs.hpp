@@ -17,7 +17,8 @@ using std::string;
 struct ServerPlayer
 {
     string name;
-    string character;       // Type on this can be changed if necessary, mainly useful for printing/testing
+    string character;   
+    int clientNum;    // Type on this can be changed if necessary, mainly useful for printing/testing
     // Point pos            (uncomment once the GUI functionality gets added in--be sure to add into 
     //                      the operator overrides below)
 };

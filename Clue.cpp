@@ -19,7 +19,7 @@ using std::endl;
 using std::thread;
 
 const int PORT = 3456;
-enum joinState { START, SERVER_CREATE, SERVER_SELECT, CHARACTER_SELECT, WAITING };
+enum joinState { START, SERVER_CREATE, SERVER_SELECT, CHARACTER_SELECT, GAME };
 
 int main()
 {
@@ -82,6 +82,11 @@ int main()
 	info.setPosition(sf::Vector2f(100, 500));
 	info.setString("Enter a name you would like to be known by:");
 
+	sf::Text players;
+	players.setFont(font);
+	players.setCharacterSize(50);
+	players.setPosition(sf::Vector2f(150, 200));
+
 	CharacterButton characters[6] =
 	{
 		CharacterButton("Miss Scarlet", sf::Vector2f(150, 120)),
@@ -95,15 +100,17 @@ int main()
 	string name;
 	string character;
 	bool nameEntered = false;
+	bool characterCreated = false;
 
 	// Clue board
 	boardTile*** clueBoard = createBoardArray();
 
-	// Set up server and client pointers and bool to track creation
+	// Server creation stuff (not used if client only
 	GameServer* server = nullptr;
 	bool serverCreated = false;
 	bool connected = false;
 
+	// Client creation stuff
 	GameClient* client = nullptr;
 	bool clientCreated = false;
 	sf::IpAddress serverIP;
@@ -313,7 +320,7 @@ int main()
 				{
 					proceed.enable();
 					clientInstructions.setString("Connected to server! Press Continue to proceed");
-					clientInstructions.setPosition(sf::Vector2f(250, 450));
+					clientInstructions.setPosition(sf::Vector2f(225, 450));
 					input.clear();
 					inputDisplay.setString(input);
 				}
@@ -345,14 +352,18 @@ int main()
 			if (!clientCreated && serverCreated)
 			{
 				serverThread = new thread(acceptPlayers, server);
-				// Going to detach the thread for now, plan on joining it in the next window
 				serverThread->detach();
 
 				client = new GameClient(serverIP, PORT);
 				clientCreated = true;
 			}
 
-			// Get taken characters and disable the buttons
+			// This bit has a bunch of functions:
+			// 1. Get the names of characters that are taken and disable the buttons so that they can't be used
+			// 2. Get the names of players that have joined and are ready for the game to start
+			// 3. Switch the game state to play the game.
+			// (I'm well aware this is kinda janky, but it's the best I could come up with given the amount of
+			// work still needing to be done and the time constraints)
 			sf::Packet takenChars;
 			takenChars = client->receiveData();
 			int numTaken;
@@ -361,16 +372,38 @@ int main()
 			for (int i = 0; i < numTaken; i++)
 			{
 				takenChars >> taken;
-				for (int j = 0; j < 6; j++)
+
+				// If the randomly-generated "play the game" signal is sent
+				if (taken == "d2WO8CBMC7b9KoMHh@@abO8ci!")
 				{
-					if (characters[j].getName() == taken)
+					state = GAME;
+				}
+
+				// Or, if i is even, it's a player name
+				else if (i == 0 || i % 2 == 0)
+				{
+					string prevtext = players.getString() + '\n';
+					if (prevtext.find(taken) == string::npos)
 					{
-						characters[j].setDisabled();
-						characters[j].update(mouse);
+						players.setString(prevtext + taken);
+					}
+				}
+				
+				// Otherwise, it's a character name and needs to be checked to be disabled
+				else
+				{
+					for (int j = 0; j < 6; j++)
+					{
+						if (characters[j].getName() == taken)
+						{
+							characters[j].setDisabled();
+							characters[j].update(mouse);
+						}
 					}
 				}
 			}
-
+			
+			// Update the character select buttons if we're past the name entering phase
 			if (nameEntered)
 			{
 				for (int i = 0; i < 6; i++)
@@ -419,7 +452,8 @@ int main()
 							{
 								character = characters[i].getName();
 								client->getPlayerData(name, character, clueBoard);
-								state = WAITING;
+								characterCreated = true;
+								info.setString("Waiting for other players...");
 							}
 						}
 					}
@@ -434,12 +468,16 @@ int main()
 			window.draw(info);
 
 			// If the name is entered, move on to the second phase of character selection
-			if (nameEntered)
+			if (nameEntered && !characterCreated)
 			{
 				for (int i = 0; i < 6; i++)
 				{
 					characters[i].render(&window);
 				}
+			}
+			else if (characterCreated)
+			{
+				window.draw(players);
 			}
 			else
 			{
@@ -449,9 +487,10 @@ int main()
 			window.display();
 		}
 
-		/********************************************RENDER WAITING SCREEN*******************************************/
-		else if (state == WAITING)
+		/**********************RENDER GAME SCREEN (This is where the action takes place)**************************/
+		else if (state == GAME)
 		{
+			info.setString("Game stuff here");
 			while (window.pollEvent(event))
 			{
 				switch (event.type)
@@ -468,7 +507,6 @@ int main()
 				}
 			}
 			window.clear();
-			info.setString("Waiting for other players...");
 			window.draw(info);
 			window.display();
 		}
