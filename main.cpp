@@ -385,6 +385,8 @@ int main()
 			for (int i = 0; i < 3; i++) {
 				window.draw(players[current_player]->getHand()[i]->getSprite());
 			}
+
+			window.draw(journal);
 		}
 		else if (game_state == 0) { // suggestion phase
 
@@ -523,7 +525,7 @@ int main()
 			window.draw(suggestionText);
 		}
 
-		//window.draw(journal);
+		
 		
 			window.display();
 
