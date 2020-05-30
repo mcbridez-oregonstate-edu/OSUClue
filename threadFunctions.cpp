@@ -12,3 +12,8 @@ void acceptPlayers(GameServer* server)
 	server->acceptPlayers();
     server->startGame();
 }
+
+void playGame(GameServer* server)
+{
+	server->dealPlayers();
+}

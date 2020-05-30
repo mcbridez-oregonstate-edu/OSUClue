@@ -31,6 +31,7 @@ class GameServer : public Server
         void acceptPlayers();
         void sendTakenCharacters();
         void startGame();
+        void dealPlayers();
 };
 
 #endif

@@ -72,11 +72,6 @@ int main()
 	// Create character select screen
 	CharacterSelectScreen charScreen(&font);
 
-	sf::Text info;
-	info.setFont(font);
-	info.setCharacterSize(75);
-	info.setPosition(sf::Vector2f(100, 500));
-
 	string name;
 	string character;
 	bool nameEntered = false;
@@ -288,7 +283,6 @@ int main()
 			if (!clientCreated && serverCreated)
 			{
 				serverThread = new thread(acceptPlayers, server);
-				serverThread->detach();
 
 				client = new GameClient(serverIP, PORT);
 				clientCreated = true;
@@ -312,6 +306,14 @@ int main()
 				// If the randomly-generated "play the game" signal is sent
 				if (taken == "d2WO8CBMC7b9KoMHh@@abO8ci!")
 				{
+					if (serverCreated)
+					{
+						cout << "This is the serverCreated conditional. About to join serverThread" << endl;
+						serverThread->join();
+						cout << "Serverthread join successful, about to delete ptr" << endl;
+						delete serverThread;
+						serverThread = nullptr;
+					}
 					state = GAME;
 				}
 
@@ -367,10 +369,17 @@ int main()
 						character = charScreen.characterPressed();
 						if (character != "")
 						{
-							client->getPlayerData(name, character, clueBoard);
+							token* charToken = nullptr;
+							for (int i = 0; i < 6; i++)
+							{
+								if (tokensVect[i]->getName() == character)
+								{
+									charToken = tokensVect[i];
+								}
+							}
+							client->getPlayerData(name, charToken, clueBoard);
 							characterCreated = true;
 						}
-
 					}
 					default:
 					{
@@ -404,7 +413,12 @@ int main()
 		/**********************RENDER GAME SCREEN (This is where the action takes place)**************************/
 		else if (state == GAME)
 		{
-			info.setString("Game stuff here");
+			if (serverCreated)
+			{
+				serverThread = new thread(playGame, server);
+			}
+			client->receiveHand();
+
 			while (window.pollEvent(event))
 			{
 				switch (event.type)
@@ -423,7 +437,12 @@ int main()
 				}
 			}
 			window.clear();
-			window.draw(info);
+			window.draw(rendered_board);
+			for (int i = 0; i < tokensVect.size(); i++)
+			{
+				window.draw(tokensVect[i]->get_token());
+			}
+			client->displayHand(&window);
 			window.display();
 		}
 	}

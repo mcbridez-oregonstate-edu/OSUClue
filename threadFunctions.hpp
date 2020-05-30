@@ -10,5 +10,6 @@
 #include "GameServer.hpp"
 
 void acceptPlayers(GameServer*);
+void playGame(GameServer*);
 
 #endif

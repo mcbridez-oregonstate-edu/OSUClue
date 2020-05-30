@@ -108,13 +108,28 @@ vector<Card*> Deck::getSolution()
 }
 
 /******************************************************************************************
-                                    void Deck::deal(vector<Player> players)
- * Description: Continues to deal cards to the players and remove them from the deck until
- * the deck is empty
+                           vector<vector<Card*>> Deck::deal()
+ * Description: Deals cards to a vector of hands, then returns the vector, to be 
+ * distributed by the server
 ******************************************************************************************/
-void Deck::deal(vector<Player*> players)
+vector<vector<Card*>> Deck::deal()
 {
     int playerNum = 0;
+
+    vector<vector<Card*>> hands;
+    vector<Card*> p1Hand;
+    vector<Card*> p2Hand;
+    vector<Card*> p3Hand;
+    vector<Card*> p4Hand;
+    vector<Card*> p5Hand;
+    vector<Card*> p6Hand;
+    hands.push_back(p1Hand);
+    hands.push_back(p2Hand);
+    hands.push_back(p3Hand);
+    hands.push_back(p4Hand);
+    hands.push_back(p5Hand);
+    hands.push_back(p6Hand);
+
     vector<Card*>::reverse_iterator itr = deck.rbegin();
     while (itr != deck.rend())
     {
@@ -122,10 +137,12 @@ void Deck::deal(vector<Player*> players)
         {
             playerNum = 0;
         }
-        players[playerNum]->addCard(*itr);
+        hands[playerNum].push_back(*itr);
         playerNum++;
         itr++;
     }
+
+    return hands;
 }
 
 /*******************************************************************************************

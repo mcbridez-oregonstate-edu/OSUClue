@@ -27,13 +27,11 @@ GameClient::GameClient(sf::IpAddress server, int serverPort) : Client(server, se
  * disallow them from choosing the same character as other players. Needs to be 
  * replaced/integrated with GUI stuff.
 **************************************************************************************/
-void GameClient::getPlayerData(string name, string character, boardTile*** clueBoard)
+void GameClient::getPlayerData(string name, token* playerToken, boardTile*** clueBoard)
 {
     double height = 20;
     double width = 19.75;
-    tuple<int, int> placeholder;
-    token* playerToken = new token(character, width, height, clueBoard);
-    thisPlayer = Player(name, playerToken, placeholder);
+    thisPlayer = Player(name, playerToken);
     sendPlayerData();
 }
 
@@ -49,4 +47,40 @@ void GameClient::sendPlayerData()
     sf::Packet packet;
     packet << name << character;
     sendData(packet);
+}
+
+/***************************************************************************************
+                            void GameClient::receiveHand()
+ * Description: Receives the hand of cards dealt to the player by the server and 
+ * stores them in the client's internal Player object's hand.
+***************************************************************************************/
+void GameClient::receiveHand()
+{
+    sf::Packet handDealt;
+    vector<Card*> myHand;
+    handDealt = receiveData();
+    handDealt >> myHand;
+    
+    for (int i = 0; i < myHand.size(); i++)
+    {
+        thisPlayer.addCard(myHand[i]);
+    }
+}
+
+/****************************************************************************************
+                    void GameClient::displayHand(sf::RenderTarget* window)
+ * Description: Displays the player's hand to the target window. Yes, I'm aware this
+ * is an odd function for this class to have, but since the decision to make the cards
+ * displayable was not mine and the cards are stored in the player in this class, this
+ * just has to be the way it is.
+****************************************************************************************/
+void GameClient::displayHand(sf::RenderTarget* window)
+{
+    thisPlayer.getHand()[0]->setCardPos(sf::Vector2f(375, 680));
+    thisPlayer.getHand()[1]->setCardPos(sf::Vector2f(575, 680));
+    thisPlayer.getHand()[2]->setCardPos(sf::Vector2f(775, 680));
+    
+    window->draw(thisPlayer.getHand()[0]->getSprite());
+    window->draw(thisPlayer.getHand()[1]->getSprite());
+    window->draw(thisPlayer.getHand()[2]->getSprite());
 }

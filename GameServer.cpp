@@ -6,9 +6,11 @@
  * implement some of the already-written game logic
 *************************************************************************/
 #include "GameServer.hpp"
+#include <vector>
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::vector;
 
 /***************************************************************************
                       GameServer::GameServer() : Server()
@@ -111,4 +113,20 @@ void GameServer::startGame()
     sf::Packet startGame;
     startGame << 1 << "d2WO8CBMC7b9KoMHh@@abO8ci!";
     sendAll(startGame);
+}
+
+/************************************************************************************
+                                void GameServer::dealPlayers()
+ * Description: Deals cards to the players by sending a packet with their hand in
+ * it
+************************************************************************************/
+void GameServer::dealPlayers()
+{
+    vector<vector<Card*>> hands = theDeck.deal();
+    for (int i = 0; i < 6; i++)
+    {
+        sf::Packet playerHand;
+        playerHand << hands[i];
+        sendOne(playerHand, i);
+    }
 }

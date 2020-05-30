@@ -29,15 +29,14 @@ using std::rand;
 Player::Player()
 {
 	this->name = "N/A";
-	this->position = std::make_tuple(-1, -1);
 }
 
 //An overloaded constructor for the Player class to set its attributes
-Player::Player(std::string name, token* playerToken, std::tuple<int, int> position)
+Player::Player(std::string name, token* playerToken)
 {
 	this->name = name;
 	this->playerToken = playerToken;
-	this->position = position;
+
 	// -1 is empty, 0 is an "No", and 1 is a "Yes"; The initial layout is all empty
 	std::vector<std::vector<int>> initialNotebook{	{-1, -1, -1, -1, -1},			//Green
 													{-1, -1, -1, -1, -1},			//Mustard
@@ -113,18 +112,6 @@ void Player::printHand()
 	{
 		cout << hand[i]->getName() << endl;
 	}
-}
-
-//Returns the Player's current position as a tuple (x, y)
-std::tuple<int, int> Player::getPosition()
-{
-	return this->position;
-}
-
-//Updates the Player's current position to a specific x, y coordinate
-void Player::updatePosition(std::tuple<int, int> pos)
-{
-	this->position = pos;
 }
 
 //Gets the Player's handbook

@@ -10,7 +10,10 @@
 
 #include <SFML/Network.hpp>
 #include <string>
+#include <vector>
+#include "Card.hpp"
 using std::string;
+using std::vector;
 
 // A structure for keeping track of which client is which player, what character they're
 // playing, and what their chosen name is (also later position once this gets integrated)
@@ -27,5 +30,9 @@ struct ServerPlayer
 sf::Packet& operator <<(sf::Packet&, const ServerPlayer&);
 
 sf::Packet& operator >>(sf::Packet&, ServerPlayer&);
+
+sf::Packet& operator <<(sf::Packet&, const vector<Card*>&);
+
+sf::Packet& operator >>(sf::Packet&, vector<Card*>&);
 
 #endif

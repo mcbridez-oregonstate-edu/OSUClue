@@ -30,12 +30,11 @@ private:
 	std::string name;							//the name of the player
 	token* playerToken;							//the token that the player has chosen
 	std::vector<Card*> hand;
-	std::tuple<int, int> position;				//the player's token's current (x,y) coordinate
 	std::vector<std::vector<int>> notebook;
 
 public:
 	Player();
-	Player(std::string, token*, std::tuple<int, int>);
+	Player(std::string, token*);
 	std::string getName();
 	token* getToken();
 	std::string getTokenName();
@@ -43,8 +42,6 @@ public:
 	void addCard(Card*);
 	std::vector<Card*> getHand();
 	void printHand();				// For testing purposes only, to be removed 
-	std::tuple<int, int> getPosition();
-	void updatePosition(std::tuple<int, int>);
 	std::vector<std::vector<int>> getNotebook();
 	void updateNotebook(NotebookEntities, int, int);
 	void printNotebook();
