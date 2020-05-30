@@ -133,7 +133,7 @@ int main()
 	int steps;
 	bool has_rolled = 0;
 
-	// game state control variable,  1 = move state, 0 = suggestion state
+	// game state control variable,  1 = move state, 0 = suggestion state, 2 == accusation
 	int game_state = 1;
 	
 	// control variable for suggestion phase. 0 = picking people, 1 = picking weapon, 2 = revealing cards
@@ -212,7 +212,7 @@ int main()
 						if (event.key.code == sf::Keyboard::Right)
 						{
 							if (steps > 0) {
-								if (isValidMove(players[current_player]->getToken()->get_space(),
+								if (isValidMove(players[current_player],
 									boardArray[players[current_player]->getToken()->get_row()][players[current_player]->getToken()->get_col() + 1],
 									steps)) {
 									players[current_player]->getToken()->move_token(width, 0, 0, 1, boardArray);
@@ -224,7 +224,7 @@ int main()
 						if (event.key.code == sf::Keyboard::Left)
 						{
 							if (steps > 0) {
-								if (isValidMove(players[current_player]->getToken()->get_space(),
+								if (isValidMove(players[current_player],
 									boardArray[players[current_player]->getToken()->get_row()][players[current_player]->getToken()->get_col() - 1],
 									steps)) {
 									players[current_player]->getToken()->move_token(-width, 0, 0, -1, boardArray);
@@ -236,7 +236,7 @@ int main()
 						if (event.key.code == sf::Keyboard::Down)
 						{
 							if (steps > 0) {
-								if (isValidMove(players[current_player]->getToken()->get_space(),
+								if (isValidMove(players[current_player],
 									boardArray[players[current_player]->getToken()->get_row() + 1][players[current_player]->getToken()->get_col()],
 									steps)) {
 									players[current_player]->getToken()->move_token(0, height, 1, 0, boardArray);
@@ -248,7 +248,7 @@ int main()
 						if (event.key.code == sf::Keyboard::Up)
 						{
 							if (steps > 0) {
-								if (isValidMove(players[current_player]->getToken()->get_space(),
+								if (isValidMove(players[current_player],
 									boardArray[players[current_player]->getToken()->get_row() - 1][players[current_player]->getToken()->get_col()],
 									steps)) {
 									players[current_player]->getToken()->move_token(0, -height, -1, 0, boardArray);
@@ -259,10 +259,11 @@ int main()
 						// end turn
 						if (event.key.code == sf::Keyboard::Enter)
 						{
-							// if player ends turn in a room, switch to suggestions state
-							if (players[current_player]->getToken()->get_space()->isRoom())
+							// if player ends turn in a room, switch to suggestions state, unless they started in the room and have not moved out
+							if (players[current_player]->getToken()->get_space()->isRoom() && players[current_player]->getSuggested() == 0)
 							{
 								game_state = 0;
+								players[current_player]->setSuggested(1);
 							}
 							else {
 								// change player
@@ -273,6 +274,11 @@ int main()
 									current_player = 0;
 								}
 							}
+						}
+						// make accusation
+						if (event.key.code == sf::Keyboard::R) {
+							game_state = 2; // accusation state
+						
 						}
 						break;
 					}
@@ -366,6 +372,37 @@ int main()
 					{
 						current_player = 0;
 
+					}
+				}
+			}
+		}
+		else if (game_state == 2) {
+			int endPhase = 0;
+
+			while (window.pollEvent(event)) {
+				switch (event.type) {
+				case sf::Event::Closed:
+					window.close();
+					break;
+
+				case sf::Event::KeyReleased:
+					if (event.key.code == sf::Keyboard::Enter) {
+						endPhase = 1;
+					}
+				default:
+					break;
+				}
+
+
+				
+				// if the game hasn't ended, go to the next player
+				if (endPhase == 1) {
+					game_state = 1;
+					current_player++;
+					has_rolled = 0;
+					if (current_player > num_players)
+					{
+						current_player = 0;
 					}
 				}
 			}
