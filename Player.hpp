@@ -33,6 +33,8 @@ private:
 	std::tuple<int, int> position;				//the player's token's current (x,y) coordinate
 	std::vector<std::vector<int>> notebook;
 
+	bool hasSuggested;
+
 public:
 	Player();
 	Player(std::string, token*, std::tuple<int, int>);
