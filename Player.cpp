@@ -63,6 +63,7 @@ Player::Player(std::string name, token* inputToken, std::tuple<int, int> positio
 													{-1, -1, -1, -1, -1},			//Billiard Room
 	};
 	this->notebook = initialNotebook;
+	this->hasSuggested = 0;
 }
 
 //Gets the player's name
@@ -331,58 +332,7 @@ vector<string> Player::makeSuggestion()
 	// the player doesn't get to choose this
 
 	suggestion.push_back(playerToken->get_space()->getName());
-	/*int seed = time(0);
-	srand(seed);
-	int choice3;
-	choice3 = (rand() % 9) + 1;
-	switch (choice3)
-	{
-		case 1:
-		{
-			suggestion.push_back("Lounge");
-			break;
-		}
-		case 2:
-		{
-			suggestion.push_back("Billiard Room");
-			break;
-		}
-		case 3:
-		{
-			suggestion.push_back("Hall");
-			break;
-		}
-		case 4:
-		{
-			suggestion.push_back("Conservatory");
-			break;
-		}
-		case 5:
-		{
-			suggestion.push_back("Ballroom");
-			break;
-		}
-		case 6:
-		{
-			suggestion.push_back("Library");
-			break;
-		}
-		case 7:
-		{
-			suggestion.push_back("Kitchen");
-			break;
-		}
-		case 8:
-		{
-			suggestion.push_back("Study");
-			break;
-		}
-		case 9:
-		{
-			suggestion.push_back("Dining Room");
-			break;
-		}
-	}*/
+
 
 	return suggestion;
 }
@@ -426,4 +376,16 @@ string Player::showCard(vector<string> suggestionList)
 		cin >> playerChoice;
 	}
 	return possibleChoices[playerChoice-1];	
+}
+
+// change whether the player can make a suggestion or not
+void Player::setSuggested(int flag)
+{
+	// 0 means the player can make a suggestion, 1 means they can't. Cant make a suggest in the same room that they started in.
+	hasSuggested = flag;
+}
+ // return hasSuggested variable
+bool Player::getSuggested()
+{
+	return hasSuggested;
 }

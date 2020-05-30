@@ -55,6 +55,8 @@ public:
 	string showCard(vector<string>);
 	//void takeTurn();				// Location logic needs to be implemented so that this can check if certain conditions are met
 									// before presenting the player with their options.
+	void setSuggested(int);
+	bool getSuggested();
 };
 
 #endif

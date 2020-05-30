@@ -23,9 +23,9 @@ using std::ifstream;
 **				 false otherwise. Takes as arguments the boardTile of the current
 **				 space and the space being moved to
 ************************************************************************************/
-bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount) {
+bool isValidMove(Player* current_player, boardTile* target_space, int& stepCount) {
 	bool room_movement = 0;
-
+	boardTile* current_space = current_player->getToken()->get_space();
 
 	// check if space is occupied or not
 	if (!target_space->isOccupied()) {
@@ -43,6 +43,7 @@ bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCou
 
 					target_space->setOccupied(1);
 					stepCount--;
+					current_player->setSuggested(0); // if player moves out of the room, they are allowed to make a suggetion when moving into a room
 				}
 				// player is moving into a room which ends movement, does not occupy the space because multple tokens can be in the room
 				else {
