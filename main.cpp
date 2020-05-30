@@ -17,8 +17,6 @@
 //#include "game.hpp"
 #include <iomanip>
 
-
-
 using namespace std;
 using std::tuple;
 
