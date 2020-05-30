@@ -28,6 +28,7 @@
     <ClInclude Include="boardFunctions.hpp" />
     <ClInclude Include="boardTile.h" />
     <ClInclude Include="Card.hpp" />
+    <ClInclude Include="CardButton.hpp" />
     <ClInclude Include="Deck.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Token.hpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="boardFunctions.cpp" />
     <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CardButton.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -178,29 +180,6 @@
       <AdditionalLibraryDirectories>C:\Users\mcbri\source\SFML\lib;$(SolutionDir)SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-
-  <ItemGroup>
-    <ClCompile Include="boardFunctions.cpp" />
-    <ClCompile Include="boardTile.cpp" />
-    <ClCompile Include="Card.cpp" />
-    <ClCompile Include="CardButton.cpp" />
-    <ClCompile Include="Deck.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="token.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="boardFunctions.hpp" />
-    <ClInclude Include="boardTile.h" />
-    <ClInclude Include="Card.hpp" />
-    <ClInclude Include="CardButton.hpp" />
-    <ClInclude Include="Deck.hpp" />
-    <ClInclude Include="Game.hpp" />
-    <ClInclude Include="Player.hpp" />
-    <ClInclude Include="token.hpp" />
-  </ItemGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
