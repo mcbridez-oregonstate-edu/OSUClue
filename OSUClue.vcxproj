@@ -22,13 +22,17 @@
     <ClInclude Include="boardFunctions.hpp" />
     <ClInclude Include="boardTile.h" />
     <ClInclude Include="Card.hpp" />
+    <ClInclude Include="CharacterSelectScreen.hpp" />
     <ClInclude Include="Client.hpp" />
+    <ClInclude Include="CreateServerScreen.hpp" />
     <ClInclude Include="Deck.hpp" />
     <ClInclude Include="GameClient.hpp" />
     <ClInclude Include="GameServer.hpp" />
     <ClInclude Include="CardButton.hpp" />
     <ClInclude Include="CharacterButton.hpp" />
     <ClInclude Include="buttonStates.hpp" />
+    <ClInclude Include="JoinServerScreen.hpp" />
+    <ClInclude Include="StartScreen.hpp" />
     <ClInclude Include="threadFunctions.hpp" />
     <ClInclude Include="SimpleButton.hpp" />
     <ClInclude Include="packetstructs.hpp" />
@@ -42,15 +46,19 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardButton.cpp" />
     <ClCompile Include="CharacterButton.cpp" />
+    <ClCompile Include="CharacterSelectScreen.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Clue.cpp" />
+    <ClCompile Include="CreateServerScreen.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="JoinServerScreen.cpp" />
     <ClCompile Include="packetstructs.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="SimpleButton.cpp" />
+    <ClCompile Include="StartScreen.cpp" />
     <ClCompile Include="threadFunctions.cpp" />
     <ClCompile Include="Token.cpp" />
   </ItemGroup>

@@ -24,7 +24,6 @@ class SimpleButton {
 		int buttonState;
 
 	public:
-		SimpleButton();
 		SimpleButton(std::string, sf::Vector2f, int);
 		void setButtonPos(sf::Vector2f);
 		void update(const sf::Vector2f);

@@ -10,18 +10,6 @@
 #include <iostream>
 
 /******************************************************************************************
-								SimpleButton::SimpleButton()
- * Description: The default constructor for SimpleButton... doesn't really do much
-******************************************************************************************/
-SimpleButton::SimpleButton()
-{
-	boxHoverColor = sf::Color::White;
-	textHoverColor = sf::Color::Black;
-	fontSize = 20;
-	buttonState = IDLE;
-}
-
-/******************************************************************************************
 	SimpleButton::SimpleButton(std::string text, sf::Vector2f targetPos, int textSize)
  * Description: The constructor for the simple button class. Takes a string
  * for the label, a target position, and an int for the text size. Gets the dimensions of 
