@@ -143,3 +143,9 @@ boardTile* token::get_space() {
 std::string token::getName() {
 	return name;
 }
+
+// set token color to black (no longer in game)
+void token::setBlack() {
+	piece.setFillColor(sf::Color::Black);
+}
+

@@ -34,6 +34,7 @@ private:
 	std::tuple<int, int> position;				//the player's token's current (x,y) coordinate
 	std::vector<std::vector<int>> notebook;
 
+	bool alive;
 	bool hasSuggested;
 
 public:
@@ -61,6 +62,11 @@ public:
 									// before presenting the player with their options.
 	void setSuggested(int);
 	bool getSuggested();
+
+	void setAlive(int);
+	bool getAlive();
+
+	
 };
 
 #endif
