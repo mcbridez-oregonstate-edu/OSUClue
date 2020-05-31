@@ -156,7 +156,7 @@ int main()
 	sf::Text controlsText;
 	controlsText.setFont(font);
 	controlsText.move(sf::Vector2f(1000, 800));
-	controlsText.setString("Arrow keys to move\n'R' to make an accusastion\n'Enter' to make suggestion/\n\tend turn");
+	controlsText.setString("Arrow keys to move\n'A' to make an accusastion\n'Enter' to make suggestion/\n\tend turn");
 
 	sf::Text endText;
 	endText.setFont(font);
@@ -303,7 +303,7 @@ int main()
 							}
 						}
 						// make accusation
-						if (event.key.code == sf::Keyboard::R) {
+						if (event.key.code == sf::Keyboard::A) {
 							game_state = 2; // accusation state
 						
 						}
