@@ -125,11 +125,12 @@ int main()
 	int steps;
 	bool has_rolled = 0;
 
-	// game state control variable,  1 = move state, 0 = suggestion state, 2 == accusation
+	// game state control variable,  1 = move state, 0 = suggestion state, 2 = accusation state, 3 = game won
 	int game_state = 1;
 	
 	// control variable for suggestion phase. 0 = picking people, 1 = picking weapon, 2 = revealing cards
 	int suggestion_phase = 0;
+	int accusation_phase = 0;
 	bool noReveal = 0;
 
 	//making text box for player/step counter
@@ -143,6 +144,17 @@ int main()
 
 	sf::Text suggestionText;
 	suggestionText.setFont(font);
+
+	sf::Text controlsText;
+	controlsText.setFont(font);
+	controlsText.move(sf::Vector2f(1000, 800));
+	controlsText.setString("Arrow keys to move\n'R' to make an accusastion\n'Enter' to end turn");
+
+	sf::Text endText;
+	endText.setFont(font);
+	endText.setCharacterSize(50);
+	endText.move(sf::Vector2f(300, 140));
+	
 
 	std::cout << "Move with the arrow keys. Press 'Enter' when you are done moving." << std::endl;
 
@@ -158,6 +170,10 @@ int main()
 	vector<CardButton> choiceButtons;
 	CardButton* revealedCard = 0;
 	string revealingPlayerName = "";
+
+
+	// vector holding player's accusation
+	vector<string> playerAccusation;
 
 	// game loop
 	while (window.isOpen())
@@ -253,12 +269,23 @@ int main()
 							}
 							else {
 								// change player
-								current_player++;
+								int count = 0;
 								has_rolled = 0;
-								if (current_player > num_players)
-								{
-									current_player = 0;
-								}
+								do {
+									current_player++;
+									if (current_player > num_players)
+									{
+										current_player = 0;
+									}
+
+									count++;
+									// check if all players are dead
+									if (count > num_players + 1) {
+										game_state = 4;
+										break;
+									}
+								} while (players[current_player]->getAlive() != 1);
+
 							}
 						}
 						// make accusation
@@ -347,24 +374,28 @@ int main()
 				}
 				else if (suggestion_phase == 6) {
 					game_state = 1;
-					current_player++;
-					has_rolled = 0;
+					// go back to moving phase, current turn stays the same to allow player to make an accustion
+				
 
 					// reset player suggestion variables
 					playerSuggest.clear();
 					suggestion_phase = 0;
 
-					if (current_player > num_players)
+					/*	current_player++;
+					has_rolled = 0;*/
+					/*if (current_player > num_players)
 					{
 						current_player = 0;
 
-					}
+					}*/
 				}
 			}
 		}
-		else if (game_state == 2) {
+		else if (game_state == 2) { // accusation state
 			int endPhase = 0;
+			int nextPhase = 0;
 
+			std::string accusationChoice;
 			while (window.pollEvent(event)) {
 				switch (event.type) {
 				case sf::Event::Closed:
@@ -373,23 +404,124 @@ int main()
 
 				case sf::Event::KeyReleased:
 					if (event.key.code == sf::Keyboard::Enter) {
-						endPhase = 1;
+						nextPhase = 1;
 					}
 				default:
 					break;
 				}
 
+				if (accusation_phase == 0) { // player chooses a suspect
+					suggestionText.setString("Accusation: Choose a Suspect");
+					for (int i = 0; i < b_people.size(); i++) {
+						b_people[i]->update(mouse);
+						if (b_people[i]->isPressed()) {
+							accusationChoice = b_people[i]->getName();
+							accusation_phase++;
+							playerAccusation.push_back(accusationChoice);
+						}
+					}
+				}
+				else if (accusation_phase == 1) { // player chooses a weapon
+					suggestionText.setString("Accusation: Choose a Weapon");
+					for (int i = 0; i < b_weapons.size(); i++) {
+						b_weapons[i]->update(mouse);
+						if (b_weapons[i]->isPressed()) {
+							accusationChoice = b_weapons[i]->getName();
+							accusation_phase++;
+							playerAccusation.push_back(accusationChoice);
+						}
+					}
+				}
+				else if (accusation_phase == 2) { // player chooses a room
+					suggestionText.setString("Accusation: Choose a Location");
+					for (int i = 0; i < b_rooms.size(); i++) {
+						b_rooms[i]->update(mouse);
+						if (b_rooms[i]->isPressed()) {
+							accusationChoice = b_rooms[i]->getName();
+							accusation_phase++;
+							playerAccusation.push_back(accusationChoice);
+						}
+					}
+				}
+				else if (accusation_phase == 3) { // show which cards were suggested
+					suggestionText.setString("You have chosen:\nPress 'Enter' to continue . . .");
+					if (nextPhase == 1) {
+						bool solved = true;
+						nextPhase = 0;
 
+						// check solution
+						for (int i = 0; i < 3; i++) {
+							if (solution[i]->getName() != playerAccusation[i]) {
+								solved = false;
+								break;
+							}
+						}
+						// incorrect solution, go to next player
+						if (solved == false) {
+							accusation_phase++;
+							players[current_player]->getToken()->setBlack(); // turn the player's token to black
+							players[current_player]->setAlive(0);
+						}
+						// case solved, end game
+						else if (solved == true) {
+							game_state = 3;
+						}
+
+					}
+				}
+				else if (accusation_phase == 4) { // tell the player has the incorrect solution
+					if (nextPhase == 1) {
+						nextPhase = 0;
+						endPhase = 1;
+					}
+				}
 				
 				// if the game hasn't ended, go to the next player
 				if (endPhase == 1) {
 					game_state = 1;
-					current_player++;
+					int count = 0;
+					do {
+						
+						current_player++;
+						if (current_player > num_players)
+						{
+							current_player = 0;
+						}
+
+						count++;
+						if (count > num_players + 1) {
+							game_state = 4;
+							break;
+						}
+					} while (players[current_player]->getAlive() != 1);
 					has_rolled = 0;
-					if (current_player > num_players)
-					{
-						current_player = 0;
-					}
+					accusation_phase = 0;
+					playerAccusation.clear();
+					
+				}
+			}
+		}
+		// win screen
+		else if (game_state == 3) {
+			while (window.pollEvent(event)) {
+				switch (event.type) {
+				case sf::Event::Closed:
+					window.close();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		// everybody loses
+		else if (game_state == 4) {
+			while (window.pollEvent(event)) {
+				switch (event.type) {
+				case sf::Event::Closed:
+					window.close();
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -403,7 +535,7 @@ int main()
 				window.draw(tokensVect[i]->get_token());
 			}
 			window.draw(stepCounterText);
-
+			window.draw(controlsText);
 			// draw player hands
 			for (int i = 0; i < 3; i++) {
 				window.draw(players[current_player]->getHand()[i]->getSprite());
@@ -535,6 +667,142 @@ int main()
 				revealedCard->resetPos();
 			}
 			window.draw(suggestionText);
+		}
+		else if (game_state == 2) { // accusation phase
+			if (accusation_phase == 0) { // render buttons for people
+				for (int i = 0; i < b_people.size(); i++) {
+					b_people[i]->render(&window);
+					b_people[i]->update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+				}
+			}
+			else if (accusation_phase == 1) { // render buttons for weapons
+					for (int i = 0; i < b_weapons.size(); i++) {
+					b_weapons[i]->render(&window);
+					b_weapons[i]->update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+				}
+			}
+			else if (accusation_phase == 2) { // render buttons for rooms
+				for (int i = 0; i < b_rooms.size(); i++) {
+					b_rooms[i]->render(&window);
+					b_rooms[i]->update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+				}
+			}
+			else if (accusation_phase == 3) { // show which cards were chosen for accusation
+				for (int i = 0; i < b_people.size(); i++) {
+					if (b_people[i]->getName() == playerAccusation[0]) {
+						b_people[i]->setButtonPos(sf::Vector2f(375, 140));
+						b_people[i]->update(mouse);
+						b_people[i]->render(&window);
+						b_people[i]->resetPos();
+					}
+				}
+				for (int i = 0; i < b_weapons.size(); i++) {
+					if (b_weapons[i]->getName() == playerAccusation[1]) {
+						b_weapons[i]->setButtonPos(sf::Vector2f(575, 140));
+						b_weapons[i]->update(mouse);
+						b_weapons[i]->render(&window);
+						b_weapons[i]->resetPos();
+					}
+				}
+				for (int i = 0; i < b_rooms.size(); i++) {
+					if (b_rooms[i]->getName() == playerAccusation[2]) {
+						b_rooms[i]->setButtonPos(sf::Vector2f(775, 140));
+						b_rooms[i]->update(mouse);
+						b_rooms[i]->render(&window);
+						b_rooms[i]->resetPos();
+					}
+				}
+			}
+			else if (accusation_phase == 4) {
+				suggestionText.setString(players[current_player]->getName() + " is incorrect!\n press Enter to continue");
+				for (int i = 0; i < b_people.size(); i++) {
+					if (b_people[i]->getName() == playerAccusation[0]) {
+						b_people[i]->setButtonPos(sf::Vector2f(375, 340));
+						b_people[i]->update(mouse);
+						b_people[i]->render(&window);
+						b_people[i]->resetPos();
+					}
+				}
+				for (int i = 0; i < b_weapons.size(); i++) {
+					if (b_weapons[i]->getName() == playerAccusation[1]) {
+						b_weapons[i]->setButtonPos(sf::Vector2f(575, 340));
+						b_weapons[i]->update(mouse);
+						b_weapons[i]->render(&window);
+						b_weapons[i]->resetPos();
+					}
+				}
+				for (int i = 0; i < b_rooms.size(); i++) {
+					if (b_rooms[i]->getName() == playerAccusation[2]) {
+						b_rooms[i]->setButtonPos(sf::Vector2f(775, 340));
+						b_rooms[i]->update(mouse);
+						b_rooms[i]->render(&window);
+						b_rooms[i]->resetPos();
+					}
+				}
+			}
+			window.draw(suggestionText);
+		}
+		else if (game_state == 3) {
+		
+		
+			for (int i = 0; i < b_people.size(); i++) {
+				if (b_people[i]->getName() == playerAccusation[0]) {
+					b_people[i]->setButtonPos(sf::Vector2f(375, 340));
+					b_people[i]->update(mouse);
+					b_people[i]->render(&window);
+					b_people[i]->resetPos();
+				}
+			}
+			for (int i = 0; i < b_weapons.size(); i++) {
+				if (b_weapons[i]->getName() == playerAccusation[1]) {
+					b_weapons[i]->setButtonPos(sf::Vector2f(575, 340));
+					b_weapons[i]->update(mouse);
+					b_weapons[i]->render(&window);
+					b_weapons[i]->resetPos();
+				}
+			}
+			for (int i = 0; i < b_rooms.size(); i++) {
+				if (b_rooms[i]->getName() == playerAccusation[2]) {
+					b_rooms[i]->setButtonPos(sf::Vector2f(775, 340));
+					b_rooms[i]->update(mouse);
+					b_rooms[i]->render(&window);
+					b_rooms[i]->resetPos();
+				}
+
+				endText.setString(players[current_player]->getName() + " has solved the case!");
+				window.draw(endText);
+			}
+			
+		}
+		else if (game_state == 4) {
+
+			for (int i = 0; i < b_people.size(); i++) {
+				if (b_people[i]->getName() == solution[0]->getName()) {
+					b_people[i]->setButtonPos(sf::Vector2f(375, 340));
+					b_people[i]->update(mouse);
+					b_people[i]->render(&window);
+					b_people[i]->resetPos();
+				}
+			}
+			for (int i = 0; i < b_weapons.size(); i++) {
+				if (b_weapons[i]->getName() == solution[1]->getName()) {
+					b_weapons[i]->setButtonPos(sf::Vector2f(575, 340));
+					b_weapons[i]->update(mouse);
+					b_weapons[i]->render(&window);
+					b_weapons[i]->resetPos();
+				}
+			}
+			for (int i = 0; i < b_rooms.size(); i++) {
+				if (b_rooms[i]->getName() == solution[2]->getName()) {
+					b_rooms[i]->setButtonPos(sf::Vector2f(775, 340));
+					b_rooms[i]->update(mouse);
+					b_rooms[i]->render(&window);
+					b_rooms[i]->resetPos();
+				}
+			}
+				endText.setString("The case went unsolved!");
+				endText.setPosition(sf::Vector2f(500, 140));
+				window.draw(endText);
 		}
 			window.display();
 	}

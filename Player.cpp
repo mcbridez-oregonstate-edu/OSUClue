@@ -64,6 +64,7 @@ Player::Player(std::string name, token* inputToken, std::tuple<int, int> positio
 	};
 	this->notebook = initialNotebook;
 	this->hasSuggested = 0;
+	this->alive = 1;
 }
 
 //Gets the player's name
@@ -379,13 +380,23 @@ string Player::showCard(vector<string> suggestionList)
 }
 
 // change whether the player can make a suggestion or not
-void Player::setSuggested(int flag)
-{
+void Player::setSuggested(int flag){
 	// 0 means the player can make a suggestion, 1 means they can't. Cant make a suggest in the same room that they started in.
 	hasSuggested = flag;
 }
  // return hasSuggested variable
-bool Player::getSuggested()
-{
+bool Player::getSuggested(){
 	return hasSuggested;
 }
+
+// set alive status
+void Player::setAlive(int status){
+	alive = status;
+}
+
+// get alive status
+bool Player::getAlive() {
+	return alive;
+}
+
+

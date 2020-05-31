@@ -28,6 +28,7 @@ public:
 	int get_col();
 	std::string getName();
 	
+	void setBlack();
 };
 
 
