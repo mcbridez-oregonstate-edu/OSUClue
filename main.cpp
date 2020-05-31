@@ -205,6 +205,8 @@ int main()
 		}
 
 		// update text box with current player/step counter
+		sf::Color color = players[current_player]->getToken()->get_token().getFillColor();		//retrieve token color to match with text color
+		stepCounterText.setFillColor(color);
 		stepCounterString = players[current_player]->getName() +
 			"\nSteps: " + std::to_string(steps) +
 			"\nLocation: " + tokensVect[current_player]->get_space()->getName();
