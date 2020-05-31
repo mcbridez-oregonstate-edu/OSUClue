@@ -10,7 +10,6 @@
 
 #include <SFML/Network.hpp>
 #include <string>
-#include <vector>
 #include "Card.hpp"
 using std::string;
 using std::vector;
@@ -31,8 +30,8 @@ sf::Packet& operator <<(sf::Packet&, const ServerPlayer&);
 
 sf::Packet& operator >>(sf::Packet&, ServerPlayer&);
 
-sf::Packet& operator <<(sf::Packet&, const vector<Card*>&);
+sf::Packet& operator <<(sf::Packet&, const Card*&);
 
-sf::Packet& operator >>(sf::Packet&, vector<Card*>&);
+sf::Packet& operator >>(sf::Packet&, Card*&);
 
 #endif

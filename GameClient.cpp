@@ -56,14 +56,16 @@ void GameClient::sendPlayerData()
 ***************************************************************************************/
 void GameClient::receiveHand()
 {
+    cout << "Socket waiting" << endl;
+    socket.setBlocking(true);
     sf::Packet handDealt;
-    vector<Card*> myHand;
     handDealt = receiveData();
-    handDealt >> myHand;
-    
-    for (int i = 0; i < myHand.size(); i++)
+    cout << "Data received" << endl;
+    Card* card;
+    for (int i = 0; i < 3; i++)
     {
-        thisPlayer.addCard(myHand[i]);
+        handDealt >> card;
+        thisPlayer.addCard(card);
     }
 }
 

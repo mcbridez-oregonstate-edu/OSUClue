@@ -21,12 +21,12 @@ sf::Packet& operator >>(sf::Packet& packet, ServerPlayer& player)
 }
 
 // Packet operator overrides for vector<Card*>
-sf::Packet& operator <<(sf::Packet& packet, const vector<Card*>& hand)
+sf::Packet& operator <<(sf::Packet& packet, const Card*& hand)
 {
     return packet << hand;
 }
 
-sf::Packet& operator >>(sf::Packet& packet, vector<Card*>& hand)
+sf::Packet& operator >>(sf::Packet& packet, Card*& hand)
 {
     return packet >> hand;
 }

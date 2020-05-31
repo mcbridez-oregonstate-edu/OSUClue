@@ -283,6 +283,7 @@ int main()
 			if (!clientCreated && serverCreated)
 			{
 				serverThread = new thread(acceptPlayers, server);
+				serverThread->detach();
 
 				client = new GameClient(serverIP, PORT);
 				clientCreated = true;
@@ -306,14 +307,6 @@ int main()
 				// If the randomly-generated "play the game" signal is sent
 				if (taken == "d2WO8CBMC7b9KoMHh@@abO8ci!")
 				{
-					if (serverCreated)
-					{
-						cout << "This is the serverCreated conditional. About to join serverThread" << endl;
-						serverThread->join();
-						cout << "Serverthread join successful, about to delete ptr" << endl;
-						delete serverThread;
-						serverThread = nullptr;
-					}
 					state = GAME;
 				}
 
@@ -413,12 +406,6 @@ int main()
 		/**********************RENDER GAME SCREEN (This is where the action takes place)**************************/
 		else if (state == GAME)
 		{
-			if (serverCreated)
-			{
-				serverThread = new thread(playGame, server);
-			}
-			client->receiveHand();
-
 			while (window.pollEvent(event))
 			{
 				switch (event.type)
@@ -442,7 +429,8 @@ int main()
 			{
 				window.draw(tokensVect[i]->get_token());
 			}
-			client->displayHand(&window);
+			client->receiveHand();
+			//client->displayHand(&window);
 			window.display();
 		}
 	}
