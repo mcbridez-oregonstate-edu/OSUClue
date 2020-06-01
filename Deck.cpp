@@ -21,34 +21,36 @@ using std::endl;
 **************************************************************************************/
 Deck::Deck()
 {
-    deck.push_back(new Card("Miss Scarlet", SUSPECT));
-    deck.push_back(new Card("Mr. Green", SUSPECT));
-    deck.push_back(new Card("Colonel Mustard", SUSPECT));
-    deck.push_back(new Card("Mrs. White", SUSPECT));
-    deck.push_back(new Card("Mrs. Peacock", SUSPECT));
-    deck.push_back(new Card("Professor Plum", SUSPECT));
-    deck.push_back(new Card("Rope", WEAPON));
-    deck.push_back(new Card("Wrench", WEAPON));
-    deck.push_back(new Card("Lead Pipe", WEAPON));
-    deck.push_back(new Card("Knife", WEAPON));
-    deck.push_back(new Card("Candlestick", WEAPON));
-    deck.push_back(new Card("Revolver", WEAPON));
-    deck.push_back(new Card("Lounge", ROOM));
-    deck.push_back(new Card("Library", ROOM));
-    deck.push_back(new Card("Ballroom", ROOM));
-    deck.push_back(new Card("Billiard Room", ROOM));
-    deck.push_back(new Card("Kitchen", ROOM));
-    deck.push_back(new Card("Conservatory", ROOM));
-    deck.push_back(new Card("Hall", ROOM));
-    deck.push_back(new Card("Study", ROOM));
-    deck.push_back(new Card("Dining Room", ROOM));
+    cout << "Creating Deck.... ";
+    deck.push_back(Card("Miss Scarlet", SUSPECT));
+    deck.push_back(Card("Mr. Green", SUSPECT));
+    deck.push_back(Card("Colonel Mustard", SUSPECT));
+    deck.push_back(Card("Mrs. White", SUSPECT));
+    deck.push_back(Card("Mrs. Peacock", SUSPECT));
+    deck.push_back(Card("Professor Plum", SUSPECT));
+    deck.push_back(Card("Rope", WEAPON));
+    deck.push_back(Card("Wrench", WEAPON));
+    deck.push_back(Card("Lead Pipe", WEAPON));
+    deck.push_back(Card("Knife", WEAPON));
+    deck.push_back(Card("Candlestick", WEAPON));
+    deck.push_back(Card("Revolver", WEAPON));
+    deck.push_back(Card("Lounge", ROOM));
+    deck.push_back(Card("Library", ROOM));
+    deck.push_back(Card("Ballroom", ROOM));
+    deck.push_back(Card("Billiard Room", ROOM));
+    deck.push_back(Card("Kitchen", ROOM));
+    deck.push_back(Card("Conservatory", ROOM));
+    deck.push_back(Card("Hall", ROOM));
+    deck.push_back(Card("Study", ROOM));
+    deck.push_back(Card("Dining Room", ROOM));
+    cout << "Done" << endl;
     pickSolution();
 }
 
 /***************************************************************************************
                                     Deck::~Deck()
  * Description: The destructor for the Deck class. Frees all the allocated memory
-***************************************************************************************/
+***************************************************************************************
 Deck::~Deck()
 {
     vector<Card*>::reverse_iterator deleteMe = deck.rbegin();
@@ -66,18 +68,18 @@ Deck::~Deck()
         deleteMe++;
     }
     solution.clear();
-}
+}*/
 
 /***************************************************************************************
                                 void Deck::swap(Card** a, Card** b)
  * Description: Swaps the locations of card a and b in the deck. A helper function for
  * shuffle
 ***************************************************************************************/
-void Deck::swap(Card** a, Card** b)
+void Deck::swap(Card* a, Card* b)
 {
-    Card* temp = *a;
+    Card* temp = a;
     *a = *b;
-    *b = temp;
+    b = temp;
 }
 
 /***************************************************************************************
@@ -102,16 +104,16 @@ void Deck::shuffle()
                                    vector<Card> Deck::getSolution()
  * Description: Returns the solution vector to the calling function
 ******************************************************************************************/
-vector<Card*> Deck::getSolution()
+vector<Card> Deck::getSolution()
 {
     return solution;
 }
 
 /******************************************************************************************
-                                 vector<Card*> Deck::getDeck()
+                                 vector<Card> Deck::getDeck()
  * Description: Returns the deck vector to the calling function
 ******************************************************************************************/
-vector<Card*> Deck::getDeck()
+vector<Card> Deck::getDeck()
 {
     return deck;
 }
@@ -121,17 +123,17 @@ vector<Card*> Deck::getDeck()
  * Description: Deals cards to a vector of hands, then returns the vector, to be 
  * distributed by the server
 ******************************************************************************************/
-vector<vector<Card*>> Deck::deal()
+vector<vector<Card>> Deck::deal()
 {
     int playerNum = 0;
 
-    vector<vector<Card*>> hands;
-    vector<Card*> p1Hand;
-    vector<Card*> p2Hand;
-    vector<Card*> p3Hand;
-    vector<Card*> p4Hand;
-    vector<Card*> p5Hand;
-    vector<Card*> p6Hand;
+    vector<vector<Card>> hands;
+    vector<Card> p1Hand;
+    vector<Card> p2Hand;
+    vector<Card> p3Hand;
+    vector<Card> p4Hand;
+    vector<Card> p5Hand;
+    vector<Card> p6Hand;
     hands.push_back(p1Hand);
     hands.push_back(p2Hand);
     hands.push_back(p3Hand);
@@ -139,7 +141,7 @@ vector<vector<Card*>> Deck::deal()
     hands.push_back(p5Hand);
     hands.push_back(p6Hand);
 
-    vector<Card*>::reverse_iterator itr = deck.rbegin();
+    vector<Card>::reverse_iterator itr = deck.rbegin();
     while (itr != deck.rend())
     {
         if (playerNum >= 6)
@@ -161,7 +163,8 @@ vector<vector<Card*>> Deck::deal()
 *******************************************************************************************/
 void Deck::pickSolution()
 {
-    vector<Card*>::iterator itr = deck.begin();
+    cout << "Picking solution.... ";
+    vector<Card>::iterator itr = deck.begin();
 
     // Seed RNG
     int seed = time(0);
@@ -169,27 +172,25 @@ void Deck::pickSolution()
 
     // Pick a suspect at random, add to the solution, and remove from main deck
     int susVal = rand() % 6;     // Gives a number 0-5 (current suspect positions)
-    Card* suspect = new Card(deck[susVal]->getName(), deck[susVal]->getType());
+    Card suspect(deck[susVal].getName(), deck[susVal].getType());
     solution.push_back(suspect);
     advance(itr, susVal);
-    delete *itr;
     deck.erase(itr);
 
     // Pick a weapon at random, add to solution, and remove from the main deck
     int weapVal= (rand() % 6) + 5;      // Gives a number 5-10 (current weapon positions after removal of 1 suspect)
-    Card* weapon = new Card(deck[weapVal]->getName(), deck[weapVal]->getType());
+    Card weapon(deck[weapVal].getName(), deck[weapVal].getType());
     solution.push_back(weapon);
     itr = deck.begin();
     advance(itr, weapVal);
-    delete *itr;
     deck.erase(itr);
 
     // Pick a room at random, add to solution, and remove from the main deck
     int roomVal = (rand() % 9) + 10;        // Gives a number 10-19 (current room positions after removal of weapon and suspect)
-    Card* room = new Card(deck[roomVal]->getName(), deck[weapVal]->getType());
+    Card room(deck[roomVal].getName(), deck[weapVal].getType());
     solution.push_back(room);
     itr = deck.begin();
     advance(itr, roomVal);
-    delete *itr;
     deck.erase(itr);
+    cout << "Done" << endl;
 }

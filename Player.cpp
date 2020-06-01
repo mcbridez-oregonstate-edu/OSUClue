@@ -61,6 +61,14 @@ Player::Player(std::string name, token* playerToken)
 													{-1, -1, -1, -1, -1},			//Billiard Room
 	};
 	this->notebook = initialNotebook;
+
+	cardTextures.push_back(card1texture);
+	cardTextures.push_back(card2texture);
+	cardTextures.push_back(card3texture);
+
+	cardSprites.push_back(card1sprite);
+	cardSprites.push_back(card2sprite);
+	cardSprites.push_back(card3sprite);
 }
 
 //Gets the player's name
@@ -86,7 +94,7 @@ std::string Player::getTokenName()
 void Player::removeCard(std::string cardName)
 {
 	for (std::size_t i = 0; i < this->hand.size(); i++) {
-		if (this->hand.at(i)->getName() == cardName) {
+		if (this->hand.at(i).getName() == cardName) {
 			this->hand.erase(this->hand.begin() + i);
 			break;
 		}
@@ -94,106 +102,102 @@ void Player::removeCard(std::string cardName)
 }
 
 //Adds a specific card to hand
-void Player::addCard(Card* card)
+void Player::addCard(Card card)
 {
 	this->hand.push_back(card);
-	string name = card->getName();
-	sf::Texture texture;
-	sf::Sprite image;
+	string name = card.getName();
+	
 	// load textures for card images
 	if (name == "Miss Scarlet") 
 	{
-		texture.loadFromFile("res/images/suspects/scarlett.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/suspects/scarlett.jpg");
 	}
 	else if (name == "Mr. Green") 
 	{
-		texture.loadFromFile("res/images/suspects/green.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/suspects/green.jpg");
 	}
 	else if (name == "Colonel Mustard") 
 	{
-		texture.loadFromFile("res/images/suspects/mustard.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/suspects/mustard.jpg");
 	}
 	else if (name == "Mrs. White") 
 	{
-		texture.loadFromFile("res/images/suspects/white.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/suspects/white.jpg");
 	}
 	else if (name == "Mrs. Peacock") 
 	{
-		texture.loadFromFile("res/images/suspects/peacock.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/suspects/peacock.jpg");
 	}
 	else if (name == "Professor Plum")
 	{
-		texture.loadFromFile("res/images/suspects/plum.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/suspects/plum.jpg");
 	}
 	else if (name == "Rope")
 	{
-		texture.loadFromFile("res/images/weapons/rope.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/weapons/rope.jpg");
 	}
 	else if (name == "Wrench") 
 	{
-		texture.loadFromFile("res/images/weapons/wrench.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/weapons/wrench.jpg");
 	}
 	else if (name == "Lead Pipe") 
 	{
-		texture.loadFromFile("res/images/weapons/leadpipe.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/weapons/leadpipe.jpg");
 	}
 	else if (name == "Knife") 
 	{
-		texture.loadFromFile("res/images/weapons/knife.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/weapons/knife.jpg");
 	}
 	else if (name == "Candlestick") 
 	{
-		texture.loadFromFile("res/images/weapons/candlestick.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/weapons/candlestick.jpg");
 	}
 	else if (name == "Revolver") 
 	{
-		texture.loadFromFile("res/images/weapons/revolver.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/weapons/revolver.jpg");
 	}
 	else if (name == "Lounge") 
 	{
-		texture.loadFromFile("res/images/locations/lounge.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/lounge.jpg");
 	}
 	else if (name == "Library") 
 	{
-		texture.loadFromFile("res/images/locations/library.jpg");;
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/library.jpg");;
 	}
 	else if (name == "Ballroom") 
 	{
-		texture.loadFromFile("res/images/locations/ballroom.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/ballroom.jpg");
 	}
 	else if (name == "Billiard Room") 
 	{
-		texture.loadFromFile("res/images/locations/billiard.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/billiard.jpg");
 	}
 	else if (name == "Kitchen") 
 	{
-		texture.loadFromFile("res/images/locations/kitchen.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/kitchen.jpg");
 	}
 	else if (name == "Conservatory") 
 	{
-		texture.loadFromFile("res/images/locations/conservatory.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/conservatory.jpg");
 	}
 	else if (name == "Hall") 
 	{
-		texture.loadFromFile("res/images/locations/hall.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/hall.jpg");
 	}
 	else if (name == "Study") 
 	{
-		texture.loadFromFile("res/images/locations/study.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/study.jpg");
 	}
 	else if (name == "Dining Room") 
 	{
-		texture.loadFromFile("res/images/locations/dining.jpg");
+		cardTextures[hand.size() - 1].loadFromFile("res/images/locations/dining.jpg");
 	}
 
-	image.setTexture(texture);
-
-	cardTextures.push_back(texture);
-	cardSprites.push_back(image);
+	cardSprites[hand.size() - 1].setTexture(cardTextures[hand.size() - 1]);
 }
 
 //Gets the player's hand as a vector of Cards
-std::vector<Card*> Player::getHand()
+std::vector<Card> Player::getHand()
 {
 	return this->hand;
 }

@@ -73,6 +73,7 @@ void Server::acceptClient()
     {
         if (listener.accept(clients[numClients]) == sf::Socket::Done)
         {
+            cout << "Client " << numClients + 1 << " accepted" << endl;
             selector.add(clients[numClients]);
             numClients++;
         }

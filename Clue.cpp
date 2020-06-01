@@ -138,6 +138,7 @@ int main()
 			// Create server
 			if (!serverCreated)
 			{
+				cout << "About to create server" << endl;
 				server = new GameServer(PORT);
 				serverCreated = true;
 			}
@@ -206,7 +207,6 @@ int main()
 				{
 				case sf::Event::Closed:
 				{
-					delete server;
 					delete client;
 					window.close();
 					break;
@@ -283,7 +283,6 @@ int main()
 			if (!clientCreated && serverCreated)
 			{
 				serverThread = new thread(acceptPlayers, server);
-				serverThread->detach();
 
 				client = new GameClient(serverIP, PORT);
 				clientCreated = true;
@@ -308,6 +307,11 @@ int main()
 				if (taken == "d2WO8CBMC7b9KoMHh@@abO8ci!")
 				{
 					cout << "Client: Signal received, changing to GAME" << endl;
+					if (serverCreated)
+					{
+						serverThread->join();
+						serverThread = nullptr;
+					}
 					state = GAME;
 				}
 
@@ -341,7 +345,10 @@ int main()
 					case sf::Event::Closed:
 					{
 						delete client;
-						delete server;
+						if (serverCreated)
+						{
+							delete server;
+						}
 						window.close();
 						break;
 					}
@@ -407,13 +414,20 @@ int main()
 		/**********************RENDER GAME SCREEN (This is where the action takes place)**************************/
 		else if (state == GAME)
 		{
+			if (serverCreated && serverThread == nullptr)
+			{
+				serverThread = new thread(playGame, server);
+			}
 			while (window.pollEvent(event))
 			{
 				switch (event.type)
 				{
 					case sf::Event::Closed:
 					{
-						delete server;
+						if (serverCreated)
+						{
+							delete server;
+						}
 						delete client;
 						window.close();
 						break;

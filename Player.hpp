@@ -29,7 +29,13 @@ class Player {
 private:
 	std::string name;							//the name of the player
 	token* playerToken;							//the token that the player has chosen
-	std::vector<Card*> hand;
+	std::vector<Card> hand;
+	sf::Sprite card1sprite;
+	sf::Sprite card2sprite;
+	sf::Sprite card3sprite;
+	sf::Texture card1texture;
+	sf::Texture card2texture;
+	sf::Texture card3texture;
 	vector<sf::Sprite> cardSprites;
 	vector<sf::Texture> cardTextures;
 	std::vector<std::vector<int>> notebook;
@@ -41,8 +47,8 @@ public:
 	token* getToken();
 	std::string getTokenName();
 	void removeCard(std::string);
-	void addCard(Card*);
-	std::vector<Card*> getHand();
+	void addCard(Card);
+	std::vector<Card> getHand();
 	std::vector<std::vector<int>> getNotebook();
 	void updateNotebook(NotebookEntities, int, int);
 	void renderCards(sf::RenderTarget* window);

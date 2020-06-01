@@ -124,12 +124,12 @@ void GameServer::startGame()
 ************************************************************************************/
 void GameServer::dealPlayers()
 {
-    vector<vector<Card*>> hands = theDeck.deal();
+    vector<vector<Card>> hands = theDeck.deal();
     cout << "Deck Dealt, about to send hands" << endl;
     for (int i = 0; i < numClients; i++)
     {
         sf::Packet playerHand;
-        vector<Card*> hand = hands[i];
+        vector<Card> hand = hands[i];
         for (int j = 0; j < hand.size(); j++)
         {
             playerHand << hand[j];

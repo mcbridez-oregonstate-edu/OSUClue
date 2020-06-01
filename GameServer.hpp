@@ -22,7 +22,7 @@ class GameServer : public Server
         ServerPlayer players[6];
         int playersCreated;
         Deck theDeck;
-        vector<Card*> solution;
+        vector<Card> solution;
         void receivePlayerInfo();
 
     public:

@@ -46,23 +46,12 @@ CardType Card::getType() {
 }
 
 // Packet operator overrides for Card*
-sf::Packet& operator <<(sf::Packet& packet, const Card*& card)
+sf::Packet& operator <<(sf::Packet& packet, const Card& card)
 {
-	return packet << card->name << card->type;
+	return packet << card.name << card.type;
 }
 
-sf::Packet& operator >>(sf::Packet& packet, Card*& card)
+sf::Packet& operator >>(sf::Packet& packet, Card& card)
 {
-	return packet >> card->name >> card->type;
-}
-
-// Packet operator overrides for CardType
-sf::Packet& operator <<(sf::Packet& packet, const CardType& type)
-{
-	return packet << static_cast<int>(type);
-}
-
-sf::Packet& operator >>(sf::Packet& packet, CardType& type)
-{
-	return packet >> type;
+	return packet >> card.name >> card.type;
 }

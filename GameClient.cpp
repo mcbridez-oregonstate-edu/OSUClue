@@ -61,10 +61,9 @@ void GameClient::receiveHand()
     if (!handDealt.endOfPacket())
     {
         cout << "Packet is not empty, about to extract data" << endl;
-        Card* card = nullptr;
-        for (int i = 0; i < 3; i++)
+        Card card;
+        while (handDealt >> card)
         {
-            handDealt >> card;
             thisPlayer.addCard(card);
         }
     }

@@ -14,18 +14,18 @@ using std::vector;
 
 class Deck {
 private:
-    vector<Card*> deck;
-    vector<Card*> solution;
+    vector<Card> deck;
+    vector<Card> solution;
     void pickSolution();        // We only want to run this once, so make it private and put it in the constructor
-    void swap(Card** a, Card** b);    // Private helper function for shuffle
+    void swap(Card* a, Card* b);    // Private helper function for shuffle
 
 public:
     Deck();
-    ~Deck();
+    //~Deck();
     void shuffle();
-    vector<vector<Card*>> deal();
-    vector<Card*> getSolution();
-    vector<Card*> getDeck();
+    vector<vector<Card>> deal();
+    vector<Card> getSolution();
+    vector<Card> getDeck();
 };
 
 #endif // !DECK_HPP

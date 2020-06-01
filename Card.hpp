@@ -26,12 +26,27 @@ public:
 	CardType getType();
 
 	//Packet operator overrides for Card*
-	friend sf::Packet& operator <<(sf::Packet&, const Card*&);
-	friend sf::Packet& operator >>(sf::Packet&, Card*&);
+	friend sf::Packet& operator <<(sf::Packet&, const Card&);
+	friend sf::Packet& operator >>(sf::Packet&, Card&);
 };
 
-// Packet operator overrides for CardType
-sf::Packet& operator <<(sf::Packet&, const CardType&);
-sf::Packet& operator >>(sf::Packet&, CardType&);
+// enum override-- taken from https://en.sfml-dev.org/forums/index.php?topic=17075.0
+// (because SFML and C++11 enums don't cooperate and I never would have been able to figure this out on my own)
+template<typename T, typename = typename std::enable_if<std::is_enum<T>::value>::type>
+sf::Packet& operator<<(sf::Packet& roPacket, const T& reMsgType)
+{
+	return roPacket << static_cast<typename std::underlying_type<T>::type>(reMsgType);
+}
+
+template<typename T, typename = typename std::enable_if<std::is_enum<T>::value>::type>
+sf::Packet& operator>>(sf::Packet& roPacket, T& reMsgType)
+{
+	typename std::underlying_type<T>::type xMsgType;
+	roPacket >> xMsgType;
+	reMsgType = static_cast<T>(xMsgType);
+
+	return roPacket;
+}
+
 
 #endif
