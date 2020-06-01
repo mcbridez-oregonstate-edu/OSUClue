@@ -76,6 +76,13 @@ boardTile::boardTile(string type, int row, int col) {
 	else {
 		roomName = "Ground Floor";
 	}
+
+	if (type.at(2) == 'p') {
+		secretPassage = true;
+	}
+	else {
+		secretPassage = false;
+	}
 }
 boardTile::boardTile(std::string type)
 {

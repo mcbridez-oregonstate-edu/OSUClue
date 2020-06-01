@@ -13,6 +13,7 @@ private:
 	bool occupied;
 	bool room;
 	bool door;
+	bool secretPassage;
 
 
 public:
