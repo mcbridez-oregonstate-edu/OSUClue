@@ -19,14 +19,3 @@ sf::Packet& operator >>(sf::Packet& packet, ServerPlayer& player)
 {
     return packet >> player.name >> player.character >> player.clientNum;
 }
-
-// Packet operator overrides for vector<Card*>
-sf::Packet& operator <<(sf::Packet& packet, const Card*& hand)
-{
-    return packet << hand;
-}
-
-sf::Packet& operator >>(sf::Packet& packet, Card*& hand)
-{
-    return packet >> hand;
-}

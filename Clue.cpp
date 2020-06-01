@@ -297,7 +297,7 @@ int main()
 			// work still needing to be done and the time constraints)
 			sf::Packet takenChars;
 			takenChars = client->receiveData();
-			int numTaken;
+			int numTaken = 0;
 			string taken;
 			takenChars >> numTaken;
 			for (int i = 0; i < numTaken; i++)
@@ -307,6 +307,7 @@ int main()
 				// If the randomly-generated "play the game" signal is sent
 				if (taken == "d2WO8CBMC7b9KoMHh@@abO8ci!")
 				{
+					cout << "Client: Signal received, changing to GAME" << endl;
 					state = GAME;
 				}
 
@@ -429,8 +430,14 @@ int main()
 			{
 				window.draw(tokensVect[i]->get_token());
 			}
-			client->receiveHand();
-			//client->displayHand(&window);
+			if (client->handIsEmpty())
+			{
+				client->receiveHand();
+			}
+			else
+			{
+				client->displayHand(&window);
+			}
 			window.display();
 		}
 	}

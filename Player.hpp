@@ -30,6 +30,8 @@ private:
 	std::string name;							//the name of the player
 	token* playerToken;							//the token that the player has chosen
 	std::vector<Card*> hand;
+	vector<sf::Sprite> cardSprites;
+	vector<sf::Texture> cardTextures;
 	std::vector<std::vector<int>> notebook;
 
 public:
@@ -41,15 +43,9 @@ public:
 	void removeCard(std::string);
 	void addCard(Card*);
 	std::vector<Card*> getHand();
-	void printHand();				// For testing purposes only, to be removed 
 	std::vector<std::vector<int>> getNotebook();
 	void updateNotebook(NotebookEntities, int, int);
-	void printNotebook();
-	vector<string> makeSuggestion();
-	bool containsCard(vector<string>);
-	string showCard(vector<string>);
-	//void takeTurn();				// Location logic needs to be implemented so that this can check if certain conditions are met
-									// before presenting the player with their options.
+	void renderCards(sf::RenderTarget* window);
 };
 
 #endif

@@ -26,7 +26,7 @@ Client::Client(sf::IpAddress server, int serverPort)
     }
     else
     {
-        socket.setBlocking(false);
+        selector.add(socket);
         success = true;
     }
 }
@@ -54,7 +54,17 @@ void Client::sendData(sf::Packet packet)
 sf::Packet Client::receiveData()
 {
     sf::Packet packet;
-    socket.receive(packet);
+    if (selector.wait(sf::microseconds(10.f)))
+    {
+        if (selector.isReady(socket))
+        {
+            socket.receive(packet);
+        }
+    }
+    else
+    {
+        //cout << "Server: Nothing ready to receive" << endl;
+    }
 
     return packet;
 }

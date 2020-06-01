@@ -27,11 +27,6 @@ struct ServerPlayer
 
 // Packet operator overrides for ServerPlayer
 sf::Packet& operator <<(sf::Packet&, const ServerPlayer&);
-
 sf::Packet& operator >>(sf::Packet&, ServerPlayer&);
-
-sf::Packet& operator <<(sf::Packet&, const Card*&);
-
-sf::Packet& operator >>(sf::Packet&, Card*&);
 
 #endif

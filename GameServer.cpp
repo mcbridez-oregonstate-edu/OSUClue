@@ -73,8 +73,9 @@ void GameServer::acceptPlayers()
     {
         acceptClient();
         // Only send if we have a new client or player
-        if (prevNumClients < numClients || prevNumPlayers < playersCreated)
+        if ((prevNumClients < numClients || prevNumPlayers < playersCreated) && playersCreated != 0)
         {
+            cout << "Sending taken characters" << endl;
             sendTakenCharacters();
             prevNumClients = numClients;
             prevNumPlayers = playersCreated;
@@ -110,6 +111,7 @@ void GameServer::sendTakenCharacters()
 ***********************************************************************************/
 void GameServer::startGame()
 {
+    cout << "Sending start game signal" << endl;
     sf::Packet startGame;
     startGame << 1 << "d2WO8CBMC7b9KoMHh@@abO8ci!";
     sendAll(startGame);
@@ -117,7 +119,7 @@ void GameServer::startGame()
 
 /************************************************************************************
                                 void GameServer::dealPlayers()
- * Description: Deals cards to the players by sending a packet with their hand in
+ * Description: Deals cards to the players by sending a packet with cards in
  * it
 ************************************************************************************/
 void GameServer::dealPlayers()

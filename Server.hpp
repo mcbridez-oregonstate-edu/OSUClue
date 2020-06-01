@@ -7,6 +7,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "packetstructs.hpp"
 #include <SFML/Network.hpp>
 #include <string>
 using std::string;

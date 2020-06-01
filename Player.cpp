@@ -97,21 +97,105 @@ void Player::removeCard(std::string cardName)
 void Player::addCard(Card* card)
 {
 	this->hand.push_back(card);
+	string name = card->getName();
+	sf::Texture texture;
+	sf::Sprite image;
+	// load textures for card images
+	if (name == "Miss Scarlet") 
+	{
+		texture.loadFromFile("res/images/suspects/scarlett.jpg");
+	}
+	else if (name == "Mr. Green") 
+	{
+		texture.loadFromFile("res/images/suspects/green.jpg");
+	}
+	else if (name == "Colonel Mustard") 
+	{
+		texture.loadFromFile("res/images/suspects/mustard.jpg");
+	}
+	else if (name == "Mrs. White") 
+	{
+		texture.loadFromFile("res/images/suspects/white.jpg");
+	}
+	else if (name == "Mrs. Peacock") 
+	{
+		texture.loadFromFile("res/images/suspects/peacock.jpg");
+	}
+	else if (name == "Professor Plum")
+	{
+		texture.loadFromFile("res/images/suspects/plum.jpg");
+	}
+	else if (name == "Rope")
+	{
+		texture.loadFromFile("res/images/weapons/rope.jpg");
+	}
+	else if (name == "Wrench") 
+	{
+		texture.loadFromFile("res/images/weapons/wrench.jpg");
+	}
+	else if (name == "Lead Pipe") 
+	{
+		texture.loadFromFile("res/images/weapons/leadpipe.jpg");
+	}
+	else if (name == "Knife") 
+	{
+		texture.loadFromFile("res/images/weapons/knife.jpg");
+	}
+	else if (name == "Candlestick") 
+	{
+		texture.loadFromFile("res/images/weapons/candlestick.jpg");
+	}
+	else if (name == "Revolver") 
+	{
+		texture.loadFromFile("res/images/weapons/revolver.jpg");
+	}
+	else if (name == "Lounge") 
+	{
+		texture.loadFromFile("res/images/locations/lounge.jpg");
+	}
+	else if (name == "Library") 
+	{
+		texture.loadFromFile("res/images/locations/library.jpg");;
+	}
+	else if (name == "Ballroom") 
+	{
+		texture.loadFromFile("res/images/locations/ballroom.jpg");
+	}
+	else if (name == "Billiard Room") 
+	{
+		texture.loadFromFile("res/images/locations/billiard.jpg");
+	}
+	else if (name == "Kitchen") 
+	{
+		texture.loadFromFile("res/images/locations/kitchen.jpg");
+	}
+	else if (name == "Conservatory") 
+	{
+		texture.loadFromFile("res/images/locations/conservatory.jpg");
+	}
+	else if (name == "Hall") 
+	{
+		texture.loadFromFile("res/images/locations/hall.jpg");
+	}
+	else if (name == "Study") 
+	{
+		texture.loadFromFile("res/images/locations/study.jpg");
+	}
+	else if (name == "Dining Room") 
+	{
+		texture.loadFromFile("res/images/locations/dining.jpg");
+	}
+
+	image.setTexture(texture);
+
+	cardTextures.push_back(texture);
+	cardSprites.push_back(image);
 }
 
 //Gets the player's hand as a vector of Cards
 std::vector<Card*> Player::getHand()
 {
 	return this->hand;
-}
-
-// Prints the Player's hand. For testing only, to be removed after UI integration
-void Player::printHand()
-{
-	for (int i = 0; i < hand.size(); i++)
-	{
-		cout << hand[i]->getName() << endl;
-	}
 }
 
 //Gets the Player's handbook
@@ -128,288 +212,17 @@ void Player::updateNotebook(NotebookEntities row, int col, int change)
 	this->notebook[row][col] = change;
 }
 
-//debug function; not likely for game use
-void Player::printNotebook() {
-	for (int i = 0; i < this->notebook.size(); i++) {
-		for (int j = 0; j < this->notebook[i].size(); j++) {
-			std::cout << this->notebook[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-}
-
-/*******************************************************************************************
-							vector<string> Player::makeSuggestion()
-* Description: Prompts the player for suggestion input and returns their answers for
-* comparison with other players' hands in the calling function. Also provides functionality 
-* for the player to view their hand and notebook so that they are able to make an educated
-* guess. Currently implemented with console IO, to be integrated with a UI later
-*******************************************************************************************/
-vector<string> Player::makeSuggestion()
+/*********************************************************************************************
+					void Player::renderCards(sf::RenderTarget* window)
+ * Description: Renders the player's cards in the target window
+*********************************************************************************************/
+void Player::renderCards(sf::RenderTarget* window)
 {
-	// Output instructions
-	vector<string> suggestion;
-	cout << "Choose a suspect to suggest by typing a number or type 'Notebook' or 'Hand' to view your notebook or hand" << endl;
-	cout << "1. Miss Scarlet" << endl;
-	cout << "2. Mr. Green" << endl;
-	cout << "3. Mrs. White" << endl;
-	cout << "4. Professor Plum" << endl;
-	cout << "5. Colonel Mustard" << endl;
-	cout << "6. Mrs. Peacock" << endl;
-
-	// Get input
-	string input1;
-	cin >> input1;
-
-	// Set up validation loop--Won't be necessary if the UI incorporates buttons for the user to click when
-	// suggesting
-	bool valid = false;
-	while (!valid)
-	{
-		if (input1 == "Notebook")
-		{
-			printNotebook();
-			// This is essentially a placeholder
-			cout << "Notebook printed. Please make a suspect selection:" << endl;
-			cin >> input1;
-		}
-		else if (input1 == "Hand")
-		{
-			cout << "Your hand contains:" << endl;
-			printHand();
-			cout << "Hand printed. Please make a suspect selection:" << endl;
-			cin >> input1;
-		}
-		// I understand this is a bit clunky but this is mainly for testing so idc
-		else if (input1 == "1" || input1 == "2" || input1 == "3" || input1 == "4" || input1 == "5" || input1 == "6")
-		{
-			valid = true;
-		}
-		else
-		{
-			cout << "Input invalid. Please select a number or type Notebook or Hand to view those options" << endl;
-			cin >> input1;
-		}
-	}
-
-	// Change input to an int so that a switch statement can be used and my life can be made easier
-	int choice1 = stoi(input1);
-
-	// Add the suspect name to the suggestion based on the player's choice
-	switch (choice1)
-	{
-		case 1:
-		{
-			suggestion.push_back("Miss Scarlet");
-			break;
-		}
-		case 2:
-		{
-			suggestion.push_back("Mr. Green");
-			break;
-		}
-		case 3:
-		{
-			suggestion.push_back("Mrs. White");
-			break;
-		}
-		case 4:
-		{
-			suggestion.push_back("Professor Plum");
-			break;
-		}
-		case 5:
-		{
-			suggestion.push_back("Colonel Mustard");
-			break;
-		}
-		case 6:
-		{
-			suggestion.push_back("Mrs. Peacock");
-			break;
-		}
-	}
-
-	// Prompt user for weapon choice
-	cout << "Choose a weapon to suggest by typing a number or type 'Notebook' or 'Hand' to view your notebook or hand" << endl;
-	cout << "1. Rope" << endl;
-	cout << "2. Wrench" << endl;
-	cout << "3. Lead Pipe" << endl;
-	cout << "4. Knife" << endl;
-	cout << "5. Candlestick" << endl;
-	cout << "6. Revolver" << endl;
-
-	// Get input
-	string input2;
-	cin >> input2;
-
-	// Set up validation loop--Won't be necessary if the UI incorporates buttons for the user to click when
-	// suggesting
-	valid = false;
-	while (!valid)
-	{
-		if (input2 == "Notebook")
-		{
-			printNotebook();
-			// This is essentially a placeholder
-			cout << "Notebook printed. Please make a suspect selection:" << endl;
-			cin >> input2;
-		}
-		else if (input2 == "Hand")
-		{
-			cout << "Your hand contains:" << endl;
-			
-			cout << "Hand printed. Please make a suspect selection:" << endl;
-			cin >> input2;
-		}
-		// I understand this is a bit clunky but this is mainly for testing so idc
-		else if (input2 == "1" || input2 == "2" || input2 == "3" || input2 == "4" || input2 == "5" || input2 == "6")
-		{
-			valid = true;
-		}
-		else
-		{
-			cout << "Input invalid. Please select a number or type Notebook or Hand to view those options" << endl;
-			cin >> input2;
-		}
-	}
-
-	// Change input to an int so that a switch statement can be used and my life can be made easier
-	int choice2;
-	choice2 = stoi(input2);
-
-	// Add the suspect name to the suggestion based on the player's choice
-	switch (choice2)
-	{
-		case 1:
-		{
-			suggestion.push_back("Rope");
-			break;
-		}
-		case 2:
-		{
-			suggestion.push_back("Wrench");
-			break;
-		}
-		case 3:
-		{
-			suggestion.push_back("Lead Pipe");
-			break;
-		}
-		case 4:
-		{
-			suggestion.push_back("Knife");
-			break;
-		}
-		case 5:
-		{
-			suggestion.push_back("Candlestick");
-			break;
-		}
-		case 6:
-		{
-			suggestion.push_back("Revolver");
-			break;
-		}
-	}
-
-	// Pick a random room to make the suggestion out of since we don't have positional info yet and 
-	// the player doesn't get to choose this
-
-	suggestion.push_back(playerToken->get_space()->getName());
-	/*int seed = time(0);
-	srand(seed);
-	int choice3;
-	choice3 = (rand() % 9) + 1;
-	switch (choice3)
-	{
-		case 1:
-		{
-			suggestion.push_back("Lounge");
-			break;
-		}
-		case 2:
-		{
-			suggestion.push_back("Billiard Room");
-			break;
-		}
-		case 3:
-		{
-			suggestion.push_back("Hall");
-			break;
-		}
-		case 4:
-		{
-			suggestion.push_back("Conservatory");
-			break;
-		}
-		case 5:
-		{
-			suggestion.push_back("Ballroom");
-			break;
-		}
-		case 6:
-		{
-			suggestion.push_back("Library");
-			break;
-		}
-		case 7:
-		{
-			suggestion.push_back("Kitchen");
-			break;
-		}
-		case 8:
-		{
-			suggestion.push_back("Study");
-			break;
-		}
-		case 9:
-		{
-			suggestion.push_back("Dining Room");
-			break;
-		}
-	}*/
-
-	return suggestion;
-}
-
-//returns true if any card from the suggestion exists in the player's hand; returns false if no cards from the suggestion exist
-bool Player::containsCard(vector<string> suggestionList)
-{
-	for (int i = 0; i < this->hand.size(); i++) {
-		if ((this->hand[i])->getName().compare(suggestionList[0]) == 0 || (this->hand[i])->getName().compare(suggestionList[1]) == 0 || (this->hand[i])->getName().compare(suggestionList[2]) == 0) {
-			return true;
-		}
-	}
-	return false;
-}
-
-//a player responds to another player's suggestion by showing one of their cards
-//returns the name (string) of the card that they want to show
-string Player::showCard(vector<string> suggestionList)
-{
-	vector<string> possibleChoices;
-	int playerChoice;
-	cout << "Which of the following cards would you like to share?" << endl;
-	//create a temporary vector of matching cards that a player can choose from (ignores cards from the player's hand that weren't a part of the suggestion)
-	for (int i = 0; i < this->hand.size(); i++) {
-		if ((this->hand[i])->getName().compare(suggestionList[0]) == 0 || (this->hand[i])->getName().compare(suggestionList[1]) == 0 || (this->hand[i])->getName().compare(suggestionList[2]) == 0) {
-			cout << this->hand[i]->getName() << endl;
-			possibleChoices.push_back(hand[i]->getName());
-		}
-	}
-
-	//list choices by number
-	for (int i = 0; i < possibleChoices.size(); i++) {
-		cout << i + 1 << ". " << possibleChoices[i] << endl;
-	}
-
-	cin >> playerChoice;
-	while (!cin || playerChoice <= 0 || playerChoice > possibleChoices.size()) {		//validating that we want an integer response
-		cout << "Please select a valid option." << endl;
-		cin.clear();
-		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		cin >> playerChoice;
-	}
-	return possibleChoices[playerChoice-1];	
+	cardSprites[0].setPosition(sf::Vector2f(375, 680));
+	cardSprites[1].setPosition(sf::Vector2f(575, 680));
+	cardSprites[2].setPosition(sf::Vector2f(775, 680));
+	
+	window->draw(cardSprites[0]);
+	window->draw(cardSprites[1]);
+	window->draw(cardSprites[2]);
 }

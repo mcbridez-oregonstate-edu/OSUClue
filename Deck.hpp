@@ -25,6 +25,7 @@ public:
     void shuffle();
     vector<vector<Card*>> deal();
     vector<Card*> getSolution();
+    vector<Card*> getDeck();
 };
 
 #endif // !DECK_HPP

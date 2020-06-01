@@ -119,9 +119,6 @@
     <ClCompile Include="SimpleButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Clue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="threadFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -135,6 +132,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CharacterSelectScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Clue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -56,16 +56,17 @@ void GameClient::sendPlayerData()
 ***************************************************************************************/
 void GameClient::receiveHand()
 {
-    cout << "Socket waiting" << endl;
-    socket.setBlocking(true);
     sf::Packet handDealt;
     handDealt = receiveData();
-    cout << "Data received" << endl;
-    Card* card;
-    for (int i = 0; i < 3; i++)
+    if (!handDealt.endOfPacket())
     {
-        handDealt >> card;
-        thisPlayer.addCard(card);
+        cout << "Packet is not empty, about to extract data" << endl;
+        Card* card = nullptr;
+        for (int i = 0; i < 3; i++)
+        {
+            handDealt >> card;
+            thisPlayer.addCard(card);
+        }
     }
 }
 
@@ -78,11 +79,14 @@ void GameClient::receiveHand()
 ****************************************************************************************/
 void GameClient::displayHand(sf::RenderTarget* window)
 {
-    thisPlayer.getHand()[0]->setCardPos(sf::Vector2f(375, 680));
-    thisPlayer.getHand()[1]->setCardPos(sf::Vector2f(575, 680));
-    thisPlayer.getHand()[2]->setCardPos(sf::Vector2f(775, 680));
-    
-    window->draw(thisPlayer.getHand()[0]->getSprite());
-    window->draw(thisPlayer.getHand()[1]->getSprite());
-    window->draw(thisPlayer.getHand()[2]->getSprite());
+    thisPlayer.renderCards(window);
+}
+
+/****************************************************************************************
+                                bool GameClient::handIsEmpty()
+ * Description: Returns true if the player object's hand of cards is empty.
+****************************************************************************************/
+bool GameClient::handIsEmpty()
+{
+    return thisPlayer.getHand().empty();
 }

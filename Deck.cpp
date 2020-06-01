@@ -108,6 +108,15 @@ vector<Card*> Deck::getSolution()
 }
 
 /******************************************************************************************
+                                 vector<Card*> Deck::getDeck()
+ * Description: Returns the deck vector to the calling function
+******************************************************************************************/
+vector<Card*> Deck::getDeck()
+{
+    return deck;
+}
+
+/******************************************************************************************
                            vector<vector<Card*>> Deck::deal()
  * Description: Deals cards to a vector of hands, then returns the vector, to be 
  * distributed by the server
@@ -140,14 +149,6 @@ vector<vector<Card*>> Deck::deal()
         hands[playerNum].push_back(*itr);
         playerNum++;
         itr++;
-    }
-
-    for (int i = 0; i < 6; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            cout << "Hand " << i << ", Card " << j << " is " << hands[i][j]->getName() << endl;
-        }
     }
 
     return hands;

@@ -24,6 +24,7 @@ class GameClient : public Client
         void sendPlayerData();
         void receiveHand();
         void displayHand(sf::RenderTarget*);
+        bool handIsEmpty();
 };
 
 #endif
