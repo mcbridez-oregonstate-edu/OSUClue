@@ -139,6 +139,7 @@ int main()
 	// control variable for suggestion phase. 0 = picking people, 1 = picking weapon, 2 = revealing cards
 	int suggestion_phase = 0;
 	int accusation_phase = 0;
+	int revealingPlayer = 0;
 	bool noReveal = 0;
 
 	//making text box for player/step counter
@@ -341,8 +342,7 @@ int main()
 					if (event.mouseButton.button == sf::Mouse::Left) {
 						for (int i = 0; i < b_notebook.size(); i++) {
 							if (b_notebook[i]->update(mouse)) {
-								players[current_player]->flipNotebook(i);
-								
+								players[current_player]->flipNotebook(i);		
 							}
 						}
 					}
@@ -368,6 +368,23 @@ int main()
 					if (event.key.code == sf::Keyboard::Enter) {
 						next_phase = 1;
 					}
+				case sf::Event::MouseButtonReleased:
+					if (event.mouseButton.button == sf::Mouse::Left) {
+						if (suggestion_phase == 4) {
+							for (int i = 0; i < b_notebook.size(); i++) {
+								if (b_notebook[i]->update(mouse)) {
+									players[revealingPlayer]->flipNotebook(i);
+								}
+							}
+						}
+						else {
+							for (int i = 0; i < b_notebook.size(); i++) {
+								if (b_notebook[i]->update(mouse)) {
+									players[current_player]->flipNotebook(i);
+								}
+							}
+						}
+					}
 				default:
 					break;
 				}
@@ -380,7 +397,7 @@ int main()
 							suggestionChoice = b_people[i]->getName();
 							suggestion_phase++;
 							playerSuggest.push_back(suggestionChoice);
-							cout << suggestionChoice << endl;
+						
 							// move the suggested player to the room
 							for (int i = 0; i < num_players; i++) {
 								
@@ -667,7 +684,7 @@ int main()
 			else if (suggestion_phase == 4) { // phase for revealing player
 
 				noReveal = 0; // reset control flag signally if there is a card to reveal;
-				int revealingPlayer = current_player + 1;
+				revealingPlayer = current_player + 1;
 
 
 				if (revealingPlayer > num_players) {
