@@ -10,12 +10,11 @@
 #include "boardFunctions.hpp"
 #include <stdlib.h>
 #include <time.h>
-
-
 #include "player.hpp"
 #include "deck.hpp"
 #include "game.hpp"
 #include "CardButton.hpp"
+#include "NotebookButton.hpp"
 #include <iomanip>
 
 using namespace std;
@@ -117,13 +116,13 @@ int main()
 		cout << endl;
 	}
 
-	// update notebook with cards in hand
-	for (int i = 0; i < players.size(); i++) {
-		for (int j = 0; j < players[i]->getHand().size(); j++) {
-			NotebookEntities nCard = players[i]->nCard(players[i]->getHand()[j]->getName());
-			players[i]->updateNotebook(nCard, 0, 0);
-		}
-	}
+	//// update notebook with cards in hand
+	//for (int i = 0; i < players.size(); i++) {
+	//	for (int j = 0; j < players[i]->getHand().size(); j++) {
+	//		NotebookEntities nCard = players[i]->nCard(players[i]->getHand()[j]->getName());
+	//		players[i]->updateNotebook(nCard, 0, 0);
+	//	}
+	//}
 
 	//control variables for changing player control
 	int current_player = 0;
@@ -183,6 +182,12 @@ int main()
 	// vector holding player's accusation
 	vector<string> playerAccusation;
 
+	NotebookButton testButton(0, sf::Vector2f(1100, 10 +18));
+
+	vector<NotebookButton*> b_notebook = createNotebookButtons();
+
+	window.setFramerateLimit(60);
+	
 	// game loop
 	while (window.isOpen())
 	{
@@ -308,7 +313,19 @@ int main()
 						
 						}
 						break;
+
+						
 					}
+				case sf::Event::MouseButtonReleased:
+					if (event.mouseButton.button == sf::Mouse::Left) {
+						for (int i = 0; i < b_notebook.size(); i++) {
+							if (b_notebook[i]->update(mouse)) {
+								players[current_player]->flipNotebook(i);
+								
+							}
+						}
+					}
+
 				default:
 					break;
 				}
@@ -553,7 +570,11 @@ int main()
 				window.draw(players[current_player]->getHand()[i]->getSprite());
 			}
 
+
 			window.draw(journal);
+			for (int i = 0; i < b_notebook.size(); i++) {
+				b_notebook[i]->render(&window, players[current_player]->getNewNotebook()[i]);
+			}
 		}
 		else if (game_state == 0) { // suggestion phase
 
@@ -569,13 +590,22 @@ int main()
 				for (int i = 0; i < b_people.size(); i++) {
 					b_people[i]->render(&window);
 					b_people[i]->update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
-
+				}
+				// render notebook
+				window.draw(journal);
+				for (int i = 0; i < b_notebook.size(); i++) {
+					b_notebook[i]->render(&window, players[current_player]->getNewNotebook()[i]);
 				}
 			}
 			else if (suggestion_phase == 1) { // render buttons for weapons
 				for (int i = 0; i < b_weapons.size(); i++) {
 					b_weapons[i]->render(&window);
 					b_weapons[i]->update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+				}
+				// render notebook
+				window.draw(journal);
+				for (int i = 0; i < b_notebook.size(); i++) {
+					b_notebook[i]->render(&window, players[current_player]->getNewNotebook()[i]);
 				}
 			}
 			// suggestion phase 2 does not draw anything
@@ -673,6 +703,10 @@ int main()
 								b_rooms[h]->resetPos();
 							}
 						}
+						window.draw(journal);
+						for (int i = 0; i < b_notebook.size(); i++) {
+							b_notebook[i]->render(&window, players[revealingPlayer]->getNewNotebook()[i]);
+						}
 					}
 				}
 				else { // no matching card was found
@@ -702,17 +736,29 @@ int main()
 					b_people[i]->render(&window);
 					b_people[i]->update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
 				}
+				window.draw(journal);
+				for (int i = 0; i < b_notebook.size(); i++) {
+					b_notebook[i]->render(&window, players[current_player]->getNewNotebook()[i]);
+				}
 			}
 			else if (accusation_phase == 1) { // render buttons for weapons
 					for (int i = 0; i < b_weapons.size(); i++) {
 					b_weapons[i]->render(&window);
 					b_weapons[i]->update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
 				}
+					window.draw(journal);
+					for (int i = 0; i < b_notebook.size(); i++) {
+						b_notebook[i]->render(&window, players[current_player]->getNewNotebook()[i]);
+					}
 			}
 			else if (accusation_phase == 2) { // render buttons for rooms
 				for (int i = 0; i < b_rooms.size(); i++) {
 					b_rooms[i]->render(&window);
 					b_rooms[i]->update(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+				}
+				window.draw(journal);
+				for (int i = 0; i < b_notebook.size(); i++) {
+					b_notebook[i]->render(&window, players[current_player]->getNewNotebook()[i]);
 				}
 			}
 			else if (accusation_phase == 3) { // show which cards were chosen for accusation
@@ -741,7 +787,7 @@ int main()
 					}
 				}
 			}
-			else if (accusation_phase == 4) {
+			else if (accusation_phase == 4) { // incorrect accusation
 				suggestionText.setString(players[current_player]->getName() + " is incorrect!\n press Enter to continue");
 				for (int i = 0; i < b_people.size(); i++) {
 					if (b_people[i]->getName() == playerAccusation[0]) {
@@ -770,7 +816,7 @@ int main()
 			}
 			window.draw(suggestionText);
 		}
-		else if (game_state == 3) {
+		else if (game_state == 3) { // game won
 		
 		
 			for (int i = 0; i < b_people.size(); i++) {
@@ -802,7 +848,7 @@ int main()
 			}
 			
 		}
-		else if (game_state == 4) {
+		else if (game_state == 4) { // everyone loses
 
 			for (int i = 0; i < b_people.size(); i++) {
 				if (b_people[i]->getName() == solution[0]->getName()) {
@@ -833,7 +879,9 @@ int main()
 				window.draw(endText);
 		}
 
-			window.display();
+		
+		
+		window.display();
 
 	}
 	// free allocated memory
@@ -860,6 +908,10 @@ int main()
 
 	for (int i = 0; i < b_rooms.size(); i++) {
 		delete b_rooms[i];
+	}
+
+	for (int i = 0; i < b_notebook.size(); i++) {
+		delete b_notebook[i];
 	}
 	return 0;
 }

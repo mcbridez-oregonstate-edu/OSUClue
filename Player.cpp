@@ -61,7 +61,14 @@ Player::Player(std::string name, token* inputToken, std::tuple<int, int> positio
 													{-1, -1, -1, -1, -1},			//19Library
 													{-1, -1, -1, -1, -1},			//20Billiard Room
 	};
+
+
 	this->notebook = initialNotebook;
+	/*int notebookInit[21];
+	for (int i = 0; i < 21; i++) {
+		notebookInit[i] = 0;
+	}*/
+	this->newNotebook/* = notebookInit;*/;
 	this->hasSuggested = 0;
 	this->alive = 1;
 }
@@ -303,23 +310,23 @@ string Player::sNotebook() {
 		"Mustard___________", 
 		"Peacock___________", 
 		"Plum______________", 
-		"Scarlet___________", 
+		"Scarlet____________", 
 		"White_____________", 
-		"Candlestick_______", 
-		"Knife_____________", 
-		"Revolver__________", 
-		"Lead Pipe_________", 
+		"Candlestick________", 
+		"Knife______________", 
+		"Revolver___________", 
+		"Lead Pipe__________", 
 		"Rope______________", 
-		"Wrench____________", 
-		"Conservatory______", 
-		"Ballroom__________", 
-		"Kitchen___________", 
-		"Dining Room_______", 
+		"Wrench___________", 
+		"Conservatory_______", 
+		"Ballroom___________", 
+		"Kitchen____________", 
+		"Dining Room________", 
 		"Lounge____________", 
-		"Hall______________", 
+		"Hall_______________", 
 		"Study_____________", 
-		"Library___________", 
-		"Billiard Room_____" };
+		"Library____________", 
+		"Billiard Room_______" };
 	for (int i = 0; i < this->notebook.size(); i++) {
 		output += rowNames[i];
 		for (int j = 0; j < this->notebook[i].size(); j++) {
@@ -573,6 +580,25 @@ void Player::setSuggested(int flag){
  // return hasSuggested variable
 bool Player::getSuggested(){
 	return hasSuggested;
+}
+
+// return notebook array
+int* Player::getNewNotebook()
+{
+	return newNotebook;
+}
+
+// flip notebook entry to 0 or 1;
+void Player::flipNotebook(int entry)
+{
+	if (newNotebook[entry] == 0) {
+		newNotebook[entry] = 1;
+		cout << "1" << endl;
+	}
+	else {
+		newNotebook[entry] = 0;
+		cout << "0" << endl;
+	}
 }
 
 // set alive status

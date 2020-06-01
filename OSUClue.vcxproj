@@ -30,6 +30,7 @@
     <ClInclude Include="Card.hpp" />
     <ClInclude Include="CardButton.hpp" />
     <ClInclude Include="Deck.hpp" />
+    <ClInclude Include="NotebookButton.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Token.hpp" />
   </ItemGroup>
@@ -40,6 +41,7 @@
     <ClCompile Include="CardButton.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NotebookButton.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Token.cpp" />
   </ItemGroup>

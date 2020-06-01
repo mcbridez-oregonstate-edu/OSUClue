@@ -213,3 +213,22 @@ vector<CardButton*> createButtonArray(int type) {
 
 	return buttonVector;
 }
+
+
+/************************************************************************************
+**	Name:vector<NotebookButton*> createNotebookButtons()
+**	Description: Function that creates and returns a vector containing the buttons for
+				 the notebook
+************************************************************************************/
+vector<NotebookButton*> createNotebookButtons()
+{
+
+	vector<NotebookButton*> buttonVector;
+
+	for (int i = 0; i < 21; i++) {
+		NotebookButton* button = new NotebookButton(i, sf::Vector2f(1100, 10 + (18 * i)));
+		buttonVector.push_back(button);
+	}
+
+	return buttonVector;
+}
