@@ -243,22 +243,18 @@ int secretPassage(token* token, boardTile*** board){
 	if (token->get_space()->getName() == "Kitchen") {
 
 		token->move_passage(824.5, 225, 4, 23, board);
-		cout << "moved to Study" << endl;
 		return 1;
 	}
 	else if (token->get_space()->getName() == "Study") {
 		token->move_passage(449.25, 585, 22, 4, board);
-		cout << "moved to Kitchen" << endl;
 		return 1;
 	}
 	else if (token->get_space()->getName() == "Lounge") {
-		token->move_passage(449.25, 205, 3, 4, board);
-		cout << "moved to Conservatory" << endl;
+		token->move_passage(449.25, 205, 3, 4, board);;
 		return 1;
 	}
 	else if (token->get_space()->getName() == "Conservatory") {
 		token->move_passage(804.75, 565, 21, 22, board);
-		cout << "moved to Lounge" << endl;
 		return 1;
 	}
 	else {
