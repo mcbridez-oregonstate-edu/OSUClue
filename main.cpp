@@ -480,6 +480,16 @@ int main()
 					if (event.key.code == sf::Keyboard::Enter) {
 						nextPhase = 1;
 					}
+				case sf::Event::MouseButtonReleased:
+					if (event.mouseButton.button == sf::Mouse::Left) {
+						
+						for (int i = 0; i < b_notebook.size(); i++) {
+							if (b_notebook[i]->update(mouse)) {
+								players[revealingPlayer]->flipNotebook(i);
+							}
+						}
+						
+					}
 				default:
 					break;
 				}
