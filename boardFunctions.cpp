@@ -213,3 +213,52 @@ vector<CardButton*> createButtonArray(int type) {
 
 	return buttonVector;
 }
+
+
+/************************************************************************************
+**	Name:vector<NotebookButton*> createNotebookButtons()
+**	Description: Function that creates and returns a vector containing the buttons for
+				 the notebook
+************************************************************************************/
+vector<NotebookButton*> createNotebookButtons()
+{
+
+	vector<NotebookButton*> buttonVector;
+
+	for (int i = 0; i < 21; i++) {
+		NotebookButton* button = new NotebookButton(i, sf::Vector2f(1100, 10 + (18 * i)));
+		buttonVector.push_back(button);
+	}
+
+	return buttonVector;
+}
+
+/************************************************************************************
+**	Name: int secretPassage(boardTile* current_space, boardTile*** board);
+**	Description: Function that implements secret passages. Returns 1 if a secret passage
+**				 is used, and 0 otherwise.
+************************************************************************************/
+int secretPassage(token* token, boardTile*** board){
+
+	if (token->get_space()->getName() == "Kitchen") {
+
+		token->move_passage(824.5, 225, 4, 23, board);
+
+		return 1;
+	}
+	else if (token->get_space()->getName() == "Study") {
+		token->move_passage(449.25, 585, 22, 4, board);
+		return 1;
+	}
+	else if (token->get_space()->getName() == "Lounge") {
+		token->move_passage(449.25, 205, 3, 4, board);
+		return 1;
+	}
+	else if (token->get_space()->getName() == "Conservatory") {
+		token->move_passage(804.75, 565, 21, 22, board);
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}

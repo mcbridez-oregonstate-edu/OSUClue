@@ -15,6 +15,10 @@ private:
 	bool door;
 
 
+	int row;
+	int col;
+
+
 public:
 
 	boardTile();
@@ -33,5 +37,8 @@ public:
 	std::string getName();
 	void setOccupied(int);
 	TILE_TYPE getTile_type();
+
+	int getRow();
+	int getCol();
 };
 #endif

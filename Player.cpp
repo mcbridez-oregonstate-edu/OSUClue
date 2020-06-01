@@ -61,7 +61,14 @@ Player::Player(std::string name, token* inputToken, std::tuple<int, int> positio
 													{-1, -1, -1, -1, -1},			//19Library
 													{-1, -1, -1, -1, -1},			//20Billiard Room
 	};
+
+
 	this->notebook = initialNotebook;
+	/*int notebookInit[21];
+	for (int i = 0; i < 21; i++) {
+		notebookInit[i] = 0;
+	}*/
+	this->newNotebook/* = notebookInit;*/;
 	this->hasSuggested = 0;
 	this->alive = 1;
 }
@@ -299,27 +306,27 @@ void Player::printNotebook() {
 string Player::sNotebook() {
 	string output;
 	string rowNames[] = { 
-		"Green_____________", 
-		"Mustard___________", 
-		"Peacock___________", 
-		"Plum______________", 
-		"Scarlet___________", 
-		"White_____________", 
-		"Candlestick_______", 
-		"Knife_____________", 
-		"Revolver__________", 
-		"Lead Pipe_________", 
-		"Rope______________", 
-		"Wrench____________", 
-		"Conservatory______", 
-		"Ballroom__________", 
-		"Kitchen___________", 
-		"Dining Room_______", 
-		"Lounge____________", 
-		"Hall______________", 
-		"Study_____________", 
-		"Library___________", 
-		"Billiard Room_____" };
+		"Green", 
+		"Mustard", 
+		"Peacock", 
+		"Plum", 
+		"Scarlet", 
+		"White", 
+		"Candlestick", 
+		"Knife", 
+		"Revolver", 
+		"Lead Pipe", 
+		"Rope", 
+		"Wrench", 
+		"Conservatory", 
+		"Ballroom", 
+		"Kitchen", 
+		"Dining Room", 
+		"Lounge", 
+		"Hall", 
+		"Study", 
+		"Library", 
+		"Billiard Room" };
 	for (int i = 0; i < this->notebook.size(); i++) {
 		output += rowNames[i];
 		for (int j = 0; j < this->notebook[i].size(); j++) {
@@ -573,6 +580,25 @@ void Player::setSuggested(int flag){
  // return hasSuggested variable
 bool Player::getSuggested(){
 	return hasSuggested;
+}
+
+// return notebook array
+int* Player::getNewNotebook()
+{
+	return newNotebook;
+}
+
+// flip notebook entry to 0 or 1;
+void Player::flipNotebook(int entry)
+{
+	if (newNotebook[entry] == 0) {
+		newNotebook[entry] = 1;
+	}
+	else {
+		newNotebook[entry] = 0;
+
+	} 
+
 }
 
 // set alive status

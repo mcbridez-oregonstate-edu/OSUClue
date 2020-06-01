@@ -33,7 +33,7 @@ private:
 	std::vector<Card*> hand;
 	std::tuple<int, int> position;				//the player's token's current (x,y) coordinate
 	std::vector<std::vector<int>> notebook;
-
+	int newNotebook[21] = { 0 };
 	bool alive;
 	bool hasSuggested;
 
@@ -62,6 +62,10 @@ public:
 									// before presenting the player with their options.
 	void setSuggested(int);
 	bool getSuggested();
+
+	int* getNewNotebook();
+	void flipNotebook(int entry);
+	
 
 	void setAlive(int);
 	bool getAlive();

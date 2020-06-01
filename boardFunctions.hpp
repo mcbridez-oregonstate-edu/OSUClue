@@ -8,6 +8,7 @@
 #include "boardTile.h"
 #include "token.hpp"
 #include "CardButton.hpp"
+#include "NotebookButton.hpp"
 #include "Player.hpp"
 #include <vector>
 
@@ -17,6 +18,9 @@ bool isValidMove(Player* current_player, boardTile* target_space, int& stepCount
 boardTile*** createBoardArray();
 vector<token*> playerTokens(double, double, boardTile***);
 vector<CardButton*> createButtonArray(int);
+vector<NotebookButton*> createNotebookButtons();
+
+int secretPassage(token* token, boardTile*** board);
 
 
 #endif
