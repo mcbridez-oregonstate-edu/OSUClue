@@ -37,6 +37,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 	double col_start = 0;
 	int row = 0;
 	int col = 0;
+	this->name = name;
 	if (name == "Colonel Mustard")
 	{
 		color = sf::Color(225, 173, 1);

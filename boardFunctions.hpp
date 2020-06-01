@@ -21,6 +21,7 @@ vector<CardButton*> createButtonArray(int);
 vector<NotebookButton*> createNotebookButtons();
 
 int secretPassage(token* token, boardTile*** board);
+void moveSuggestion(std::string room,token* token, boardTile*** board);
 
 
 #endif

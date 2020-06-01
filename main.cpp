@@ -379,6 +379,14 @@ int main()
 							suggestionChoice = b_people[i]->getName();
 							suggestion_phase++;
 							playerSuggest.push_back(suggestionChoice);
+							cout << suggestionChoice << endl;
+							// move the suggested player to the room
+							for (int i = 0; i < num_players; i++) {
+								
+								if (players[i]->getTokenName() == suggestionChoice) {	
+									moveSuggestion(players[current_player]->getToken()->get_space()->getName(), players[i]->getToken(), boardArray);
+								}
+							}
 						}
 					}
 				}
