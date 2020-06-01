@@ -139,6 +139,7 @@ int main()
 	// control variable for suggestion phase. 0 = picking people, 1 = picking weapon, 2 = revealing cards
 	int suggestion_phase = 0;
 	int accusation_phase = 0;
+	int choiceFlag = 0;
 	int revealingPlayer = 0;
 	bool noReveal = 0;
 
@@ -370,6 +371,75 @@ int main()
 					}
 				case sf::Event::MouseButtonReleased:
 					if (event.mouseButton.button == sf::Mouse::Left) {
+
+						if (suggestion_phase == 0) {
+							for (int i = 0; i < b_people.size(); i++) {
+								b_people[i]->update(mouse);
+								if (b_people[i]->isPressed()) {
+									suggestionChoice = b_people[i]->getName();
+									suggestion_phase++;
+									playerSuggest.push_back(suggestionChoice);
+
+									// move the suggested player to the room
+									for (int i = 0; i < num_players; i++) {
+
+										if (players[i]->getTokenName() == suggestionChoice) {
+											// if the token is moved to a different room due to a suggestion, they are allowed to suggest on their turn
+											if (players[i]->getToken()->get_space()->getName() != players[current_player]->getToken()->get_space()->getName()) {
+												players[i]->setSuggested(0);
+											}
+											moveSuggestion(players[current_player]->getToken()->get_space()->getName(), players[i]->getToken(), boardArray);
+											break;
+										}
+									}
+								}
+							}
+						}
+						else if (suggestion_phase == 1) {
+							for (int i = 0; i < b_weapons.size(); i++) {
+								b_weapons[i]->update(mouse);
+								if (b_weapons[i]->isPressed()) {
+									suggestionChoice = b_weapons[i]->getName();
+									suggestion_phase++;
+									playerSuggest.push_back(suggestionChoice);
+								}
+							}
+						}
+						else if (suggestion_phase == 4) {
+							if (revealingPlayer != current_player) { // render buttons for revealing player
+								for (int i = 0; i < choices.size(); i++) {
+									for (int j = 0; j < b_people.size(); j++) {
+										if (b_people[j]->getName() == choices[i]) {
+											b_people[j]->update(mouse);
+											if (b_people[j]->isPressed()) {
+												suggestion_phase++;
+												revealedCard = b_people[j];
+											}
+										}
+									}
+									for (int k = 0; k < b_weapons.size(); k++) {
+										if (b_weapons[k]->getName() == choices[i]) {
+											b_weapons[k]->update(mouse);
+											if (b_weapons[k]->isPressed()) {
+												suggestion_phase++;
+												revealedCard = b_weapons[k];
+											}
+										}
+									}
+									for (int h = 0; h < b_rooms.size(); h++) {
+										if (b_rooms[h]->getName() == choices[i]) {
+											b_rooms[h]->update(mouse);
+											if (b_rooms[h]->isPressed()) {
+												suggestion_phase++;
+												revealedCard = b_rooms[h];
+											}
+										}
+									}
+								}
+							}
+						}
+
+						// let notebook be used during suggestion
 						if (suggestion_phase == 4) {
 							for (int i = 0; i < b_notebook.size(); i++) {
 								if (b_notebook[i]->update(mouse)) {
@@ -391,38 +461,38 @@ int main()
 
 				if (suggestion_phase == 0) { // player suggests a suspect
 					suggestionText.setString("Suggestion: Choose a Suspect");
-					for (int i = 0; i < b_people.size(); i++) {
-						b_people[i]->update(mouse);
-						if (b_people[i]->isPressed()) {
-							suggestionChoice = b_people[i]->getName();
-							suggestion_phase++;
-							playerSuggest.push_back(suggestionChoice);
-						
-							// move the suggested player to the room
-							for (int i = 0; i < num_players; i++) {
-								
-								if (players[i]->getTokenName() == suggestionChoice) {	
-									// if the token is moved to a different room due to a suggestion, they are allowed to suggest on their turn
-									if (players[i]->getToken()->get_space()->getName() != players[current_player]->getToken()->get_space()->getName()) {
-										players[i]->setSuggested(0);
-									}
-									moveSuggestion(players[current_player]->getToken()->get_space()->getName(), players[i]->getToken(), boardArray);
-									break;
-								}
-							}
-						}
-					}
+					//for (int i = 0; i < b_people.size(); i++) {
+					//	b_people[i]->update(mouse);
+					//	if (b_people[i]->isPressed()) {
+					//		suggestionChoice = b_people[i]->getName();
+					//		suggestion_phase++;
+					//		playerSuggest.push_back(suggestionChoice);
+					//	
+					//		// move the suggested player to the room
+					//		for (int i = 0; i < num_players; i++) {
+					//			
+					//			if (players[i]->getTokenName() == suggestionChoice) {	
+					//				// if the token is moved to a different room due to a suggestion, they are allowed to suggest on their turn
+					//				if (players[i]->getToken()->get_space()->getName() != players[current_player]->getToken()->get_space()->getName()) {
+					//					players[i]->setSuggested(0);
+					//				}
+					//				moveSuggestion(players[current_player]->getToken()->get_space()->getName(), players[i]->getToken(), boardArray);
+					//				break;
+					//			}
+					//		}
+					//	}
+					//}
 				}
 				else if (suggestion_phase == 1) { // player suggests a weapon
 					suggestionText.setString("Suggestion: Choose a Weapon");
-					for (int i = 0; i < b_weapons.size(); i++) {
+					/*for (int i = 0; i < b_weapons.size(); i++) {
 						b_weapons[i]->update(mouse);
 						if (b_weapons[i]->isPressed()) {
 							suggestionChoice = b_weapons[i]->getName();
 							suggestion_phase++;
 							playerSuggest.push_back(suggestionChoice);
 						}
-					}
+					}*/
 				}
 				else if (suggestion_phase == 2) { // current location is automatically suggested
 					suggestionChoice = players[current_player]->getToken()->get_space()->getName();
@@ -482,7 +552,36 @@ int main()
 					}
 				case sf::Event::MouseButtonReleased:
 					if (event.mouseButton.button == sf::Mouse::Left) {
-						
+						if (accusation_phase == 0) {
+							for (int i = 0; i < b_people.size(); i++) {
+								b_people[i]->update(mouse);
+								if (b_people[i]->isPressed()) {
+									accusationChoice = b_people[i]->getName();
+									accusation_phase++;
+									playerAccusation.push_back(accusationChoice);
+								}
+							}
+						}
+						else if (accusation_phase == 1) {
+							for (int i = 0; i < b_weapons.size(); i++) {
+								b_weapons[i]->update(mouse);
+								if (b_weapons[i]->isPressed()) {
+									accusationChoice = b_weapons[i]->getName();
+									accusation_phase++;
+									playerAccusation.push_back(accusationChoice);
+								}
+							}
+						}
+						else if (accusation_phase == 2) {
+							for (int i = 0; i < b_rooms.size(); i++) {
+								b_rooms[i]->update(mouse);
+								if (b_rooms[i]->isPressed()) {
+									accusationChoice = b_rooms[i]->getName();
+									accusation_phase++;
+									playerAccusation.push_back(accusationChoice);
+								}
+							}
+						}
 						for (int i = 0; i < b_notebook.size(); i++) {
 							if (b_notebook[i]->update(mouse)) {
 								players[revealingPlayer]->flipNotebook(i);
@@ -496,36 +595,36 @@ int main()
 
 				if (accusation_phase == 0) { // player chooses a suspect
 					suggestionText.setString("Accusation: Choose a Suspect");
-					for (int i = 0; i < b_people.size(); i++) {
+					/*for (int i = 0; i < b_people.size(); i++) {
 						b_people[i]->update(mouse);
 						if (b_people[i]->isPressed()) {
 							accusationChoice = b_people[i]->getName();
 							accusation_phase++;
 							playerAccusation.push_back(accusationChoice);
 						}
-					}
+					}*/
 				}
 				else if (accusation_phase == 1) { // player chooses a weapon
 					suggestionText.setString("Accusation: Choose a Weapon");
-					for (int i = 0; i < b_weapons.size(); i++) {
+					/*for (int i = 0; i < b_weapons.size(); i++) {
 						b_weapons[i]->update(mouse);
 						if (b_weapons[i]->isPressed()) {
 							accusationChoice = b_weapons[i]->getName();
 							accusation_phase++;
 							playerAccusation.push_back(accusationChoice);
 						}
-					}
+					}*/
 				}
 				else if (accusation_phase == 2) { // player chooses a room
 					suggestionText.setString("Accusation: Choose a Location");
-					for (int i = 0; i < b_rooms.size(); i++) {
+					/*for (int i = 0; i < b_rooms.size(); i++) {
 						b_rooms[i]->update(mouse);
 						if (b_rooms[i]->isPressed()) {
 							accusationChoice = b_rooms[i]->getName();
 							accusation_phase++;
 							playerAccusation.push_back(accusationChoice);
 						}
-					}
+					}*/
 				}
 				else if (accusation_phase == 3) { // show which cards were suggested
 					suggestionText.setString("You have chosen:\nPress 'Enter' to continue . . .");
@@ -695,13 +794,13 @@ int main()
 
 				noReveal = 0; // reset control flag signally if there is a card to reveal;
 				revealingPlayer = current_player + 1;
-
+				
 
 				if (revealingPlayer > num_players) {
 					revealingPlayer = 0;
 				}
 
-				while (revealingPlayer != current_player) { // find the first player to have a matching card
+				while (revealingPlayer != current_player && choiceFlag != 1) { // find the first player to have a matching card
 					if (players[revealingPlayer]->containsCard(playerSuggest)) {
 						suggestionText.setString(players[revealingPlayer]->getName() + " choose a card to reveal");
 						revealingPlayerName = players[revealingPlayer]->getName();
@@ -713,6 +812,7 @@ int main()
 								}
 							}
 						}
+						choiceFlag = 1;
 						break;
 					}
 					revealingPlayer++;
@@ -726,36 +826,37 @@ int main()
 							if (b_people[j]->getName() == choices[i]) {
 								b_people[j]->setButtonPos(sf::Vector2f(375, 140));
 								b_people[j]->update(mouse);
-								if (b_people[j]->isPressed()) {
+								/*if (b_people[j]->isPressed()) {
 									suggestion_phase++;
 									revealedCard = b_people[j];
-								}
+								}*/
 								b_people[j]->render(&window);
-								b_people[j]->resetPos();
+								//b_people[j]->resetPos();
 							}
 						}
 						for (int k = 0; k < b_weapons.size(); k++) {
 							if (b_weapons[k]->getName() == choices[i]) {
 								b_weapons[k]->setButtonPos(sf::Vector2f(575, 140));
 								b_weapons[k]->update(mouse);
-								if (b_weapons[k]->isPressed()) {
+								/*if (b_weapons[k]->isPressed()) {
 									suggestion_phase++;
 									revealedCard = b_weapons[k];
-								}
+								}*/
 								b_weapons[k]->render(&window);
-								b_weapons[k]->resetPos();
+								//b_weapons[k]->resetPos();
 							}
 						}
 						for (int h = 0; h < b_rooms.size(); h++) {
 							if (b_rooms[h]->getName() == choices[i]) {
 								b_rooms[h]->setButtonPos(sf::Vector2f(775, 140));
 								b_rooms[h]->update(mouse);
+								/*
 								if (b_rooms[h]->isPressed()) {
 									suggestion_phase++;
 									revealedCard = b_rooms[h];
-								}
+								}*/
 								b_rooms[h]->render(&window);
-								b_rooms[h]->resetPos();
+								//b_rooms[h]->resetPos();
 							}
 						}
 						window.draw(journal);
@@ -769,9 +870,24 @@ int main()
 					noReveal = 1;
 				}			
 
-				choices.clear();
+				//choices.clear();
 			}
 			else if (suggestion_phase == 5) { // show the revealed card
+				choiceFlag = 0;
+				choices.clear();
+				// reset button positions
+				for (int j = 0; j < b_people.size(); j++) {
+						b_people[j]->resetPos();
+					
+				}
+				for (int j = 0; j < b_weapons.size(); j++) {
+					b_weapons[j]->resetPos();
+
+				}
+				for (int j = 0; j < b_rooms.size(); j++) {
+					b_rooms[j]->resetPos();
+				}
+
 				suggestionText.setString(revealingPlayerName + " reveals:\n Press Enter to coninue . . . ");
 				revealedCard->setButtonPos(sf::Vector2f(575, 340));
 				revealedCard->update(mouse);
