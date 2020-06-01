@@ -251,7 +251,9 @@ int secretPassage(token* token, boardTile*** board){
 		return 1;
 	}
 	else if (token->get_space()->getName() == "Lounge") {
-		token->move_passage(449.25, 205, 3, 4, board);
+
+		token->move_passage(449.25, 205, 3, 4, board);;
+
 		return 1;
 	}
 	else if (token->get_space()->getName() == "Conservatory") {
@@ -260,5 +262,39 @@ int secretPassage(token* token, boardTile*** board){
 	}
 	else {
 		return 0;
+	}
+}
+
+/************************************************************************************
+**	Name: void moveSuggestion(std::string room,token* token, boardTile*** board);
+**	Description: Function that moves the token to the specified room due to a suggestion
+************************************************************************************/
+void moveSuggestion(std::string room, token* token, boardTile*** board){
+	if (room == "Lounge") {
+		token->move_passage(804.75, 565, 21, 22, board);
+	}
+	else if (room == "Dining Room") {
+		token->move_passage(627, 545, 20, 13, board);
+	}
+	else if (room == "Conservatory") {
+		token->move_passage(449.25, 205, 3, 4, board);
+	}
+	else if (room == "Billiard Room") {
+		token->move_passage(587.5, 225, 4, 11, board);
+	}
+	else if (room == "Library") {
+		token->move_passage(706, 225, 4, 17, board);
+	}
+	else if (room == "Study") {
+		token->move_passage(824.6, 225, 4, 23, board);
+	}
+	else if (room == "Ballroom") {
+		token->move_passage(469, 405, 13, 5, board);
+	}
+	else if (room == "Hall") {
+		token->move_passage(804.75, 385, 12, 22, board);
+	}
+	else if (room == "Kitchen") {
+		token->move_passage(449.25, 205, 22, 4, board);
 	}
 }
