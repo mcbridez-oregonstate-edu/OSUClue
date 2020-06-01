@@ -129,7 +129,8 @@ int main()
 	int num_players = players.size() - 1;
 
 	//player step count for moving
-	int steps;
+	int steps; // keep track of steps left
+	int roll; // keep track of starting roll
 	bool has_rolled = 0;
 
 	// game state control variable,  1 = move state, 0 = suggestion state, 2 = accusation state, 3 = game won
@@ -154,8 +155,8 @@ int main()
 
 	sf::Text controlsText;
 	controlsText.setFont(font);
-	controlsText.move(sf::Vector2f(1000, 800));
-	controlsText.setString("Arrow keys to move\n'A' to make an accusastion\n'Enter' to make suggestion/\n\tend turn");
+	controlsText.move(sf::Vector2f(1000, 750));
+	controlsText.setString("\t\tControls:\nArrow keys to move\n'A' to make an accusastion\n'Enter' to make suggestion/\n\tend turn\n'P' to use a secret passage");
 
 	sf::Text endText;
 	endText.setFont(font);
@@ -205,7 +206,8 @@ int main()
 		if (!has_rolled) {
 			int die_1 = (rand() % 6) + 1;
 			int die_2 = (rand() % 6) + 1;
-			steps = die_1 + die_2;
+			roll = die_1 + die_2; // keep track of starting roll
+			steps = roll; // keep track of steps left
 			has_rolled = 1;
 		}
 
@@ -237,6 +239,7 @@ int main()
 									boardArray[players[current_player]->getToken()->get_row()][players[current_player]->getToken()->get_col() + 1],
 									steps)) {
 									players[current_player]->getToken()->move_token(width, 0, 0, 1, boardArray);
+									
 								}
 							}
 							break;
@@ -249,6 +252,7 @@ int main()
 									boardArray[players[current_player]->getToken()->get_row()][players[current_player]->getToken()->get_col() - 1],
 									steps)) {
 									players[current_player]->getToken()->move_token(-width, 0, 0, -1, boardArray);
+									
 								}
 							}
 							break;
@@ -261,6 +265,7 @@ int main()
 									boardArray[players[current_player]->getToken()->get_row() + 1][players[current_player]->getToken()->get_col()],
 									steps)) {
 									players[current_player]->getToken()->move_token(0, height, 1, 0, boardArray);
+								
 								}
 							}
 							break;
@@ -273,9 +278,23 @@ int main()
 									boardArray[players[current_player]->getToken()->get_row() - 1][players[current_player]->getToken()->get_col()],
 									steps)) {
 									players[current_player]->getToken()->move_token(0, -height, -1, 0, boardArray);
+									
 								}
 							}
 							break;
+						}
+						// use secret passage, begining of turn only
+						if (event.key.code == sf::Keyboard::P) {
+							// can only use passage at begining of turn i.e no steps moved
+							if (roll == steps) {
+								int passageUsed = 0;
+								passageUsed = secretPassage(players[current_player]->getToken(), boardArray);
+								if (passageUsed) {
+									// turn steps to 0, and allow player to make a suggestion
+									steps = 0;
+									players[current_player]->setSuggested(0);
+								}
+							}
 						}
 						// end turn
 						if (event.key.code == sf::Keyboard::Enter)
@@ -290,6 +309,7 @@ int main()
 								// change player
 								int count = 0;
 								has_rolled = 0;
+							
 								do {
 									current_player++;
 									if (current_player > num_players)
@@ -410,13 +430,7 @@ int main()
 					playerSuggest.clear();
 					suggestion_phase = 0;
 
-					/*	current_player++;
-					has_rolled = 0;*/
-					/*if (current_player > num_players)
-					{
-						current_player = 0;
-
-					}*/
+				
 				}
 			}
 		}

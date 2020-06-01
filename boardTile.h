@@ -13,7 +13,10 @@ private:
 	bool occupied;
 	bool room;
 	bool door;
-	bool secretPassage;
+
+
+	int row;
+	int col;
 
 
 public:
@@ -34,5 +37,8 @@ public:
 	std::string getName();
 	void setOccupied(int);
 	TILE_TYPE getTile_type();
+
+	int getRow();
+	int getCol();
 };
 #endif

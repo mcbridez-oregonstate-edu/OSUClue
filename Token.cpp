@@ -5,6 +5,7 @@
 ********************************************************************************************************************/
 #include <SFML/Graphics.hpp>
 #include "token.hpp"
+#include <iostream>
 
 
 
@@ -116,6 +117,7 @@ void token::move_token(double row, double col, int row_index, int col_index, boa
 	tile_row += row_index;
 	tile_col += col_index;
 	current_space = board[tile_row][tile_col];
+	
 }
 
 int token::get_row() {
@@ -142,6 +144,15 @@ boardTile* token::get_space() {
 ********************************************************************************************************************/
 std::string token::getName() {
 	return name;
+}
+
+void token::move_passage(double row, double col, int row_index, int col_index, boardTile*** board)
+{
+	piece.setPosition(row, col);
+	tile_row = row_index;
+	tile_col = col_index;
+	current_space = board[row_index][col_index];
+	
 }
 
 // set token color to black (no longer in game)
