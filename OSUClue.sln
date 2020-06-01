@@ -5,10 +5,14 @@ VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSUClue", "OSUClue.vcxproj", "{42467454-D596-4DAA-8E2F-DF3BFC949FFD}"
 EndProject
+Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "OSUClueInstaller", "..\OSUClueInstaller\OSUClueInstaller.aiproj", "{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		DefaultBuild|x64 = DefaultBuild|x64
+		DefaultBuild|x86 = DefaultBuild|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -17,10 +21,26 @@ Global
 		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.Debug|x64.Build.0 = Debug|x64
 		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.Debug|x86.ActiveCfg = Debug|Win32
 		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.Debug|x86.Build.0 = Debug|Win32
+		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.DefaultBuild|x64.ActiveCfg = Debug|x64
+		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.DefaultBuild|x64.Build.0 = Debug|x64
+		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.DefaultBuild|x86.ActiveCfg = Debug|Win32
+		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.DefaultBuild|x86.Build.0 = Debug|Win32
 		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.Release|x64.ActiveCfg = Release|x64
 		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.Release|x64.Build.0 = Release|x64
 		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.Release|x86.ActiveCfg = Release|Win32
 		{42467454-D596-4DAA-8E2F-DF3BFC949FFD}.Release|x86.Build.0 = Release|Win32
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.Debug|x64.ActiveCfg = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.Debug|x64.Build.0 = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.Debug|x86.ActiveCfg = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.Debug|x86.Build.0 = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.DefaultBuild|x64.ActiveCfg = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.DefaultBuild|x64.Build.0 = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.DefaultBuild|x86.ActiveCfg = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.DefaultBuild|x86.Build.0 = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.Release|x64.ActiveCfg = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.Release|x64.Build.0 = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.Release|x86.ActiveCfg = DefaultBuild
+		{4FBB69D8-AE73-4DCD-BB99-A6B8C8734F8F}.Release|x86.Build.0 = DefaultBuild
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
