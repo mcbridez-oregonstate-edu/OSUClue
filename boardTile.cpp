@@ -3,7 +3,7 @@
 
 using namespace std;
 
-boardTile::boardTile(string type, int row, int col) {
+boardTile::boardTile(string type, int rowInput, int colInput) {
 
 	if (type.at(0) == 'w') {
 		occupied = true;
@@ -76,6 +76,11 @@ boardTile::boardTile(string type, int row, int col) {
 	else {
 		roomName = "Ground Floor";
 	}
+
+	
+
+	row = rowInput;
+	col = colInput;
 }
 boardTile::boardTile(std::string type)
 {
@@ -132,6 +137,16 @@ bool boardTile::hasDoor() {
 
 TILE_TYPE boardTile::getTile_type() {
 	return tileType;
+}
+
+int boardTile::getRow()
+{
+	return row;
+}
+
+int boardTile::getCol()
+{
+	return col;
 }
 
 /*******************************************************************************************************************

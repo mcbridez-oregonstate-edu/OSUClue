@@ -306,27 +306,27 @@ void Player::printNotebook() {
 string Player::sNotebook() {
 	string output;
 	string rowNames[] = { 
-		"Green_____________", 
-		"Mustard___________", 
-		"Peacock___________", 
-		"Plum______________", 
-		"Scarlet____________", 
-		"White_____________", 
-		"Candlestick________", 
-		"Knife______________", 
-		"Revolver___________", 
-		"Lead Pipe__________", 
-		"Rope______________", 
-		"Wrench___________", 
-		"Conservatory_______", 
-		"Ballroom___________", 
-		"Kitchen____________", 
-		"Dining Room________", 
-		"Lounge____________", 
-		"Hall_______________", 
-		"Study_____________", 
-		"Library____________", 
-		"Billiard Room_______" };
+		"Green", 
+		"Mustard", 
+		"Peacock", 
+		"Plum", 
+		"Scarlet", 
+		"White", 
+		"Candlestick", 
+		"Knife", 
+		"Revolver", 
+		"Lead Pipe", 
+		"Rope", 
+		"Wrench", 
+		"Conservatory", 
+		"Ballroom", 
+		"Kitchen", 
+		"Dining Room", 
+		"Lounge", 
+		"Hall", 
+		"Study", 
+		"Library", 
+		"Billiard Room" };
 	for (int i = 0; i < this->notebook.size(); i++) {
 		output += rowNames[i];
 		for (int j = 0; j < this->notebook[i].size(); j++) {
@@ -596,7 +596,9 @@ void Player::flipNotebook(int entry)
 	}
 	else {
 		newNotebook[entry] = 0;
-	}
+
+	} 
+
 }
 
 // set alive status
