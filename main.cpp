@@ -303,6 +303,7 @@ int main()
 							if (players[current_player]->getToken()->get_space()->isRoom() && players[current_player]->getSuggested() == 0)
 							{
 								game_state = 0;
+								steps = 0;
 								players[current_player]->setSuggested(1);
 							}
 							else {
@@ -384,7 +385,12 @@ int main()
 							for (int i = 0; i < num_players; i++) {
 								
 								if (players[i]->getTokenName() == suggestionChoice) {	
+									// if the token is moved to a different room due to a suggestion, they are allowed to suggest on their turn
+									if (players[i]->getToken()->get_space()->getName() != players[current_player]->getToken()->get_space()->getName()) {
+										players[i]->setSuggested(0);
+									}
 									moveSuggestion(players[current_player]->getToken()->get_space()->getName(), players[i]->getToken(), boardArray);
+									break;
 								}
 							}
 						}
