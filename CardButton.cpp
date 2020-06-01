@@ -107,11 +107,11 @@ void CardButton::update(const sf::Vector2f mousePos)
 	
 
 	if (image.getGlobalBounds().contains(mousePos)) {
-		buttonState = HOVER;
+		buttonState = PRESSED;
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			buttonState = PRESSED;
-		}
+		}*/
 	}
 
 	switch (buttonState) {
