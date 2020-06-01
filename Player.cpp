@@ -593,11 +593,9 @@ void Player::flipNotebook(int entry)
 {
 	if (newNotebook[entry] == 0) {
 		newNotebook[entry] = 1;
-		cout << "1" << endl;
 	}
 	else {
 		newNotebook[entry] = 0;
-		cout << "0" << endl;
 	}
 }
 
