@@ -15,6 +15,7 @@
 #include "CreateServerScreen.hpp"
 #include "JoinServerScreen.hpp"
 #include "CharacterSelectScreen.hpp"
+#include "Die.hpp"
 #include <iostream>
 #include <thread>
 using std::cin;
@@ -72,6 +73,23 @@ int main()
 	// Create character select screen
 	CharacterSelectScreen charScreen(&font);
 
+	// Stuff for game screen
+	sf::Text gameStatus;
+	gameStatus.setFont(font);
+	gameStatus.setCharacterSize(50);
+	gameStatus.setPosition(sf::Vector2f(250, 30));
+
+	bool isTurn = false;
+	bool getTurn = true;
+	Die die(6);
+	int roll = 0;
+	int steps = 0;
+
+	sf::Text stepCounterText;
+	string stepCounterString;
+	stepCounterText.setFont(font);
+
+	// Name and character creation storage/indicators
 	string name;
 	string character;
 	bool nameEntered = false;
@@ -414,10 +432,50 @@ int main()
 		/**********************RENDER GAME SCREEN (This is where the action takes place)**************************/
 		else if (state == GAME)
 		{
+			// Create a new server thread to play the game (since we joined the last one to ensure it was done
+			// accepting players)
 			if (serverCreated && serverThread == nullptr)
 			{
 				serverThread = new thread(playGame, server);
 			}
+
+			// Keep trying to receive a hand until the client gets one
+			while (client->handIsEmpty())
+			{
+				client->receiveHand();
+			}
+
+			// Get whose turn it is
+			if (getTurn)
+			{
+				sf::Packet turnPacket;
+				turnPacket = client->receiveData();
+				if (!turnPacket.endOfPacket())
+				{
+					string name;
+					string playerTurn;
+					turnPacket >> name >> playerTurn;
+					if (playerTurn == character)
+					{
+						isTurn = true;
+						gameStatus.setString("It's your turn! Make your move!");
+						gameStatus.setPosition(sf::Vector2f(300, 30));
+						roll = die.roll() + die.roll();
+						steps = roll;
+						stepCounterString = "Steps: " + std::to_string(steps) +
+							"\nLocation: " + client->getToken()->get_space()->getName();
+						stepCounterText.setString(stepCounterString);
+					}
+					else
+					{
+						isTurn = false;
+						gameStatus.setString(name + " (" + playerTurn + ") is taking their turn...");
+						gameStatus.setPosition(sf::Vector2f(250, 30));
+						stepCounterText.setString("");
+					}
+				}
+			}
+
 			while (window.pollEvent(event))
 			{
 				switch (event.type)
@@ -432,23 +490,78 @@ int main()
 						window.close();
 						break;
 					}
+
+					case sf::Event::KeyReleased:
+					{
+						if (isTurn)
+						{
+							move(&event, clueBoard, client->getToken(), &steps);
+							stepCounterString = "Steps: " + std::to_string(steps) +
+								"\nLocation: " + client->getToken()->get_space()->getName();
+							stepCounterText.setString(stepCounterString);
+							client->updateInfo(isTurn);
+						}
+					}
+
 					default:
 					{
 						break;
 					}
 				}
 			}
+
+			sf::Packet updatedInfo;
+			updatedInfo = client->receiveData();
+			if (!updatedInfo.endOfPacket())
+			{
+				string tokenName;
+				int tokenCol;
+				int tokenRow;
+				updatedInfo >> tokenName >> tokenCol >> tokenRow >> getTurn;
+				for (int i = 0; i < tokensVect.size(); i++)
+				{
+					if (tokensVect[i]->getName() == tokenName)
+					{
+						// Figure out how the player moved
+						int colIndex = tokenCol - tokensVect[i]->get_col();
+						int rowIndex = tokenRow - tokensVect[i]->get_row();
+
+						// Move right
+						if (colIndex > 0)
+						{
+							tokensVect[i]->move_token(width, 0, 0, 1, clueBoard);
+						}
+
+						// Move left
+						else if (colIndex < 0)
+						{
+							tokensVect[i]->move_token(-width, 0, 0, -1, clueBoard);
+						}
+
+						// Move down
+						else if (rowIndex > 0)
+						{
+							tokensVect[i]->move_token(0, height, 1, 0, clueBoard);
+						}
+
+						// Move up
+						else if (rowIndex < 0)
+						{
+							tokensVect[i]->move_token(0, -height, -1, 0, clueBoard);
+						}
+					}
+				}
+			}
+
 			window.clear();
 			window.draw(rendered_board);
+			window.draw(gameStatus);
+			window.draw(stepCounterText);
 			for (int i = 0; i < tokensVect.size(); i++)
 			{
 				window.draw(tokensVect[i]->get_token());
 			}
-			if (client->handIsEmpty())
-			{
-				client->receiveHand();
-			}
-			else
+			if (!client->handIsEmpty())
 			{
 				client->displayHand(&window);
 			}

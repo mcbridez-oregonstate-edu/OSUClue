@@ -21,7 +21,6 @@ using std::endl;
 **************************************************************************************/
 Deck::Deck()
 {
-    cout << "Creating Deck.... ";
     deck.push_back(Card("Miss Scarlet", SUSPECT));
     deck.push_back(Card("Mr. Green", SUSPECT));
     deck.push_back(Card("Colonel Mustard", SUSPECT));
@@ -43,43 +42,21 @@ Deck::Deck()
     deck.push_back(Card("Hall", ROOM));
     deck.push_back(Card("Study", ROOM));
     deck.push_back(Card("Dining Room", ROOM));
-    cout << "Done" << endl;
+
     pickSolution();
+    shuffle();
 }
 
 /***************************************************************************************
-                                    Deck::~Deck()
- * Description: The destructor for the Deck class. Frees all the allocated memory
-***************************************************************************************
-Deck::~Deck()
-{
-    vector<Card*>::reverse_iterator deleteMe = deck.rbegin();
-    while (deleteMe != deck.rend())
-    {
-        delete *deleteMe;
-        deleteMe++;
-    }
-    deck.clear();
-
-    deleteMe = solution.rbegin();
-    while (deleteMe != solution.rend())
-    {
-        delete *deleteMe;
-        deleteMe++;
-    }
-    solution.clear();
-}*/
-
-/***************************************************************************************
-                                void Deck::swap(Card** a, Card** b)
+                                void Deck::swap(Card* a, Card* b)
  * Description: Swaps the locations of card a and b in the deck. A helper function for
  * shuffle
 ***************************************************************************************/
 void Deck::swap(Card* a, Card* b)
 {
-    Card* temp = a;
+    Card temp = *a;
     *a = *b;
-    b = temp;
+    *b = temp;
 }
 
 /***************************************************************************************
@@ -163,7 +140,6 @@ vector<vector<Card>> Deck::deal()
 *******************************************************************************************/
 void Deck::pickSolution()
 {
-    cout << "Picking solution.... ";
     vector<Card>::iterator itr = deck.begin();
 
     // Seed RNG
@@ -192,5 +168,4 @@ void Deck::pickSolution()
     itr = deck.begin();
     advance(itr, roomVal);
     deck.erase(itr);
-    cout << "Done" << endl;
 }

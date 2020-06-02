@@ -14,6 +14,6 @@ using std::vector;
 bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount);
 boardTile*** createBoardArray();
 vector<token*> playerTokens(double, double, boardTile***);
-
+void move(sf::Event*, boardTile***, token*, int*);
 
 #endif

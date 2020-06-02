@@ -29,8 +29,6 @@ GameClient::GameClient(sf::IpAddress server, int serverPort) : Client(server, se
 **************************************************************************************/
 void GameClient::getPlayerData(string name, token* playerToken, boardTile*** clueBoard)
 {
-    double height = 20;
-    double width = 19.75;
     thisPlayer = Player(name, playerToken);
     sendPlayerData();
 }
@@ -42,10 +40,10 @@ void GameClient::getPlayerData(string name, token* playerToken, boardTile*** clu
 **************************************************************************************/
 void GameClient::sendPlayerData()
 {
-    string name = thisPlayer.getName();
-    string character = thisPlayer.getTokenName();
+    ServerPlayer myPlayer = { thisPlayer.getName(), thisPlayer.getTokenName(), -1,
+        thisPlayer.getToken()->get_col(), thisPlayer.getToken()->get_row(), false };
     sf::Packet packet;
-    packet << name << character;
+    packet << myPlayer;
     sendData(packet);
 }
 
@@ -60,7 +58,6 @@ void GameClient::receiveHand()
     handDealt = receiveData();
     if (!handDealt.endOfPacket())
     {
-        cout << "Packet is not empty, about to extract data" << endl;
         Card card;
         while (handDealt >> card)
         {
@@ -88,4 +85,27 @@ void GameClient::displayHand(sf::RenderTarget* window)
 bool GameClient::handIsEmpty()
 {
     return thisPlayer.getHand().empty();
+}
+
+/****************************************************************************************
+                                 token* GameClient::getToken()
+ * Description: Returns the pointer to the token representing the player
+****************************************************************************************/
+token* GameClient::getToken()
+{
+    return thisPlayer.getToken();
+}
+
+/****************************************************************************************
+                                void GameClient::updateInfo(bool isTurn)
+ * Description: Sends a ServerPlayer struct to the server to update the player's
+ * position and turn status
+****************************************************************************************/
+void GameClient::updateInfo(bool isTurn)
+{
+    ServerPlayer myPlayer = { thisPlayer.getName(), thisPlayer.getTokenName(), -1,
+        thisPlayer.getToken()->get_col(), thisPlayer.getToken()->get_row(), isTurn};
+    sf::Packet updatePacket;
+    updatePacket << myPlayer;
+    sendData(updatePacket);
 }

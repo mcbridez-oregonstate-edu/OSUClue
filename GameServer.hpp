@@ -20,10 +20,12 @@ class GameServer : public Server
 {
     private:
         ServerPlayer players[6];
+        int playerTurn;
         int playersCreated;
         Deck theDeck;
         vector<Card> solution;
         void receivePlayerInfo();
+        void swap(ServerPlayer*, ServerPlayer*);
 
     public:
         GameServer();
@@ -32,6 +34,9 @@ class GameServer : public Server
         void sendTakenCharacters();
         void startGame();
         void dealPlayers();
+        void setPlayerOrder();
+        void sendTurn();
+        void updatePlayers();
 };
 
 #endif

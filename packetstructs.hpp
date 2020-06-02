@@ -11,6 +11,7 @@
 #include <SFML/Network.hpp>
 #include <string>
 #include "Card.hpp"
+#include "Token.hpp"
 using std::string;
 using std::vector;
 
@@ -20,9 +21,10 @@ struct ServerPlayer
 {
     string name;
     string character;   
-    int clientNum;    // Type on this can be changed if necessary, mainly useful for printing/testing
-    // Point pos            (uncomment once the GUI functionality gets added in--be sure to add into 
-    //                      the operator overrides below)
+    int clientNum;
+    int column;
+    int row;
+    bool isTurn;
 };
 
 // Packet operator overrides for ServerPlayer

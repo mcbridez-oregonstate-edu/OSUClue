@@ -71,7 +71,7 @@ boardTile::boardTile(string type, int row, int col) {
 		roomName = "Lounge";
 	}
 	else {
-		roomName = "Ground Floor";
+		roomName = "Hallway";
 	}
 }
 boardTile::boardTile(std::string type)

@@ -142,3 +142,59 @@ vector<token*> playerTokens(double width, double height, boardTile*** boardArray
 
 	return players;
 }
+
+/************************************************************************************************
+		void move(sf::Event* event, boardTile** boardArray, token* playerToken, int* steps)
+ * Description: Takes an event and determines if the properties of the event warrant moving the 
+ * token, then moves the token as appropriate.
+************************************************************************************************/
+void move(sf::Event* event, boardTile*** boardArray, token* playerToken, int* steps)
+{
+	// dimensions of each tile on the map
+	double height = 20;
+	double width = 19.75;
+
+	// Move token right
+	if (event->key.code == sf::Keyboard::Right)
+	{
+		if (steps > 0) {
+			if (isValidMove(playerToken->get_space(), boardArray[playerToken->get_row()][playerToken->get_col() + 1], *steps)) 
+			{
+				playerToken->move_token(width, 0, 0, 1, boardArray);
+
+			}
+		}
+	}
+	// move token left
+	else if (event->key.code == sf::Keyboard::Left)
+	{
+		if (steps > 0) {
+			if (isValidMove(playerToken->get_space(), boardArray[playerToken->get_row()][playerToken->get_col() - 1], *steps)) 
+			{
+				playerToken->move_token(-width, 0, 0, -1, boardArray);
+
+			}
+		}
+	}
+	// move token down
+	else if (event->key.code == sf::Keyboard::Down)
+	{
+		if (steps > 0) {
+			if (isValidMove(playerToken->get_space(), boardArray[playerToken->get_row() + 1][playerToken->get_col()], *steps)) 
+			{
+				playerToken->move_token(0, height, 1, 0, boardArray);
+
+			}
+		}
+	}
+	//move token up
+	else if (event->key.code == sf::Keyboard::Up)
+	{
+		if (steps > 0) {
+			if (isValidMove(playerToken->get_space(), boardArray[playerToken->get_row() - 1][playerToken->get_col()], *steps)) 
+			{
+				playerToken->move_token(0, -height, -1, 0, boardArray);
+			}
+		}
+	}
+}

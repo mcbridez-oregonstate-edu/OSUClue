@@ -25,6 +25,8 @@ class GameClient : public Client
         void receiveHand();
         void displayHand(sf::RenderTarget*);
         bool handIsEmpty();
+        token* getToken();
+        void updateInfo(bool isTurn);
 };
 
 #endif

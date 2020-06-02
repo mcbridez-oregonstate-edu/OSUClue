@@ -26,6 +26,7 @@
     <ClInclude Include="Client.hpp" />
     <ClInclude Include="CreateServerScreen.hpp" />
     <ClInclude Include="Deck.hpp" />
+    <ClInclude Include="Die.hpp" />
     <ClInclude Include="GameClient.hpp" />
     <ClInclude Include="GameServer.hpp" />
     <ClInclude Include="CardButton.hpp" />
@@ -51,6 +52,7 @@
     <ClCompile Include="Clue.cpp" />
     <ClCompile Include="CreateServerScreen.cpp" />
     <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="Die.cpp" />
     <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="JoinServerScreen.cpp" />

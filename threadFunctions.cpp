@@ -10,11 +10,13 @@
 void acceptPlayers(GameServer* server)
 {
 	server->acceptPlayers();
+	server->setPlayerOrder();
     server->startGame();
-	//server->dealPlayers();
 }
 
 void playGame(GameServer* server)
 {
 	server->dealPlayers();
+	server->sendTurn();
+	server->updatePlayers();
 }

@@ -21,7 +21,6 @@ private:
 
 public:
     Deck();
-    //~Deck();
     void shuffle();
     vector<vector<Card>> deal();
     vector<Card> getSolution();
