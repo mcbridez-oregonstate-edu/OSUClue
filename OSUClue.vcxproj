@@ -32,8 +32,10 @@
     <ClInclude Include="CardButton.hpp" />
     <ClInclude Include="CharacterButton.hpp" />
     <ClInclude Include="buttonStates.hpp" />
+    <ClInclude Include="NotebookButton.hpp" />
     <ClInclude Include="JoinServerScreen.hpp" />
     <ClInclude Include="StartScreen.hpp" />
+    <ClInclude Include="Suggestion.hpp" />
     <ClInclude Include="threadFunctions.hpp" />
     <ClInclude Include="SimpleButton.hpp" />
     <ClInclude Include="packetstructs.hpp" />
@@ -56,11 +58,13 @@
     <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="JoinServerScreen.cpp" />
+    <ClCompile Include="NotebookButton.cpp" />
     <ClCompile Include="packetstructs.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="SimpleButton.cpp" />
     <ClCompile Include="StartScreen.cpp" />
+    <ClCompile Include="Suggestion.cpp" />
     <ClCompile Include="threadFunctions.cpp" />
     <ClCompile Include="Token.cpp" />
   </ItemGroup>

@@ -101,11 +101,55 @@ token* GameClient::getToken()
  * Description: Sends a ServerPlayer struct to the server to update the player's
  * position and turn status
 ****************************************************************************************/
-void GameClient::updateInfo(bool isTurn)
+void GameClient::updateInfo(bool isTurn, bool isSuggest)
 {
     ServerPlayer myPlayer = { thisPlayer.getName(), thisPlayer.getTokenName(), -1,
         thisPlayer.getToken()->get_col(), thisPlayer.getToken()->get_row(), isTurn};
     sf::Packet updatePacket;
-    updatePacket << myPlayer;
+    updatePacket << myPlayer << isSuggest;
     sendData(updatePacket);
+}
+
+/****************************************************************************************
+                                void GameClient::sendHand()
+ * Description: Sends the player's hand of Cards to the server
+****************************************************************************************/
+void GameClient::sendHand()
+{
+    sf::Packet cards;
+    for (int i = 0; i < thisPlayer.getHand().size(); i++)
+    {
+        cards << thisPlayer.getHand()[i];
+    }
+    sendData(cards);
+}
+
+/****************************************************************************************
+                            string GameClient::getPrompt()
+ * Description: Checks if the server has sent the prompt to send cards. Returns the 
+ * string of the prompt to the calling function
+****************************************************************************************/
+string GameClient::getPrompt()
+{
+    sf::Packet prompt;
+    prompt = receiveData();
+    string sendCards;
+    if (prompt >> sendCards)
+    {
+        return sendCards;
+    }
+
+    return "NO";
+}
+
+/*****************************************************************************************
+                                bool GameClient::receiveMatch()
+ * Description: Returns the results of the card match checking to the client
+*****************************************************************************************/
+bool GameClient::receiveMatch()
+{
+    sf::Packet matchPacket;
+    bool match;
+    matchPacket >> match;
+    return match;
 }

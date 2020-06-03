@@ -37,6 +37,11 @@ class GameServer : public Server
         void setPlayerOrder();
         void sendTurn();
         void updatePlayers();
+        void playGame();
+        void handleSuggestion();
+        vector<Card> getPlayerHand();
+        void promptForCards(int);
+        void sendMatch(bool, int);
 };
 
 #endif

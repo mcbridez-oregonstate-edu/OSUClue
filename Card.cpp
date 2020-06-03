@@ -45,7 +45,7 @@ CardType Card::getType() {
 	return type;
 }
 
-// Packet operator overrides for Card*
+// Packet operator overrides for Card
 sf::Packet& operator <<(sf::Packet& packet, const Card& card)
 {
 	return packet << card.name << card.type;

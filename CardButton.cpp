@@ -106,12 +106,9 @@ void CardButton::update(const sf::Vector2f mousePos)
 	buttonState = IDLE;
 
 
-	if (image.getGlobalBounds().contains(mousePos)) {
-		buttonState = HOVER;
-
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			buttonState = PRESSED;
-		}
+	if (image.getGlobalBounds().contains(mousePos)) 
+	{
+		buttonState = PRESSED;
 	}
 
 	switch (buttonState) {
@@ -124,7 +121,7 @@ void CardButton::update(const sf::Vector2f mousePos)
 		break;
 	default:
 		// turn yellow on click
-		image.setColor(sf::Color::Yellow);
+		image.setColor(sf::Color(160, 160, 160, 100));
 		break;
 
 	}
@@ -168,4 +165,10 @@ bool CardButton::isPressed()
 std::string CardButton::getName()
 {
 	return name;
+}
+
+void CardButton::setIdle()
+{
+	buttonState = IDLE;
+	image.setColor(sf::Color(255, 255, 255));
 }

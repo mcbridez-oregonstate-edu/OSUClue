@@ -144,3 +144,17 @@ boardTile* token::get_space() {
 std::string token::getName() {
 	return name;
 }
+
+void token::move_passage(double row, double col, int row_index, int col_index, boardTile*** board)
+{
+	piece.setPosition(row, col);
+	tile_row = row_index;
+	tile_col = col_index;
+	current_space = board[row_index][col_index];
+
+}
+
+// set token color to black (no longer in game)
+void token::setBlack() {
+	piece.setFillColor(sf::Color::Black);
+}

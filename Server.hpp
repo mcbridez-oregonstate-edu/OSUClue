@@ -29,6 +29,7 @@ class Server
         void acceptClient();
         void sendOne(sf::Packet, int);
         void sendAll(sf::Packet);
+        void sendAllButOne(sf::Packet, int);
         sf::Packet receiveData();
 };
 

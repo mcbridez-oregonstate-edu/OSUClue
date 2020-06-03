@@ -15,6 +15,7 @@
 #include "CreateServerScreen.hpp"
 #include "JoinServerScreen.hpp"
 #include "CharacterSelectScreen.hpp"
+#include "Suggestion.hpp"
 #include "Die.hpp"
 #include <iostream>
 #include <thread>
@@ -25,11 +26,13 @@ using std::thread;
 
 const int PORT = 3456;
 enum joinState { START, SERVER_CREATE, SERVER_SELECT, CHARACTER_SELECT, GAME };
+enum suggestState {NO_SUGGEST, CHOOSE_SUSPECT, CHOOSE_WEAPON, SHOW_SUGGEST, SEND_SUGGEST};
 
 int main()
 {
 	// Set initial state and create window
-	int state = START;
+	joinState state = START;
+	suggestState suggest = NO_SUGGEST;
 	sf::RenderWindow window(sf::VideoMode(1280, 960), "Clue!", sf::Style::Default);
 
 	// Clue board
@@ -73,11 +76,21 @@ int main()
 	// Create character select screen
 	CharacterSelectScreen charScreen(&font);
 
+	// Create suggestion functionality
+	Suggestion suggestScreen(&font);
+
+	string suspect;
+	string weapon;
+	string room;
+	string playerTurnName;
+	bool suspectEntered = false;
+	bool weaponEntered = false;
+
 	// Stuff for game screen
 	sf::Text gameStatus;
 	gameStatus.setFont(font);
 	gameStatus.setCharacterSize(50);
-	gameStatus.setPosition(sf::Vector2f(250, 30));
+	gameStatus.setPosition(sf::Vector2f(300, 30));
 
 	bool isTurn = false;
 	bool getTurn = true;
@@ -450,121 +463,365 @@ int main()
 			{
 				sf::Packet turnPacket;
 				turnPacket = client->receiveData();
-				if (!turnPacket.endOfPacket())
+				string playerTurnCharacter;
+				bool packetReceived = false;
+				while (!packetReceived)
 				{
-					string name;
-					string playerTurn;
-					turnPacket >> name >> playerTurn;
-					if (playerTurn == character)
+					if (turnPacket >> playerTurnName >> playerTurnCharacter)
 					{
-						isTurn = true;
-						gameStatus.setString("It's your turn! Make your move!");
-						gameStatus.setPosition(sf::Vector2f(300, 30));
-						roll = die.roll() + die.roll();
-						steps = roll;
-						stepCounterString = "Steps: " + std::to_string(steps) +
-							"\nLocation: " + client->getToken()->get_space()->getName();
-						stepCounterText.setString(stepCounterString);
-					}
-					else
-					{
-						isTurn = false;
-						gameStatus.setString(name + " (" + playerTurn + ") is taking their turn...");
-						gameStatus.setPosition(sf::Vector2f(250, 30));
-						stepCounterText.setString("");
-					}
-				}
-			}
-
-			while (window.pollEvent(event))
-			{
-				switch (event.type)
-				{
-					case sf::Event::Closed:
-					{
-						if (serverCreated)
+						packetReceived = true;
+						getTurn = false;
+						if (playerTurnCharacter == character)
 						{
-							delete server;
-						}
-						delete client;
-						window.close();
-						break;
-					}
-
-					case sf::Event::KeyReleased:
-					{
-						if (isTurn)
-						{
-							move(&event, clueBoard, client->getToken(), &steps);
+							isTurn = true;
+							gameStatus.setString("It's your turn! Make your move!");
+							gameStatus.setPosition(sf::Vector2f(400, 30));
+							roll = die.roll() + die.roll();
+							steps = roll;
 							stepCounterString = "Steps: " + std::to_string(steps) +
 								"\nLocation: " + client->getToken()->get_space()->getName();
 							stepCounterText.setString(stepCounterString);
-							client->updateInfo(isTurn);
 						}
-					}
-
-					default:
-					{
-						break;
+						else
+						{
+							isTurn = false;
+							gameStatus.setString(playerTurnName + " (" + playerTurnCharacter + ") is taking their turn...");
+							gameStatus.setPosition(sf::Vector2f(300, 30));
+							stepCounterText.setString("");
+						}
 					}
 				}
 			}
 
+			// Poll window for events
+			while (window.pollEvent(event))
+			{
+				if (suggest == NO_SUGGEST)
+				{
+					switch (event.type)
+					{
+						case sf::Event::Closed:
+						{
+							if (serverCreated)
+							{
+								delete server;
+							}
+							delete client;
+							window.close();
+							break;
+						}
+
+						case sf::Event::KeyReleased:
+						{
+							if (isTurn && (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::Up))
+							{
+								move(&event, clueBoard, client->getToken(), &steps);
+								stepCounterString = "Steps: " + std::to_string(steps) +
+									"\nLocation: " + client->getToken()->get_space()->getName();
+								stepCounterText.setString(stepCounterString);
+								if (steps == 0 && !client->getToken()->get_space()->isRoom())
+								{
+									client->updateInfo(false, false);
+								}
+								else if (steps == 0 && client->getToken()->get_space()->isRoom())
+								{
+									client->updateInfo(isTurn, true);
+									suggest = CHOOSE_SUSPECT;
+								}
+								else
+								{
+									client->updateInfo(isTurn, false);
+								}
+							}
+						}
+
+						default:
+						{
+							break;
+						}
+					}
+				}
+
+				else
+				{
+					switch (event.type)
+					{
+						case sf::Event::Closed:
+						{
+							if (serverCreated)
+							{
+								delete server;
+							}
+							delete client;
+							window.close();
+							break;
+						}
+
+						case sf::Event::KeyReleased:
+						{
+							if (event.key.code == sf::Keyboard::Enter)
+							{
+								if (suggest == CHOOSE_SUSPECT && suspectEntered)
+								{
+									suggest = CHOOSE_WEAPON;
+								}
+
+								else if (suggest == CHOOSE_WEAPON && weaponEntered)
+								{
+									suggest = SHOW_SUGGEST;
+									room = client->getToken()->get_space()->getName();
+									cout << "Room: " << room << endl;
+								}
+								else if (suggest == SHOW_SUGGEST)
+								{
+									suggest = SEND_SUGGEST;
+									for (int i = 0; i < tokensVect.size(); i++)
+									{
+										if (tokensVect[i]->getName() == suspect)
+										{
+											moveSuggestion(room, tokensVect[i], clueBoard);
+										}
+									}
+								}
+							}
+						}
+
+						case sf::Event::MouseButtonReleased:
+						{
+							if (event.mouseButton.button == sf::Mouse::Left)
+							{
+								if (suggest == CHOOSE_SUSPECT)
+								{
+									suggestScreen.suggestSuspect(mouse);
+									suspect = suggestScreen.getSuspect();
+									cout << "suspect is " << suspect << endl;
+									if (suspect != "NONE")
+									{
+										suspectEntered = true;
+									}		
+								}
+
+								else if (suggest == CHOOSE_WEAPON)
+								{
+									suggestScreen.suggestWeapon(mouse);
+									weapon = suggestScreen.getWeapon();
+									cout << "weapon is " << weapon << endl;
+									if (weapon != "NONE")
+									{
+										weaponEntered = true;
+									} 
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// If it is time to send the suggestion
+			if (suggest == SEND_SUGGEST)
+			{
+				sf::Packet suggestionPacket;
+				suggestionPacket << suspect << weapon << room;
+				client->sendData(suggestionPacket);
+			}
+
+			// Get updated positional/turn/suggestion info
 			sf::Packet updatedInfo;
 			updatedInfo = client->receiveData();
-			if (!updatedInfo.endOfPacket())
+			string tokenName;
+			int tokenCol;
+			int tokenRow;
+			bool isSuggest;
+			if (updatedInfo >> tokenName >> tokenCol >> tokenRow >> getTurn >> isSuggest)
 			{
-				string tokenName;
-				int tokenCol;
-				int tokenRow;
-				updatedInfo >> tokenName >> tokenCol >> tokenRow >> getTurn;
-				for (int i = 0; i < tokensVect.size(); i++)
-				{
-					if (tokensVect[i]->getName() == tokenName)
+				if(!isTurn)
+				{ 
+					for (int i = 0; i < tokensVect.size(); i++)
 					{
-						// Figure out how the player moved
-						int colIndex = tokenCol - tokensVect[i]->get_col();
-						int rowIndex = tokenRow - tokensVect[i]->get_row();
-
-						// Move right
-						if (colIndex > 0)
+						if (tokensVect[i]->getName() == tokenName)
 						{
-							tokensVect[i]->move_token(width, 0, 0, 1, clueBoard);
+							// Figure out how the player moved
+							int colIndex = tokenCol - tokensVect[i]->get_col();
+							int rowIndex = tokenRow - tokensVect[i]->get_row();
+
+							// Move right
+							if (colIndex > 0)
+							{
+								tokensVect[i]->move_token(width, 0, 0, 1, clueBoard);
+							}
+
+							// Move left
+							else if (colIndex < 0)
+							{
+								tokensVect[i]->move_token(-width, 0, 0, -1, clueBoard);
+							}
+
+							// Move down
+							else if (rowIndex > 0)
+							{
+								tokensVect[i]->move_token(0, height, 1, 0, clueBoard);
+							}
+
+							// Move up
+							else if (rowIndex < 0)
+							{
+								tokensVect[i]->move_token(0, -height, -1, 0, clueBoard);
+							}
 						}
 
-						// Move left
-						else if (colIndex < 0)
+						// If the player whose turn it is has made a suggestion, handle that
+						if (isSuggest)
 						{
-							tokensVect[i]->move_token(-width, 0, 0, -1, clueBoard);
-						}
+							cout << "Suggestion is being made" << endl;
+							// Update status text to reflect suggestion mode
+							gameStatus.setString(playerTurnName + " is making a suggestion");
+							gameStatus.setPosition(sf::Vector2f(400, 30));
+							window.clear();
+							window.draw(rendered_board);
+							window.draw(gameStatus);
+							window.draw(stepCounterText);
+							for (int i = 0; i < tokensVect.size(); i++)
+							{
+								window.draw(tokensVect[i]->get_token());
+							}
+							client->displayHand(&window);
+							window.display();
 
-						// Move down
-						else if (rowIndex > 0)
-						{
-							tokensVect[i]->move_token(0, height, 1, 0, clueBoard);
-						}
+							string playerName, playerSuspect, playerWeapon, playerRoom;
+							bool suggestReceived = false;
+							bool promptedForCards = false;
+							bool suggestDisproved = false;
 
-						// Move up
-						else if (rowIndex < 0)
-						{
-							tokensVect[i]->move_token(0, -height, -1, 0, clueBoard);
+							while (!suggestReceived)
+							{
+								sf::Packet suggestion;
+								suggestion = client->receiveData();
+								if (suggestion >> playerName >> playerSuspect >> playerWeapon >> playerRoom)
+								{
+									cout << "Suggestion Received" << endl;
+									suggestReceived = true;
+									gameStatus.setString(playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom);
+									cout << playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom << endl;
+									for (int i = 0; i < tokensVect.size(); i++)
+									{
+										if (tokensVect[i]->getName() == playerSuspect)
+										{
+											moveSuggestion(playerRoom, tokensVect[i], clueBoard);
+										}
+									}
+									window.clear();
+									window.draw(rendered_board);
+									window.draw(gameStatus);
+									window.draw(stepCounterText);
+									for (int i = 0; i < tokensVect.size(); i++)
+									{
+										window.draw(tokensVect[i]->get_token());
+									}
+									client->displayHand(&window);
+									window.display();
+								}
+							}
+
+							while (!promptedForCards || suggestDisproved)
+							{
+								string prompt = client->getPrompt();
+								if (prompt == "CARDS")
+								{
+									promptedForCards = true;
+								}
+							}
+
+							if (promptedForCards)
+							{
+								client->sendHand();
+								bool match = client->receiveMatch();
+								if (match)
+								{
+									bool cardChosen = false;
+									bool cardEntered = false;
+									string chosenCard;
+									while (!cardChosen)
+									{
+										while (window.pollEvent(event))
+										{
+											switch (event.type)
+											{
+												case sf::Event::Closed:
+												{
+													if (serverCreated)
+													{
+														delete server;
+													}
+													delete client;
+													window.close();
+													break;
+												}
+
+												case sf::Event::KeyReleased:
+												{
+													if (event.key.code == sf::Keyboard::Enter && cardEntered)
+													{
+														cardChosen = true;
+													}
+												}
+
+												case sf::Event::MouseButtonReleased:
+												{
+													if (event.mouseButton.button == sf::Mouse::Left)
+													{
+														suggestScreen.chooseRevealCard(mouse, playerSuspect, playerWeapon, playerRoom);
+														chosenCard = suggestScreen.getRevealCard();
+														if (chosenCard != "NONE")
+														{
+															cardEntered = true;
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
 			}
 
 			window.clear();
-			window.draw(rendered_board);
-			window.draw(gameStatus);
-			window.draw(stepCounterText);
-			for (int i = 0; i < tokensVect.size(); i++)
+
+			// Render proper suggestion screen if applicable
+			if (suggest == CHOOSE_SUSPECT)
 			{
-				window.draw(tokensVect[i]->get_token());
+				suggestScreen.renderSuspects(&window);
 			}
-			if (!client->handIsEmpty())
+
+			else if (suggest == CHOOSE_WEAPON)
 			{
-				client->displayHand(&window);
+				suggestScreen.renderWeapons(&window);
 			}
+
+			else if (suggest == SHOW_SUGGEST)
+			{
+				suggestScreen.renderSuggestion(&window, suspect, weapon, room);
+			}
+
+			else
+			{
+				window.draw(rendered_board);
+				window.draw(gameStatus);
+				window.draw(stepCounterText);
+				for (int i = 0; i < tokensVect.size(); i++)
+				{
+					window.draw(tokensVect[i]->get_token());
+				}
+
+				// Only draw the cards if the hand has something in it
+				if (!client->handIsEmpty())
+				{
+					client->displayHand(&window);
+				}
+			}
+
 			window.display();
 		}
 	}

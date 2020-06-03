@@ -78,6 +78,12 @@
     <ClInclude Include="Die.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Suggestion.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NotebookButton.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -141,6 +147,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Die.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NotebookButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Suggestion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

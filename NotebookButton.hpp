@@ -4,43 +4,44 @@
 ** Description: Header file for the button class. Used to make buttons with the cards.
 ********************************************************************************/
 
-#ifndef CARDBUTTON_HPP
-#define CARDBUTTON_HPP
+#ifndef NOTEBOOKBUTTON_HPP
+#define NOTEBOOKBUTTON_HPP
 
-#include "buttonStates.hpp"
 #include <SFML/Graphics.hpp>
+#include "CardButton.hpp"
 #include <string>
 
 
-class CardButton {
+//enum button_states { IDLE = 0, HOVER, PRESSED };
+
+class NotebookButton {
 
 private:
-	sf::Sprite image;
-	sf::Texture texture;
+	sf::RectangleShape shape;
+
+
+	sf::Color idleColor;
 	sf::Color hoverColor;
+	sf::Color activeColor;
 
-	std::string name;
-	sf::Vector2f pos;
+	int notebookPos;
 
-	button_states buttonState;
 
+	int buttonState;
+	int colorFlag;
 
 
 public:
-	CardButton(std::string card, sf::Vector2f b_pos);
+	NotebookButton(int pos, sf::Vector2f b_pos);
 
 	void setButtonPos(sf::Vector2f pos);
-	void update(const sf::Vector2f mousePos);
-	void render(sf::RenderTarget* target);
-	void resetPos();
+	int update(const sf::Vector2f mousePos);
+	void render(sf::RenderTarget* target, int notebookValue);
+	void flipColor();
 	bool isPressed();
-	std::string getName();
-	void setIdle();
+
+
 
 
 };
-
-
-
-
 #endif

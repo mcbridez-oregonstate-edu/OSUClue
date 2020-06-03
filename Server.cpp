@@ -124,6 +124,25 @@ void Server::sendAll(sf::Packet packet)
 }
 
 /****************************************************************************
+           void Server::sendAllButOne(sf::Packet packet, int clientNum)
+ * Description: Sends the packet to all clients EXCEPT the one with
+ * the specified client number
+****************************************************************************/
+void Server::sendAllButOne(sf::Packet packet, int clientNum)
+{
+    for (int i = 0; i < numClients; i++)
+    {
+        if (i != clientNum)
+        {
+            if (clients[i].send(packet) != sf::Socket::Done)
+            {
+                cout << "Server Error: Issue sending data" << endl;
+            }
+        }  
+    }
+}
+
+/****************************************************************************
                           sf::Packet Server::receiveData()
  * Description: A general receive function that loops through the clients 
  * with the selector to see which is ready to receive things.
