@@ -119,8 +119,10 @@ void GameClient::sendHand()
     sf::Packet cards;
     for (int i = 0; i < thisPlayer.getHand().size(); i++)
     {
-        cards << thisPlayer.getHand()[i];
+        cout << "Card in Client before send: " << thisPlayer.getHand()[i].getName() << endl;
+        cards << thisPlayer.getHand()[i].getName();
     }
+    cout << "Client: About to send hand to server" << endl;
     sendData(cards);
 }
 
@@ -131,11 +133,13 @@ void GameClient::sendHand()
 ****************************************************************************************/
 string GameClient::getPrompt()
 {
+    cout << " Client: About to receive prompt for cards/done" << endl;
     sf::Packet prompt;
     prompt = receiveData();
     string sendCards;
     if (prompt >> sendCards)
     {
+        cout << "Client: Prompt is " << sendCards << endl;
         return sendCards;
     }
 
@@ -150,7 +154,16 @@ bool GameClient::receiveMatch()
 {
     sf::Packet matchPacket;
     bool match;
-    matchPacket >> match;
+    bool packetReceived = false;
+    while (!packetReceived)
+    {
+        matchPacket = receiveData();
+        if (matchPacket >> match)
+        {
+            packetReceived = true;
+        }
+    }
+    cout << "Client: Match received, value of match is: " << match << endl;
     return match;
 }
 
@@ -163,6 +176,7 @@ void GameClient::sendReveal(string cardName)
 {
     sf::Packet revealPacket;
     revealPacket << cardName;
+    cout << "Client: About to send reveal to server" << endl;
     sendData(revealPacket);
 }
 
@@ -175,13 +189,17 @@ string GameClient::getResults()
 {
     sf::Packet results;
     string resultString;
+    bool packetReceived = false;
 
-    results = receiveData();
-    while (!(results >> resultString))
+    while (!packetReceived)
     {
         results = receiveData();
+        if (results >> resultString)
+        {
+            packetReceived = true;
+        }
     }
-
+    cout << "Client: Received results, result is " << resultString << endl;
     return resultString;
 }
 

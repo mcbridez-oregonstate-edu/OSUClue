@@ -102,7 +102,7 @@ void JoinServerScreen::clientCreated()
 {
 	proceed.enable();
 	clientInstructions.setString("Connected to server! Press Continue to proceed");
-	clientInstructions.setPosition(sf::Vector2f(225, 450));
+	clientInstructions.setPosition(sf::Vector2f(200, 500));
 	input.clear();
 	inputDisplay.setString(input);
 }

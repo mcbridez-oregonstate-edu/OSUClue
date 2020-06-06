@@ -633,17 +633,42 @@ int main()
 				client->sendData(suggestionPacket);
 
 				// Wait for reveal to be returned
+				gameStatus.setString("Waiting for a card to be revealed...");
 				sf::Packet revealData;
-				revealData = client->receiveData();
-				while (revealData >> revealedCard >> revealingPlayer)
+				cout << "Client: waiting on card reveal" << endl;
+				bool packetReceived = false;
+				while (!packetReceived)
 				{
 					revealData = client->receiveData();
+					if (revealData >> revealedCard >> revealingPlayer)
+					{
+						packetReceived = true;
+					}
 
-					// Put the render functions in here so that it doesn't get stuck
+					// Put the render functions and event poll in here so that it doesn't get stuck
+					while (window.pollEvent(event))
+					{
+						switch (event.type)
+						{
+							case sf::Event::Closed:
+							{
+								delete client;
+								if (serverCreated)
+								{
+									delete server;
+								}
+								window.close();
+								break;
+							}
+							default:
+							{
+								break;
+							}
+						}
+					}
 					window.clear();
 					window.draw(rendered_board);
 					window.draw(gameStatus);
-					window.draw(stepCounterText);
 					for (int i = 0; i < tokensVect.size(); i++)
 					{
 						window.draw(tokensVect[i]->get_token());
@@ -651,8 +676,16 @@ int main()
 					client->displayHand(&window);
 					window.display();
 				}
-				suggestScreen.showRevealCard(revealedCard, revealingPlayer);
-				suggest = GET_REVEAL;
+				if (revealedCard == "DONE" && revealingPlayer == "")
+				{
+					gameStatus.setString(client->getResults());
+					suggest = NO_SUGGEST;
+				}
+				else
+				{
+					suggestScreen.showRevealCard(revealedCard, revealingPlayer);
+					suggest = GET_REVEAL;
+				}
 			}
 
 			// Get updated positional/turn/suggestion info
@@ -698,161 +731,212 @@ int main()
 								tokensVect[i]->move_token(0, -height, -1, 0, clueBoard);
 							}
 						}
+					}
 
-						// If the player whose turn it is has made a suggestion, handle that
-						if (isSuggest)
+					// If the player whose turn it is has made a suggestion, handle that
+					if (isSuggest)
+					{
+						cout << "Suggestion is being made" << endl;
+						// Update status text to reflect suggestion mode
+						gameStatus.setString(playerTurnName + " is making a suggestion");
+						gameStatus.setPosition(sf::Vector2f(400, 30));
+						window.clear();
+						window.draw(rendered_board);
+						window.draw(gameStatus);
+						for (int i = 0; i < tokensVect.size(); i++)
 						{
-							cout << "Suggestion is being made" << endl;
-							// Update status text to reflect suggestion mode
-							gameStatus.setString(playerTurnName + " is making a suggestion");
-							gameStatus.setPosition(sf::Vector2f(400, 30));
+							window.draw(tokensVect[i]->get_token());
+						}
+						client->displayHand(&window);
+						window.display();
+
+						string playerName, playerSuspect, playerWeapon, playerRoom;
+						bool suggestReceived = false;
+						bool promptedForCards = false;
+						bool suggestDisproved = false;
+
+						while (!suggestReceived)
+						{
+							sf::Packet suggestion;
+							suggestion = client->receiveData();
+							if (suggestion >> playerName >> playerSuspect >> playerWeapon >> playerRoom)
+							{
+								cout << "Suggestion Received" << endl;
+								suggestReceived = true;
+								gameStatus.setString(playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom);
+								gameStatus.setPosition(sf::Vector2f(100, 30));
+								cout << playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom << endl;
+								for (int i = 0; i < tokensVect.size(); i++)
+								{
+									if (tokensVect[i]->getName() == playerSuspect)
+									{
+										moveSuggestion(playerRoom, tokensVect[i], clueBoard);
+									}
+								}
+							}
+
+							// Put in event loop and render functs so things don't get stuck
+							while (window.pollEvent(event))
+							{
+								switch (event.type)
+								{
+								case sf::Event::Closed:
+								{
+									delete client;
+									if (serverCreated)
+									{
+										delete server;
+									}
+									window.close();
+									break;
+								}
+								default:
+								{
+									break;
+								}
+								}
+							}
 							window.clear();
 							window.draw(rendered_board);
 							window.draw(gameStatus);
-							window.draw(stepCounterText);
 							for (int i = 0; i < tokensVect.size(); i++)
 							{
 								window.draw(tokensVect[i]->get_token());
 							}
 							client->displayHand(&window);
 							window.display();
+						}
 
-							string playerName, playerSuspect, playerWeapon, playerRoom;
-							bool suggestReceived = false;
-							bool promptedForCards = false;
-							bool suggestDisproved = false;
-
-							while (!suggestReceived)
+						while (!promptedForCards && !suggestDisproved)
+						{
+							string prompt = client->getPrompt();
+							if (prompt == "CARDS")
 							{
-								sf::Packet suggestion;
-								suggestion = client->receiveData();
-								if (suggestion >> playerName >> playerSuspect >> playerWeapon >> playerRoom)
+								cout << "Client: Received prompt for cards" << endl;
+								promptedForCards = true;
+							}
+							else if (prompt == "DONE")
+							{
+								suggestDisproved = true;
+							}
+
+							// Put in event loop and render functs so things don't get stuck
+							while (window.pollEvent(event))
+							{
+								switch (event.type)
 								{
-									cout << "Suggestion Received" << endl;
-									suggestReceived = true;
-									gameStatus.setString(playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom);
-									cout << playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom << endl;
-									for (int i = 0; i < tokensVect.size(); i++)
+									case sf::Event::Closed:
 									{
-										if (tokensVect[i]->getName() == playerSuspect)
+										delete client;
+										if (serverCreated)
 										{
-											moveSuggestion(playerRoom, tokensVect[i], clueBoard);
+											delete server;
 										}
+										window.close();
+										break;
+									}
+									default:
+									{
+										break;
 									}
 								}
-								window.clear();
-								window.draw(rendered_board);
-								window.draw(gameStatus);
-								window.draw(stepCounterText);
-								for (int i = 0; i < tokensVect.size(); i++)
-								{
-									window.draw(tokensVect[i]->get_token());
-								}
-								client->displayHand(&window);
-								window.display();
 							}
-
-							while (!promptedForCards && !suggestDisproved)
+							window.clear();
+							window.draw(rendered_board);
+							window.draw(gameStatus);
+							for (int i = 0; i < tokensVect.size(); i++)
 							{
-								string prompt = client->getPrompt();
-								if (prompt == "CARDS")
-								{
-									cout << "Client: Received prompt for cards" << endl;
-									promptedForCards = true;
-								}
-								else if (prompt == "DONE")
-								{
-									suggestDisproved = true;
-								}
-
-								window.clear();
-								window.draw(rendered_board);
-								window.draw(gameStatus);
-								window.draw(stepCounterText);
-								for (int i = 0; i < tokensVect.size(); i++)
-								{
-									window.draw(tokensVect[i]->get_token());
-								}
-								client->displayHand(&window);
-								window.display();
+								window.draw(tokensVect[i]->get_token());
 							}
+							client->displayHand(&window);
+							window.display();
+						}
 
-							if (promptedForCards)
+						if (promptedForCards)
+						{
+							cout << "Client: About to send hand" << endl;
+							client->sendHand();
+							bool match = client->receiveMatch();
+							if (match)
 							{
-								cout << "Client: About to send hand" << endl;
-								client->sendHand();
-								bool match = client->receiveMatch();
-								if (match)
+								cout << "Match found" << endl;
+								// Find which cards match the suggestion in prep for the choice screen
+								suggestScreen.findRevealCards(playerSuspect, playerWeapon, playerRoom, client->getHand());
+
+								bool cardChosen = false;
+								bool cardEntered = false;
+								string chosenCard;
+								while (!cardChosen)
 								{
-									cout << "Match found" << endl;
-									bool cardChosen = false;
-									bool cardEntered = false;
-									string chosenCard;
-									while (!cardChosen)
+									while (window.pollEvent(event))
 									{
-										while (window.pollEvent(event))
+										switch (event.type)
 										{
-											switch (event.type)
+											case sf::Event::Closed:
 											{
-												case sf::Event::Closed:
+												if (serverCreated)
 												{
-													if (serverCreated)
-													{
-														delete server;
-													}
-													delete client;
-													window.close();
-													break;
+													delete server;
 												}
+												delete client;
+												window.close();
+												break;
+											}
 
-												case sf::Event::KeyReleased:
+											case sf::Event::KeyReleased:
+											{
+												if (event.key.code == sf::Keyboard::Enter && cardEntered)
 												{
-													if (event.key.code == sf::Keyboard::Enter && cardEntered)
-													{
-														cardChosen = true;
-													}
+													cardChosen = true;
 												}
+												break;
+											}
 
-												case sf::Event::MouseButtonReleased:
+											case sf::Event::MouseButtonReleased:
+											{
+												if (event.mouseButton.button == sf::Mouse::Left)
 												{
-													if (event.mouseButton.button == sf::Mouse::Left)
+													suggestScreen.chooseRevealCard(mouse);
+													chosenCard = suggestScreen.getRevealCard();
+													cout << "Chosen card is " << chosenCard << endl;
+													if (chosenCard != "NONE")
 													{
-														suggestScreen.chooseRevealCard(mouse, playerSuspect, playerWeapon, playerRoom, client->getHand());
-														chosenCard = suggestScreen.getRevealCard();
-														cout << "Chosen card is " << chosenCard << endl;
-														if (chosenCard != "NONE")
-														{
-															cardEntered = true;
-														}
+														cardEntered = true;
 													}
 												}
+												break;
+											}
+											
+											default:
+											{
+												break;
 											}
 										}
-										window.clear();
-										suggestScreen.renderRevealChoice(&window);
-										window.display();
 									}
-									client->sendReveal(chosenCard);
-									suggestScreen.reset();
-								}
-								string donePrompt = client->getPrompt();
-								while (donePrompt != "DONE")
-								{
-									donePrompt = client->getPrompt();
 									window.clear();
-									window.draw(rendered_board);
-									window.draw(gameStatus);
-									window.draw(stepCounterText);
-									for (int i = 0; i < tokensVect.size(); i++)
-									{
-										window.draw(tokensVect[i]->get_token());
-									}
-									client->displayHand(&window);
+									suggestScreen.renderRevealChoice(&window);
 									window.display();
 								}
+								client->sendReveal(chosenCard);
+								suggestScreen.reset();
 							}
-							gameStatus.setString(client->getResults());
+							string donePrompt = client->getPrompt();
+							while (donePrompt != "DONE")
+							{
+								donePrompt = client->getPrompt();
+								window.clear();
+								window.draw(rendered_board);
+								window.draw(gameStatus);
+								window.draw(stepCounterText);
+								for (int i = 0; i < tokensVect.size(); i++)
+								{
+									window.draw(tokensVect[i]->get_token());
+								}
+								client->displayHand(&window);
+								window.display();
+							}
 						}
+						gameStatus.setString(client->getResults());
 					}
 				}
 			}

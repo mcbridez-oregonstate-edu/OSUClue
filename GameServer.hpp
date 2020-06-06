@@ -39,7 +39,7 @@ class GameServer : public Server
         void updatePlayers();
         void playGame();
         void handleSuggestion();
-        vector<Card> getPlayerHand();
+        vector<string> getPlayerHand();
         void promptForCards(int);
         void sendDone();
         void sendMatch(bool, int);

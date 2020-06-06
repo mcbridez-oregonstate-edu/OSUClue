@@ -19,6 +19,8 @@ Suggestion::Suggestion(sf::Font* font)
 	b_weapons = createButtonArray(1);
 	b_rooms = createButtonArray(2);
 	suggestionText.setFont(*font);
+	suggestionText.setCharacterSize(40);
+	suggestionText.setPosition(sf::Vector2f(300, 25));
 	suspect = "NONE";
 	weapon = "NONE";
 	revealedCard = "NONE";
@@ -57,11 +59,11 @@ void Suggestion::suggestWeapon(const sf::Vector2f mouse)
 	}
 }
 
-/****************************************************************************************************************
-	void Suggestion::chooseRevealCard(const sf::Vector2f mouse, string suspect, string weapon, string room, vector<Card> cards)
- * Description: Allows the revealing player to choose the card to reveal
-****************************************************************************************************************/
-void Suggestion::chooseRevealCard(const sf::Vector2f mouse, string suspect, string weapon, string room, vector<Card> cards)
+/************************************************************************************************
+void Suggestion::findRevealCards(string suspect, string weapon, string room, vector<Card> cards)
+* Description: Figures out which cards are in the player's hand that match the suggestion.
+************************************************************************************************/
+void Suggestion::findRevealCards(string suspect, string weapon, string room, vector<Card> cards)
 {
 	for (int i = 0; i < cards.size(); i++)
 	{
@@ -92,9 +94,35 @@ void Suggestion::chooseRevealCard(const sf::Vector2f mouse, string suspect, stri
 			}
 		}
 	}
-	
+
+	if (suggestCards.size() == 1)
+	{
+		suggestCards[0]->setButtonPos(sf::Vector2f(575, 140));
+	}
+
+	else if (suggestCards.size() == 2)
+	{
+		suggestCards[0]->setButtonPos(sf::Vector2f(475, 140));
+		suggestCards[1]->setButtonPos(sf::Vector2f(675, 140));
+	}
+
+	else
+	{
+		suggestCards[0]->setButtonPos(sf::Vector2f(375, 140));
+		suggestCards[1]->setButtonPos(sf::Vector2f(575, 140));
+		suggestCards[2]->setButtonPos(sf::Vector2f(775, 140));
+	}
+}
+
+/****************************************************************************************************************
+	void Suggestion::chooseRevealCard(const sf::Vector2f mouse)
+ * Description: Allows the revealing player to choose the card to reveal
+****************************************************************************************************************/
+void Suggestion::chooseRevealCard(const sf::Vector2f mouse)
+{
 	for (int i = 0; i < suggestCards.size(); i++)
 	{
+		cout << "Name in Suggestion is: " << suggestCards[i]->getName();
 		suggestCards[i]->update(mouse);
 		if (suggestCards[i]->isPressed())
 		{
@@ -109,7 +137,7 @@ void Suggestion::chooseRevealCard(const sf::Vector2f mouse, string suspect, stri
 ************************************************************************************************/
 void Suggestion::showRevealCard(string cardName, string revealingPlayer)
 {
-	suggestionText.setString(revealingPlayer + " reveals:\n Press Enter to continue...");
+	suggestionText.setString(revealingPlayer + " revealed: (Press Enter to continue...)");
 	for (int i = 0; i < b_people.size(); i++)
 	{
 		if (b_people[i]->getName() == cardName)
@@ -197,7 +225,7 @@ void Suggestion::renderWeapons(sf::RenderTarget* window)
 *************************************************************************************************************/
 void Suggestion::renderSuggestion(sf::RenderTarget* window, string suspect, string weapon, string room)
 {
-	suggestionText.setString("You have Suggested:\nPress 'Enter' to continue . . .");
+	suggestionText.setString("You have Suggested: (Press 'Enter' to continue . . .)");
 	window->draw(suggestionText);
 	int suspectNum = -1;
 	int weaponNum = -1;
@@ -243,25 +271,7 @@ void Suggestion::renderSuggestion(sf::RenderTarget* window, string suspect, stri
 *************************************************************************************************************/
 void Suggestion::renderRevealChoice(sf::RenderTarget* window)
 {
-	suggestionText.setString("Choose a card to reveal:");
-	
-	if (suggestCards.size() == 1)
-	{
-		suggestCards[0]->setButtonPos(sf::Vector2f(575, 140));
-	}
-
-	else if (suggestCards.size() == 2)
-	{
-		suggestCards[0]->setButtonPos(sf::Vector2f(475, 140));
-		suggestCards[1]->setButtonPos(sf::Vector2f(675, 140));
-	}
-
-	else
-	{
-		suggestCards[0]->setButtonPos(sf::Vector2f(375, 140));
-		suggestCards[1]->setButtonPos(sf::Vector2f(575, 140));
-		suggestCards[2]->setButtonPos(sf::Vector2f(775, 140));
-	}
+	suggestionText.setString("Choose a card to reveal and press Enter:");
 	
 	for (int i = 0; i < suggestCards.size(); i++)
 	{
@@ -292,6 +302,7 @@ void Suggestion::reset()
 	weapon = "NONE";
 	revealedCard = "NONE";
 	revealedCardButton = nullptr;
+	suggestCards.clear();
 
 	for (int j = 0; j < b_people.size(); j++) 
 	{

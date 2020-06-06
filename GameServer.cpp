@@ -277,6 +277,7 @@ void GameServer::handleSuggestion()
     {
         // Receive suggestion
         sf::Packet suggestion;
+        cout << "Server: About to receive suggestion" << endl;
         suggestion = receiveData();
 
         // If the packet extracts, find the player name of the client
@@ -300,7 +301,7 @@ void GameServer::handleSuggestion()
     }
 
     int checkPlayer = clientNum + 1;
-    bool match;
+    bool match = false;
 
     for (int i = 0; i < numClients - 1; i++)
     {
@@ -309,18 +310,20 @@ void GameServer::handleSuggestion()
         {
             checkPlayer = 0;
         }
-        cout << "Server: checking player: " << checkPlayer << endl; 
+        cout << "Server: checking player (about to send prompt): " << checkPlayer << endl; 
         promptForCards(checkPlayer);
-        vector<Card> playerCards = getPlayerHand();
+        cout << "Server: about to get player hand" << endl;
+        vector<string> playerCards = getPlayerHand();
 
         for (int i = 0; i < playerCards.size(); i++)
         {
-            cout << "Player card: " << playerCards[i].getName() << endl;
-            if (playerCards[i].getName() == suspect || playerCards[i].getName() == room || playerCards[i].getName() == weapon)
+            cout << "Player card: " << playerCards[i] << endl;
+            if (playerCards[i] == suspect || playerCards[i] == room || playerCards[i] == weapon)
             {
                 match = true;
             }
         }
+        cout << "Value of match in server before send: " << match << endl;
         sendMatch(match, checkPlayer);
         if (match == false)
         {
@@ -339,26 +342,28 @@ void GameServer::handleSuggestion()
 
 /******************************************************************************************************
                             vector<Card> GameServer::getPlayerHand()
- * Description: Gets the player's cards from the client
+ * Description: Gets the player's card names from the client
 ******************************************************************************************************/
-vector<Card> GameServer::getPlayerHand()
+vector<string> GameServer::getPlayerHand()
 {
     sf::Packet playerHand;
+    vector<string> cards;
+    string card1;
+    string card2;
+    string card3;
+
+    // Wait until received
     playerHand = receiveData();
-    vector<Card> cards;
-    Card card;
-
-    // Wait to receive
-    while (!playerHand.endOfPacket())
-    {
+    while (!(playerHand >> card1 >> card2 >> card3))
+    {   
         playerHand = receiveData();
+        cout << "Cards received, cards are: " << card1 << " " << card2 << " " << card3 << endl;
     }
 
-    for (int i = 0; i < 3; i++)
-    {
-        playerHand >> card;
-        cards.push_back(card);
-    }
+    cards.push_back(card1);
+    cards.push_back(card2);
+    cards.push_back(card3);
+
     return cards;
 }
 
@@ -391,6 +396,7 @@ void GameServer::sendDone()
 void GameServer::sendMatch(bool match, int clientNum)
 {
     sf::Packet matchPacket;
+    cout << "Value of match in sendMatch: " << match << endl;
     matchPacket << match;
     sendOne(matchPacket, clientNum);
 }
@@ -405,10 +411,15 @@ void GameServer::getReveal(int suggestClient)
     sf::Packet revealPacket;
     string cardName;
     int clientNum;  
-    revealPacket = receiveData();
-    while (!(revealPacket >> cardName >> clientNum))
+    cout << "Server: About to receive revealed card from client" << endl;
+    bool packetReceived = false;
+    while (!packetReceived)
     {
         revealPacket = receiveData();
+        if (revealPacket >> cardName >> clientNum)
+        {
+            packetReceived = true;
+        }
     }
 
     string playerName;
@@ -423,6 +434,7 @@ void GameServer::getReveal(int suggestClient)
     sf::Packet sendReveal;
     sendReveal << cardName << playerName;
 
+    cout << "Server: About to send reveal to suggesting client" << endl;
     sendOne(sendReveal, suggestClient);
 }
 

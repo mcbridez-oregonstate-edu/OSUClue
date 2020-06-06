@@ -31,7 +31,8 @@ class Suggestion
         Suggestion(sf::Font*);
         void suggestSuspect(sf::Vector2f);
         void suggestWeapon(sf::Vector2f);
-        void chooseRevealCard(const sf::Vector2f, string, string, string, vector<Card> cards);
+        void findRevealCards(string, string, string, vector<Card>);
+        void chooseRevealCard(const sf::Vector2f);
         void showRevealCard(string, string);
         string getSuspect();
         string getWeapon();
