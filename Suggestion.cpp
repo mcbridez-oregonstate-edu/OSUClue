@@ -9,6 +9,10 @@
 using std::cout;
 using std::endl;
 
+/************************************************************************************************
+								Suggestion::Suggestion(sf::Font* font)
+ * Description: The constructor for Suggestion
+************************************************************************************************/
 Suggestion::Suggestion(sf::Font* font)
 {
 	b_people = createButtonArray(0);
@@ -18,6 +22,7 @@ Suggestion::Suggestion(sf::Font* font)
 	suspect = "NONE";
 	weapon = "NONE";
 	revealedCard = "NONE";
+	revealedCardButton = nullptr;
 }
 
 /***********************************************************************************************
@@ -53,44 +58,80 @@ void Suggestion::suggestWeapon(const sf::Vector2f mouse)
 }
 
 /****************************************************************************************************************
-	void Suggestion::chooseRevealCard(const sf::Vector2f mouse, string suspect, string weapon, string room)
- * Description: Returns the weapon suggested by the player
+	void Suggestion::chooseRevealCard(const sf::Vector2f mouse, string suspect, string weapon, string room, vector<Card> cards)
+ * Description: Allows the revealing player to choose the card to reveal
 ****************************************************************************************************************/
-void Suggestion::chooseRevealCard(const sf::Vector2f mouse, string suspect, string weapon, string room)
+void Suggestion::chooseRevealCard(const sf::Vector2f mouse, string suspect, string weapon, string room, vector<Card> cards)
 {
-	for (int i = 0; i < b_people.size(); i++) 
+	for (int i = 0; i < cards.size(); i++)
 	{
-		if (b_people[i]->getName() == suspect) 
+		if (cards[i].getName() == suspect || cards[i].getName() == weapon || cards[i].getName() == room)
 		{
-			b_people[i]->update(mouse);
-			if (b_people[i]->isPressed()) 
+			for (int j = 0; j < b_people.size(); j++)
 			{
-				revealedCard = b_people[i]->getName();
+				if (b_people[j]->getName() == cards[i].getName())
+				{
+					suggestCards.push_back(b_people[j]);
+				}
+			}
+
+			for (int j = 0; j < b_weapons.size(); j++)
+			{
+				if (b_weapons[j]->getName() == cards[i].getName())
+				{
+					suggestCards.push_back(b_weapons[j]);
+				}
+			}
+
+			for (int j = 0; j < b_rooms.size(); j++)
+			{
+				if (b_rooms[j]->getName() == cards[i].getName())
+				{
+					suggestCards.push_back(b_rooms[j]);
+				}
 			}
 		}
 	}
-	for (int i = 0; i < b_weapons.size(); i++) 
+	
+	for (int i = 0; i < suggestCards.size(); i++)
 	{
-		if (b_weapons[i]->getName() == weapon) 
+		suggestCards[i]->update(mouse);
+		if (suggestCards[i]->isPressed())
 		{
-			b_weapons[i]->update(mouse);
-			if (b_weapons[i]->isPressed()) 
-			{
-				revealedCard = b_weapons[i]->getName();
-			}
+			revealedCard = suggestCards[i]->getName();
 		}
 	}
-	for (int i = 0; i < b_rooms.size(); i++) 
+}
+
+/************************************************************************************************
+			void Suggestion::showRevealCard(string cardName, string revealingPlayer)
+ * Description: Shows the revealed card to the suggesting player
+************************************************************************************************/
+void Suggestion::showRevealCard(string cardName, string revealingPlayer)
+{
+	suggestionText.setString(revealingPlayer + " reveals:\n Press Enter to continue...");
+	for (int i = 0; i < b_people.size(); i++)
 	{
-		if (b_rooms[i]->getName() == room) 
+		if (b_people[i]->getName() == cardName)
 		{
-			b_rooms[i]->update(mouse);
-			if (b_rooms[i]->isPressed()) 
-			{
-				revealedCard = b_rooms[i]->getName();
-			}
+			revealedCardButton = b_people[i];
 		}
 	}
+	for (int i = 0; i < b_weapons.size(); i++)
+	{
+		if (b_weapons[i]->getName() == cardName)
+		{
+			revealedCardButton = b_weapons[i];
+		}
+	}
+	for (int i = 0; i < b_rooms.size(); i++)
+	{
+		if (b_rooms[i]->getName() == cardName)
+		{
+			revealedCardButton = b_rooms[i];
+		}
+	}
+	revealedCardButton->setButtonPos(sf::Vector2f(575, 340));
 }
 
 /************************************************************************************************
@@ -200,32 +241,68 @@ void Suggestion::renderSuggestion(sf::RenderTarget* window, string suspect, stri
 	void Suggestion::renderRevealChoice(sf::RenderTarget* window, string suspect, string weapon, string room)
  * Description: Renders the buttons for the revealing player to choose their reveal with
 *************************************************************************************************************/
-void Suggestion::renderRevealChoice(sf::RenderTarget* window, string suspect, string weapon, string room)
+void Suggestion::renderRevealChoice(sf::RenderTarget* window)
 {
 	suggestionText.setString("Choose a card to reveal:");
+	
+	if (suggestCards.size() == 1)
+	{
+		suggestCards[0]->setButtonPos(sf::Vector2f(575, 140));
+	}
+
+	else if (suggestCards.size() == 2)
+	{
+		suggestCards[0]->setButtonPos(sf::Vector2f(475, 140));
+		suggestCards[1]->setButtonPos(sf::Vector2f(675, 140));
+	}
+
+	else
+	{
+		suggestCards[0]->setButtonPos(sf::Vector2f(375, 140));
+		suggestCards[1]->setButtonPos(sf::Vector2f(575, 140));
+		suggestCards[2]->setButtonPos(sf::Vector2f(775, 140));
+	}
+	
+	for (int i = 0; i < suggestCards.size(); i++)
+	{
+		suggestCards[i]->render(window);
+	}
+
+	window->draw(suggestionText);
+}
+
+/****************************************************************************************
+					void Suggestion::renderReveal(sf::RenderTarget* window)
+ * Description: Renders the objects for the card reveal in the target window
+****************************************************************************************/
+void Suggestion::renderReveal(sf::RenderTarget* window)
+{
+	window->draw(suggestionText);
+	revealedCardButton->render(window);
+}
+
+/****************************************************************************************
+									void Suggestion::reset()
+ * Description: Resets the variables and positions of objects so that the next time
+ * a suggestion is made, things don't get wonky.
+****************************************************************************************/
+void Suggestion::reset()
+{
+	suspect = "NONE";
+	weapon = "NONE";
+	revealedCard = "NONE";
+	revealedCardButton = nullptr;
+
 	for (int j = 0; j < b_people.size(); j++) 
 	{
-		if (b_people[j]->getName() == suspect) 
-		{
-			b_people[j]->setButtonPos(sf::Vector2f(375, 140));
-			b_people[j]->render(window);
-		}
+		b_people[j]->resetPos();
 	}
-	for (int k = 0; k < b_weapons.size(); k++) 
+	for (int j = 0; j < b_weapons.size(); j++) 
 	{
-		if (b_weapons[k]->getName() == weapon) 
-		{
-			b_weapons[k]->setButtonPos(sf::Vector2f(575, 140));
-			b_weapons[k]->render(window);
-		}
+		b_weapons[j]->resetPos();
 	}
-	for (int h = 0; h < b_rooms.size(); h++) 
+	for (int j = 0; j < b_rooms.size(); j++) 
 	{
-		if (b_rooms[h]->getName() == room) 
-		{
-			b_rooms[h]->setButtonPos(sf::Vector2f(775, 140));
-			b_rooms[h]->render(window);
-		}
+		b_rooms[j]->resetPos();
 	}
-	window->draw(suggestionText);
 }

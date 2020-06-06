@@ -300,18 +300,22 @@ void GameServer::handleSuggestion()
     }
 
     int checkPlayer = clientNum + 1;
+    bool match;
 
     for (int i = 0; i < numClients - 1; i++)
     {
+        match = false;
         if (checkPlayer == 6)
         {
             checkPlayer = 0;
         }
+        cout << "Server: checking player: " << checkPlayer << endl; 
         promptForCards(checkPlayer);
         vector<Card> playerCards = getPlayerHand();
-        bool match = false;
+
         for (int i = 0; i < playerCards.size(); i++)
         {
+            cout << "Player card: " << playerCards[i].getName() << endl;
             if (playerCards[i].getName() == suspect || playerCards[i].getName() == room || playerCards[i].getName() == weapon)
             {
                 match = true;
@@ -324,9 +328,13 @@ void GameServer::handleSuggestion()
         }
         else
         {
-
+            cout << "Found a match, waiting for client reveal" << endl;
+            getReveal(clientNum);
+            break;
         }
     }
+    cout << "Match search done, sending results to clients" << endl;
+    sendResultsMessage(match, checkPlayer, playerName);
 }
 
 /******************************************************************************************************
@@ -339,6 +347,13 @@ vector<Card> GameServer::getPlayerHand()
     playerHand = receiveData();
     vector<Card> cards;
     Card card;
+
+    // Wait to receive
+    while (!playerHand.endOfPacket())
+    {
+        playerHand = receiveData();
+    }
+
     for (int i = 0; i < 3; i++)
     {
         playerHand >> card;
@@ -355,7 +370,18 @@ void GameServer::promptForCards(int clientNum)
 {
     sf::Packet cardPrompt;
     cardPrompt << "CARDS";
-    sendOne(cardPrompt, clientNum)
+    sendOne(cardPrompt, clientNum);
+}
+
+/******************************************************************************************************
+                                    void GameServer::sendDone()
+ * Description: Sends a signal to all clients that the suggestion phase is done.
+******************************************************************************************************/
+void GameServer::sendDone()
+{
+    sf::Packet donePacket;
+    donePacket << "DONE" << "";
+    sendAll(donePacket);
 }
 
 /******************************************************************************************************
@@ -367,4 +393,65 @@ void GameServer::sendMatch(bool match, int clientNum)
     sf::Packet matchPacket;
     matchPacket << match;
     sendOne(matchPacket, clientNum);
+}
+
+/*******************************************************************************************************
+                                  void GameServer::getReveal(int suggestClient)
+ * Description: Receives the revealed card from the revealing player and passes it along to the 
+ * suggesting player
+*******************************************************************************************************/
+void GameServer::getReveal(int suggestClient)
+{
+    sf::Packet revealPacket;
+    string cardName;
+    int clientNum;  
+    revealPacket = receiveData();
+    while (!(revealPacket >> cardName >> clientNum))
+    {
+        revealPacket = receiveData();
+    }
+
+    string playerName;
+    for (int i = 0; i < numClients; i++)
+    {
+        if (clientNum == players[i].clientNum)
+        {
+            playerName = players[i].name;
+        }
+    }
+
+    sf::Packet sendReveal;
+    sendReveal << cardName << playerName;
+
+    sendOne(sendReveal, suggestClient);
+}
+
+/***************************************************************************************************
+            void GameServer::sendResultsMessage(bool match, int playerNum, string playerName)
+ * Description: Sends the results of the suggestion check to all the clients
+***************************************************************************************************/
+void GameServer::sendResultsMessage(bool match, int playerNum, string playerName)
+{
+    sf::Packet suggestResult;
+    string resultString;
+    if (match)
+    {
+        string disproverName;
+        for (int i = 0; i < numClients; i++)
+        {
+            if (playerNum == players[i].clientNum)
+            {
+                disproverName = players[i].name;
+            }
+        }
+
+        resultString = disproverName + " has disproven " + playerName + "'s suggestion!";
+    }
+    else
+    {
+        resultString = "Nobody was able to disprove " + playerName + "'s suggestion!";
+    }
+
+    suggestResult << resultString;
+    sendAll(suggestResult);
 }

@@ -26,7 +26,7 @@ using std::thread;
 
 const int PORT = 3456;
 enum joinState { START, SERVER_CREATE, SERVER_SELECT, CHARACTER_SELECT, GAME };
-enum suggestState {NO_SUGGEST, CHOOSE_SUSPECT, CHOOSE_WEAPON, SHOW_SUGGEST, SEND_SUGGEST};
+enum suggestState {NO_SUGGEST, CHOOSE_SUSPECT, CHOOSE_WEAPON, SHOW_SUGGEST, SEND_SUGGEST, GET_REVEAL};
 
 int main()
 {
@@ -583,6 +583,12 @@ int main()
 										}
 									}
 								}
+								else if (suggest == GET_REVEAL)
+								{
+									suggestScreen.reset();
+									suggest = NO_SUGGEST;
+									gameStatus.setString(client->getResults());
+								}
 							}
 						}
 
@@ -616,6 +622,8 @@ int main()
 					}
 				}
 			}
+			string revealedCard;
+			string revealingPlayer;
 
 			// If it is time to send the suggestion
 			if (suggest == SEND_SUGGEST)
@@ -623,6 +631,28 @@ int main()
 				sf::Packet suggestionPacket;
 				suggestionPacket << suspect << weapon << room;
 				client->sendData(suggestionPacket);
+
+				// Wait for reveal to be returned
+				sf::Packet revealData;
+				revealData = client->receiveData();
+				while (revealData >> revealedCard >> revealingPlayer)
+				{
+					revealData = client->receiveData();
+
+					// Put the render functions in here so that it doesn't get stuck
+					window.clear();
+					window.draw(rendered_board);
+					window.draw(gameStatus);
+					window.draw(stepCounterText);
+					for (int i = 0; i < tokensVect.size(); i++)
+					{
+						window.draw(tokensVect[i]->get_token());
+					}
+					client->displayHand(&window);
+					window.display();
+				}
+				suggestScreen.showRevealCard(revealedCard, revealingPlayer);
+				suggest = GET_REVEAL;
 			}
 
 			// Get updated positional/turn/suggestion info
@@ -709,34 +739,52 @@ int main()
 											moveSuggestion(playerRoom, tokensVect[i], clueBoard);
 										}
 									}
-									window.clear();
-									window.draw(rendered_board);
-									window.draw(gameStatus);
-									window.draw(stepCounterText);
-									for (int i = 0; i < tokensVect.size(); i++)
-									{
-										window.draw(tokensVect[i]->get_token());
-									}
-									client->displayHand(&window);
-									window.display();
 								}
+								window.clear();
+								window.draw(rendered_board);
+								window.draw(gameStatus);
+								window.draw(stepCounterText);
+								for (int i = 0; i < tokensVect.size(); i++)
+								{
+									window.draw(tokensVect[i]->get_token());
+								}
+								client->displayHand(&window);
+								window.display();
 							}
 
-							while (!promptedForCards || suggestDisproved)
+							while (!promptedForCards && !suggestDisproved)
 							{
 								string prompt = client->getPrompt();
 								if (prompt == "CARDS")
 								{
+									cout << "Client: Received prompt for cards" << endl;
 									promptedForCards = true;
 								}
+								else if (prompt == "DONE")
+								{
+									suggestDisproved = true;
+								}
+
+								window.clear();
+								window.draw(rendered_board);
+								window.draw(gameStatus);
+								window.draw(stepCounterText);
+								for (int i = 0; i < tokensVect.size(); i++)
+								{
+									window.draw(tokensVect[i]->get_token());
+								}
+								client->displayHand(&window);
+								window.display();
 							}
 
 							if (promptedForCards)
 							{
+								cout << "Client: About to send hand" << endl;
 								client->sendHand();
 								bool match = client->receiveMatch();
 								if (match)
 								{
+									cout << "Match found" << endl;
 									bool cardChosen = false;
 									bool cardEntered = false;
 									string chosenCard;
@@ -769,8 +817,9 @@ int main()
 												{
 													if (event.mouseButton.button == sf::Mouse::Left)
 													{
-														suggestScreen.chooseRevealCard(mouse, playerSuspect, playerWeapon, playerRoom);
+														suggestScreen.chooseRevealCard(mouse, playerSuspect, playerWeapon, playerRoom, client->getHand());
 														chosenCard = suggestScreen.getRevealCard();
+														cout << "Chosen card is " << chosenCard << endl;
 														if (chosenCard != "NONE")
 														{
 															cardEntered = true;
@@ -779,9 +828,30 @@ int main()
 												}
 											}
 										}
+										window.clear();
+										suggestScreen.renderRevealChoice(&window);
+										window.display();
 									}
+									client->sendReveal(chosenCard);
+									suggestScreen.reset();
+								}
+								string donePrompt = client->getPrompt();
+								while (donePrompt != "DONE")
+								{
+									donePrompt = client->getPrompt();
+									window.clear();
+									window.draw(rendered_board);
+									window.draw(gameStatus);
+									window.draw(stepCounterText);
+									for (int i = 0; i < tokensVect.size(); i++)
+									{
+										window.draw(tokensVect[i]->get_token());
+									}
+									client->displayHand(&window);
+									window.display();
 								}
 							}
+							gameStatus.setString(client->getResults());
 						}
 					}
 				}
@@ -803,6 +873,11 @@ int main()
 			else if (suggest == SHOW_SUGGEST)
 			{
 				suggestScreen.renderSuggestion(&window, suspect, weapon, room);
+			}
+
+			else if (suggest == GET_REVEAL)
+			{
+				suggestScreen.renderReveal(&window);
 			}
 
 			else

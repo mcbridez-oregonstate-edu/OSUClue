@@ -30,6 +30,9 @@ class GameClient : public Client
         void sendHand();
         string getPrompt();
         bool receiveMatch();
+        void sendReveal(string);
+        string getResults();
+        vector<Card> getHand();
 };
 
 #endif

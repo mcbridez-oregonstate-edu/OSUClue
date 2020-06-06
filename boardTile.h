@@ -1,3 +1,4 @@
+
 #ifndef BOARDTILE_H
 #define BOARDTILE_H
 #include <iostream>
@@ -13,6 +14,10 @@ private:
 	bool occupied;
 	bool room;
 	bool door;
+
+
+	int row;
+	int col;
 
 
 public:
@@ -33,5 +38,8 @@ public:
 	std::string getName();
 	void setOccupied(int);
 	TILE_TYPE getTile_type();
+
+	int getRow();
+	int getCol();
 };
 #endif

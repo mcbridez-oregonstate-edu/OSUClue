@@ -153,3 +153,43 @@ bool GameClient::receiveMatch()
     matchPacket >> match;
     return match;
 }
+
+/******************************************************************************************
+                            void GameClient::sendReveal(string cardName)
+ * Description: Sends the chosen card name to the server to pass along to the suggesting
+ * Player.
+******************************************************************************************/
+void GameClient::sendReveal(string cardName)
+{
+    sf::Packet revealPacket;
+    revealPacket << cardName;
+    sendData(revealPacket);
+}
+
+/******************************************************************************************
+                                string GameClient::getResults()
+ * Description: Gets the string with the message about the results of the suggestion from 
+ * the server and returns it
+******************************************************************************************/
+string GameClient::getResults()
+{
+    sf::Packet results;
+    string resultString;
+
+    results = receiveData();
+    while (!(results >> resultString))
+    {
+        results = receiveData();
+    }
+
+    return resultString;
+}
+
+/*******************************************************************************************
+                                vector<Card> GameClient::getHand()
+ * Description: Returns the client's player hand
+*******************************************************************************************/
+vector<Card> GameClient::getHand()
+{
+    return thisPlayer.getHand();
+}

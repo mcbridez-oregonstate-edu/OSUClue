@@ -41,7 +41,10 @@ class GameServer : public Server
         void handleSuggestion();
         vector<Card> getPlayerHand();
         void promptForCards(int);
+        void sendDone();
         void sendMatch(bool, int);
+        void getReveal(int);
+        void sendResultsMessage(bool, int, string);
 };
 
 #endif
