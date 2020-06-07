@@ -74,7 +74,7 @@ boardTile::boardTile(string type, int rowInput, int colInput) {
 		roomName = "Lounge";
 	}
 	else {
-		roomName = "Ground Floor";
+		roomName = "Hallway";
 	}
 
 

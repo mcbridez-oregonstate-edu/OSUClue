@@ -32,8 +32,6 @@ token::token(sf::Color color, double row_start, double col_start, int row, int c
 token::token(std::string name, double width, double height, boardTile*** board)
 {
 	sf::Color color;
-	double row_start = 0;
-	double col_start = 0;
 	int row = 0;
 	int col = 0;
 	if (name == "Colonel Mustard")
@@ -155,6 +153,8 @@ void token::move_passage(double row, double col, int row_index, int col_index, b
 }
 
 // set token color to black (no longer in game)
-void token::setBlack() {
+void token::setBlack() 
+{
+	piece.setPosition(sf::Vector2f(row_start, col_start));
 	piece.setFillColor(sf::Color::Black);
 }

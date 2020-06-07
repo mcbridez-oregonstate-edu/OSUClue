@@ -50,8 +50,8 @@ void GameServer::receivePlayerInfo()
     if (!playerInfo.endOfPacket())
     {
         playerInfo >> players[playersCreated] >> clientNum;
-        cout << "Was client num received? client num is " << clientNum << endl;
         players[playersCreated].clientNum = clientNum;
+        players[playersCreated].isAlive = true;
         cout << "Data received: Name: " << players[playersCreated].name << endl;
         cout << "Character: " << players[playersCreated].character << endl;
         cout << "Client Num: " << players[playersCreated].clientNum << endl;
@@ -195,10 +195,6 @@ void GameServer::setPlayerOrder()
 ***************************************************************************************/
 void GameServer::sendTurn()
 {
-    if (playerTurn == 6)
-    {
-        playerTurn = 0;
-    }
     sf::Packet turnPacket;
     turnPacket << players[playerTurn].name << players[playerTurn].character;
     sendAll(turnPacket);
@@ -216,7 +212,8 @@ void GameServer::updatePlayers()
     clientPos = receiveData();
     ServerPlayer receivedPlayer;
     bool isSuggest;
-    if (clientPos >> receivedPlayer >> isSuggest)
+    bool isAccuse;
+    if (clientPos >> receivedPlayer >> isSuggest >> isAccuse)
     {
         // Update info for that player
         for (int i = 0; i < 6; i++)
@@ -228,19 +225,39 @@ void GameServer::updatePlayers()
                 players[i].isTurn = receivedPlayer.isTurn;
             }
         }
-
+        cout << "isAccuse in server: " << isAccuse << ", sending to players... "<< endl;
         sf::Packet sendPos;
-        sendPos << receivedPlayer.character << receivedPlayer.column << receivedPlayer.row << !receivedPlayer.isTurn << isSuggest;
+        sendPos << receivedPlayer.character << receivedPlayer.column << receivedPlayer.row << !receivedPlayer.isTurn << isSuggest << isAccuse;
         sendAll(sendPos);
 
         if (isSuggest)
         {
             handleSuggestion();
         }
+        if (isAccuse)
+        {
+            cout << "Server: About to handle accusation" << endl;
+            handleAccusation();
+        }
         // If that player's turn is over, increment the turn tracker
         if (receivedPlayer.isTurn == false)
         {
             playerTurn++;
+            if (playerTurn == 6)
+            {
+                playerTurn = 0;
+            }
+
+            // If the player has made a bad accusation, skip their turn since they're no longer
+            // in the game
+            if (!players[playerTurn].isAlive)
+            {
+                playerTurn++;
+                if (playerTurn == 6)
+                {
+                    playerTurn = 0;
+                }
+            }
             sendTurn();
         }
     }
@@ -277,7 +294,6 @@ void GameServer::handleSuggestion()
     {
         // Receive suggestion
         sf::Packet suggestion;
-        cout << "Server: About to receive suggestion" << endl;
         suggestion = receiveData();
 
         // If the packet extracts, find the player name of the client
@@ -295,7 +311,6 @@ void GameServer::handleSuggestion()
             // Send the suggestion data to all but the suggesting client
             sf::Packet suggestOut;
             suggestOut << playerName << suspect << weapon << room;
-            cout << "Server: about to send suggestion" << endl;
             sendAllButOne(suggestOut, clientNum);
         }
     }
@@ -310,20 +325,16 @@ void GameServer::handleSuggestion()
         {
             checkPlayer = 0;
         }
-        cout << "Server: checking player (about to send prompt): " << checkPlayer << endl; 
         promptForCards(checkPlayer);
-        cout << "Server: about to get player hand" << endl;
         vector<string> playerCards = getPlayerHand();
 
         for (int i = 0; i < playerCards.size(); i++)
         {
-            cout << "Player card: " << playerCards[i] << endl;
             if (playerCards[i] == suspect || playerCards[i] == room || playerCards[i] == weapon)
             {
                 match = true;
             }
         }
-        cout << "Value of match in server before send: " << match << endl;
         sendMatch(match, checkPlayer);
         if (match == false)
         {
@@ -331,12 +342,10 @@ void GameServer::handleSuggestion()
         }
         else
         {
-            cout << "Found a match, waiting for client reveal" << endl;
             getReveal(clientNum);
             break;
         }
     }
-    cout << "Match search done, sending results to clients" << endl;
     sendDone();
     sendResultsMessage(match, checkPlayer, playerName);
 }
@@ -358,7 +367,6 @@ vector<string> GameServer::getPlayerHand()
     while (!(playerHand >> card1 >> card2 >> card3))
     {   
         playerHand = receiveData();
-        cout << "Cards received, cards are: " << card1 << " " << card2 << " " << card3 << endl;
     }
 
     cards.push_back(card1);
@@ -397,7 +405,6 @@ void GameServer::sendDone()
 void GameServer::sendMatch(bool match, int clientNum)
 {
     sf::Packet matchPacket;
-    cout << "Value of match in sendMatch: " << match << endl;
     matchPacket << match;
     sendOne(matchPacket, clientNum);
 }
@@ -412,7 +419,6 @@ void GameServer::getReveal(int suggestClient)
     sf::Packet revealPacket;
     string cardName;
     int clientNum;  
-    cout << "Server: About to receive revealed card from client" << endl;
     bool packetReceived = false;
     while (!packetReceived)
     {
@@ -435,7 +441,6 @@ void GameServer::getReveal(int suggestClient)
     sf::Packet sendReveal;
     sendReveal << cardName << playerName;
 
-    cout << "Server: About to send reveal to suggesting client" << endl;
     sendOne(sendReveal, suggestClient);
 }
 
@@ -467,4 +472,70 @@ void GameServer::sendResultsMessage(bool match, int playerNum, string playerName
 
     suggestResult << resultString;
     sendAll(suggestResult);
+}
+
+/*****************************************************************************************************
+                                void GameServer::handleAccusation()
+ * Description: Handles a player's accusation
+*****************************************************************************************************/
+void GameServer::handleAccusation()
+{
+    string suspect;
+    string weapon;
+    string room;
+    int clientNum;
+    string playerName;
+    string character;
+    bool accuseReceived = false;
+
+    while (!accuseReceived)
+    {
+        // Receive accusation
+        sf::Packet accusation;
+        accusation = receiveData();
+
+        // If the packet extracts, find the player name of the client
+        if (accusation >> suspect >> weapon >> room >> clientNum)
+        {
+            accuseReceived = true;
+            for (int i = 0; i < numClients; i++)
+            {
+                if (players[i].clientNum == clientNum)
+                {
+                    playerName = players[i].name;
+                    character = players[i].character;
+                }
+            }
+        }
+    }
+
+    // Check the player's accusation against the solution
+    bool isCorrect = false;
+    if (suspect == solution[0].getName() && weapon == solution[1].getName() && room == solution[2].getName())
+    {
+        isCorrect = true;
+    }
+
+    // If wrong, set them as dead in internal structure
+    else
+    {
+        for (int i = 0; i < numClients; i++)
+        {
+            if (players[i].clientNum == clientNum)
+            {
+                players[i].isAlive = false;
+            }
+        }
+    }
+
+    // Send results to the clients
+    sf::Packet accuseResults;
+    accuseResults << isCorrect << playerName << character << suspect << weapon << room;
+    sendAll(accuseResults);
+
+    // If the player was correct, game is over, server can exit
+    if (isCorrect)
+    {
+        exit(0);
+    }
 }

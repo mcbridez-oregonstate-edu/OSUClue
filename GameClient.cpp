@@ -97,16 +97,17 @@ token* GameClient::getToken()
 }
 
 /****************************************************************************************
-                                void GameClient::updateInfo(bool isTurn)
+             void GameClient::updateInfo(bool isTurn, bool isSuggest, bool isAccuse)
  * Description: Sends a ServerPlayer struct to the server to update the player's
  * position and turn status
 ****************************************************************************************/
-void GameClient::updateInfo(bool isTurn, bool isSuggest)
+void GameClient::updateInfo(bool isTurn, bool isSuggest, bool isAccuse)
 {
     ServerPlayer myPlayer = { thisPlayer.getName(), thisPlayer.getTokenName(), -1,
         thisPlayer.getToken()->get_col(), thisPlayer.getToken()->get_row(), isTurn};
     sf::Packet updatePacket;
-    updatePacket << myPlayer << isSuggest;
+    updatePacket << myPlayer << isSuggest << isAccuse;
+    cout << "is Accuse in client" << isAccuse << endl;
     sendData(updatePacket);
 }
 
@@ -119,10 +120,8 @@ void GameClient::sendHand()
     sf::Packet cards;
     for (int i = 0; i < thisPlayer.getHand().size(); i++)
     {
-        cout << "Card in Client before send: " << thisPlayer.getHand()[i].getName() << endl;
         cards << thisPlayer.getHand()[i].getName();
     }
-    cout << "Client: About to send hand to server" << endl;
     sendData(cards);
 }
 
@@ -138,7 +137,6 @@ string GameClient::getPrompt()
     string sendCards;
     if (prompt >> sendCards)
     {
-        cout << "Client: Prompt is " << sendCards << endl;
         return sendCards;
     }
 
@@ -162,7 +160,7 @@ bool GameClient::receiveMatch()
             packetReceived = true;
         }
     }
-    cout << "Client: Match received, value of match is: " << match << endl;
+
     return match;
 }
 
@@ -175,7 +173,6 @@ void GameClient::sendReveal(string cardName)
 {
     sf::Packet revealPacket;
     revealPacket << cardName;
-    cout << "Client: About to send reveal to server" << endl;
     sendData(revealPacket);
 }
 
@@ -198,7 +195,7 @@ string GameClient::getResults()
             packetReceived = true;
         }
     }
-    cout << "Client: Received results, result is " << resultString << endl;
+
     return resultString;
 }
 

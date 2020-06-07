@@ -26,5 +26,6 @@ int secretPassage(token* token, boardTile*** board);
 void moveSuggestion(std::string room, token* token, boardTile*** board);
 
 bool checkDoors(boardTile***, string);
+bool isSecretPassage(token* token);
 
 #endif

@@ -372,11 +372,17 @@ vector<CardButton*> createButtonArray(int type)
 
 		if (roomName == "Lounge")
 		{
-
+			if (board[20][19]->isOccupied())
+			{
+				blocked = true;
+			}
 		}
 		else if (roomName == "Dining Room")
 		{
-
+			if (board[18][19]->isOccupied() && board[14][17]->isOccupied()) 
+			{
+				blocked = true;
+			}
 		}
 		else if (roomName == "Conservatory")
 		{
@@ -401,20 +407,48 @@ vector<CardButton*> createButtonArray(int type)
 		}
 		else if (roomName == "Study") 
 		{
-
+			if (board[22][8]->isOccupied())
+			{
+				blocked = true;
+			}
 		}
 		else if (roomName == "Ballroom") 
 		{
-
+			if (board[7][18]->isOccupied() && board[10][16]->isOccupied() && board[10][11]->isOccupied() && board[7][9]->isOccupied())
+			{
+				blocked = true;
+			}
 		}
 		else if (roomName == "Hall") 
 		{
-
+			if (board[22][10]->isOccupied() && board[19][13]->isOccupied() && board[19][14]->isOccupied())
+			{
+				blocked = true;
+			}
 		}
 		else if (roomName == "Kitchen") 
 		{
-
+			if (board[9][21]->isOccupied())
+			{
+				blocked = true;
+			}
 		}
 
 		return blocked;
+	}
+
+	/**************************************************************************************************
+										bool isSecretPassage(token* token)
+	 * Description: Checks if the token's current space is a secret passage 
+	**************************************************************************************************/
+	bool isSecretPassage(token* token)
+	{
+		bool isPassage = false;
+		if (token->get_space()->getName() == "Conservatory" || token->get_space()->getName() == "Kitchen" ||
+			token->get_space()->getName() == "Study" || token->get_space()->getName() == "Lounge")
+		{
+			isPassage = true;
+		}
+
+		return isPassage;
 	}

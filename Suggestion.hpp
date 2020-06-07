@@ -39,7 +39,7 @@ class Suggestion
         string getRevealCard();
         void renderSuspects(sf::RenderTarget*);
         void renderWeapons(sf::RenderTarget*);
-        void renderSuggestion(sf::RenderTarget*, string, string, string);
+        void renderSuggestion(sf::RenderTarget*, string);
         void renderRevealChoice(sf::RenderTarget*);
         void renderReveal(sf::RenderTarget*);
         void reset();

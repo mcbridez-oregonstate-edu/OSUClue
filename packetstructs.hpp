@@ -25,6 +25,7 @@ struct ServerPlayer
     int column;
     int row;
     bool isTurn;
+    bool isAlive;
 };
 
 // Packet operator overrides for ServerPlayer

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Accusation.hpp" />
     <ClInclude Include="boardFunctions.hpp" />
     <ClInclude Include="boardTile.h" />
     <ClInclude Include="Card.hpp" />
@@ -34,6 +35,7 @@
     <ClInclude Include="buttonStates.hpp" />
     <ClInclude Include="NotebookButton.hpp" />
     <ClInclude Include="JoinServerScreen.hpp" />
+    <ClInclude Include="Sidebar.hpp" />
     <ClInclude Include="StartScreen.hpp" />
     <ClInclude Include="Suggestion.hpp" />
     <ClInclude Include="threadFunctions.hpp" />
@@ -44,6 +46,7 @@
     <ClInclude Include="Token.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Accusation.cpp" />
     <ClCompile Include="boardFunctions.cpp" />
     <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="Card.cpp" />
@@ -51,6 +54,7 @@
     <ClCompile Include="CharacterButton.cpp" />
     <ClCompile Include="CharacterSelectScreen.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Clue.cpp" />
     <ClCompile Include="CreateServerScreen.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Die.cpp" />
@@ -61,6 +65,7 @@
     <ClCompile Include="packetstructs.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Sidebar.cpp" />
     <ClCompile Include="SimpleButton.cpp" />
     <ClCompile Include="StartScreen.cpp" />
     <ClCompile Include="Suggestion.cpp" />

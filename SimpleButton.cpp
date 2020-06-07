@@ -95,6 +95,7 @@ void SimpleButton::update(const sf::Vector2f mousePos)
 {
 	if (buttonState == DISABLED)
 	{
+		buttonBox.setFillColor(sf::Color::Black);
 		buttonBox.setOutlineColor(sf::Color(160, 160, 160, 100));
 		buttonLabel.setFillColor(sf::Color(160, 160, 160, 100));
 	}
@@ -130,8 +131,6 @@ void SimpleButton::update(const sf::Vector2f mousePos)
 			}
 			default:
 			{
-				// turn white on click
-				buttonBox.setFillColor(sf::Color(36, 94, 36, 255));
 				break;
 			}
 		}
@@ -184,4 +183,13 @@ bool SimpleButton::isPressed()
 		return true;
 	}
 	return false;
+}
+
+/***************************************************************************
+						void SimpleButton::setIdle()
+ * Description: Sets the button state to IDLE
+***************************************************************************/
+void SimpleButton::setIdle()
+{
+	buttonState = IDLE;
 }

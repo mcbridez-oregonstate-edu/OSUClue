@@ -31,6 +31,7 @@ class SimpleButton {
 		void disable();
 		void enable();
 		bool isPressed();
+		void setIdle();
 };
 
 #endif

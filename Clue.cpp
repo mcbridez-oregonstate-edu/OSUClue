@@ -16,7 +16,9 @@
 #include "JoinServerScreen.hpp"
 #include "CharacterSelectScreen.hpp"
 #include "Suggestion.hpp"
+#include "Accusation.hpp"
 #include "Die.hpp"
+#include "Sidebar.hpp"
 #include <iostream>
 #include <thread>
 using std::cin;
@@ -25,14 +27,16 @@ using std::endl;
 using std::thread;
 
 const int PORT = 3456;
-enum joinState { START, SERVER_CREATE, SERVER_SELECT, CHARACTER_SELECT, GAME };
+enum joinState { START, SERVER_CREATE, SERVER_SELECT, CHARACTER_SELECT, GAME, GAME_OVER, DEAD};
 enum suggestState {NO_SUGGEST, CHOOSE_SUSPECT, CHOOSE_WEAPON, SHOW_SUGGEST, SEND_SUGGEST, GET_REVEAL};
+enum accuseState{NO_ACCUSE, CONFIRM, ACCUSE_SUSPECT, ACCUSE_WEAPON, ACCUSE_ROOM, SHOW_ACCUSE, SEND_ACCUSE};
 
 int main()
 {
 	// Set initial state and create window
 	joinState state = START;
 	suggestState suggest = NO_SUGGEST;
+	accuseState accuse = NO_ACCUSE;
 	sf::RenderWindow window(sf::VideoMode(1280, 960), "Clue!", sf::Style::Default);
 
 	// Clue board
@@ -79,12 +83,16 @@ int main()
 	// Create suggestion functionality
 	Suggestion suggestScreen(&font);
 
+	// Create accusation functionality
+	Accusation accuseScreen(&font);
+
 	string suspect;
 	string weapon;
 	string room;
 	string playerTurnName;
 	bool suspectEntered = false;
 	bool weaponEntered = false;
+	bool roomEntered = false;
 
 	// Stuff for game screen
 	sf::Text gameStatus;
@@ -92,8 +100,13 @@ int main()
 	gameStatus.setCharacterSize(50);
 	gameStatus.setPosition(sf::Vector2f(300, 30));
 
+	Sidebar* sidebar = nullptr;
+	bool sidebarCreated = false;
+
 	bool isTurn = false;
 	bool getTurn = true;
+	bool movedBySuggest = false;
+	bool usedPassage = false;
 	Die die(6);
 	int roll = 0;
 	int steps = 0;
@@ -101,6 +114,8 @@ int main()
 	sf::Text stepCounterText;
 	string stepCounterString;
 	stepCounterText.setFont(font);
+	stepCounterText.setCharacterSize(35);
+	stepCounterText.setPosition(sf::Vector2f(1000, 30));
 
 	// Name and character creation storage/indicators
 	string name;
@@ -451,6 +466,15 @@ int main()
 				serverThread = new thread(playGame, server);
 			}
 
+			// Create sidebar with character and player name
+			if (!sidebarCreated)
+			{
+				sidebar = new Sidebar(&font, name, character);
+				sidebarCreated = true;
+			}
+
+			sidebar->updateButtons(mouse);
+
 			// Keep trying to receive a hand until the client gets one
 			while (client->handIsEmpty())
 			{
@@ -460,6 +484,7 @@ int main()
 			// Get whose turn it is
 			if (getTurn)
 			{
+				cout << "Getting turn info" << endl;
 				sf::Packet turnPacket;
 				turnPacket = client->receiveData();
 				string playerTurnCharacter;
@@ -473,13 +498,20 @@ int main()
 						if (playerTurnCharacter == character)
 						{
 							isTurn = true;
-							gameStatus.setString("It's your turn! Make your move!");
-							gameStatus.setPosition(sf::Vector2f(400, 30));
-							roll = die.roll() + die.roll();
-							steps = roll;
-							stepCounterString = "Steps: " + std::to_string(steps) +
-								"\nLocation: " + client->getToken()->get_space()->getName();
-							stepCounterText.setString(stepCounterString);
+							if (!checkDoors(clueBoard, client->getToken()->get_space()->getName()))
+							{
+								gameStatus.setString("It's your turn! Move using the arrow keys \nor choose another action from the sidebar");
+								gameStatus.setPosition(sf::Vector2f(300, 30));
+								roll = die.roll() + die.roll();
+								steps = roll;
+								stepCounterString = "Steps Remaining: " + std::to_string(steps) +
+									"\nLocation: " + client->getToken()->get_space()->getName();
+								stepCounterText.setString(stepCounterString);
+							}
+							else
+							{
+								gameStatus.setString("You're blocked in the room! \nPick an action from the sidebar");
+							}
 						}
 						else
 						{
@@ -492,9 +524,17 @@ int main()
 				}
 			}
 
+			sidebar->disableButtons(isTurn);
+			if (isTurn)
+			{
+				sidebar->enablePassage(isSecretPassage(client->getToken()) && !usedPassage);
+				sidebar->enableEndTurn(steps, isTurn);
+			}
+
 			// Poll window for events
 			while (window.pollEvent(event))
 			{
+				// Normal gameplay events
 				if (suggest == NO_SUGGEST)
 				{
 					switch (event.type)
@@ -505,6 +545,7 @@ int main()
 							{
 								delete server;
 							}
+							delete sidebar;
 							delete client;
 							window.close();
 							break;
@@ -512,24 +553,125 @@ int main()
 
 						case sf::Event::KeyReleased:
 						{
-							if (isTurn && (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::Up))
+							if (isTurn && (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::Up) && steps > 0)
 							{
 								move(&event, clueBoard, client->getToken(), &steps);
-								stepCounterString = "Steps: " + std::to_string(steps) +
+								stepCounterString = "Steps Remaining: " + std::to_string(steps) +
 									"\nLocation: " + client->getToken()->get_space()->getName();
 								stepCounterText.setString(stepCounterString);
-								if (steps == 0 && !client->getToken()->get_space()->isRoom())
+								if (steps == 0 && client->getToken()->get_space()->isRoom())
 								{
-									client->updateInfo(false, false);
-								}
-								else if (steps == 0 && client->getToken()->get_space()->isRoom())
-								{
-									client->updateInfo(isTurn, true);
+									client->updateInfo(isTurn, true, false);
 									suggest = CHOOSE_SUSPECT;
 								}
 								else
 								{
-									client->updateInfo(isTurn, false);
+									client->updateInfo(isTurn, false, false);
+								}
+							}
+
+							// This is all accusation stuff
+							if (event.key.code == sf::Keyboard::Enter)
+							{
+								if (accuse == ACCUSE_SUSPECT && suspectEntered)
+								{
+									accuse = ACCUSE_WEAPON;
+								}
+								else if (accuse == ACCUSE_WEAPON && weaponEntered)
+								{
+									accuse = ACCUSE_ROOM;
+								}
+								else if (accuse == ACCUSE_ROOM && roomEntered)
+								{
+									accuse = SHOW_ACCUSE;
+								}
+								else if (accuse == SHOW_ACCUSE)
+								{
+									accuse = SEND_ACCUSE;
+								}
+							}
+						}
+
+						case sf::Event::MouseButtonPressed:
+						{
+							if (event.mouseButton.button == sf::Mouse::Left)
+							{
+								if (sidebar->endTurnPressed())
+								{
+									client->updateInfo(false, false, false);
+								}
+
+								else if (sidebar->passagePressed())
+								{
+									if (client->getToken()->get_space()->getName() == "Kitchen") 
+									{
+										client->getToken()->move_passage(824.5, 225, 4, 23, clueBoard);
+									}
+									else if (client->getToken()->get_space()->getName() == "Study") 
+									{
+										client->getToken()->move_passage(449.25, 585, 22, 4, clueBoard);
+									}
+									else if (client->getToken()->get_space()->getName() == "Lounge") 
+									{
+										client->getToken()->move_passage(449.25, 205, 3, 4, clueBoard);
+									}
+									else if (client->getToken()->get_space()->getName() == "Conservatory")
+									{
+										client->getToken()->move_passage(804.75, 565, 21, 22, clueBoard);
+									}
+									usedPassage = true;
+									steps = 0;
+									client->updateInfo(isTurn, true, false);
+									suggest = CHOOSE_SUSPECT;
+								}
+
+								else if (sidebar->accusePressed())
+								{
+									accuse = CONFIRM;
+								}
+
+								// If in accusation mode
+								if (accuse == CONFIRM)
+								{
+									if (accuseScreen.yesPressed())
+									{
+										accuse = ACCUSE_SUSPECT;
+										cout << "Yes pressed, sending update info" << endl;
+										client->updateInfo(isTurn, false, true);
+									}
+
+									if (accuseScreen.noPressed())
+									{
+										accuse = NO_ACCUSE;
+										sidebar->resetAccuse();
+									}
+								}
+								else if (accuse == ACCUSE_SUSPECT)
+								{
+									accuseScreen.suggestSuspect(mouse);
+									suspect = accuseScreen.getSuspect();
+									if (suspect != "NONE")
+									{
+										suspectEntered = true;
+									}
+								}
+								else if (accuse == ACCUSE_WEAPON)
+								{
+									accuseScreen.suggestWeapon(mouse);
+									weapon = accuseScreen.getWeapon();
+									if (weapon != "NONE")
+									{
+										weaponEntered = true;
+									}
+								}
+								else if (accuse == ACCUSE_ROOM)
+								{
+									accuseScreen.suggestRoom(mouse);
+									room = accuseScreen.getRoom();
+									if (room != "NONE")
+									{
+										roomEntered = true;
+									}
 								}
 							}
 						}
@@ -541,6 +683,7 @@ int main()
 					}
 				}
 
+				// Suggestion state events
 				else
 				{
 					switch (event.type)
@@ -569,7 +712,6 @@ int main()
 								{
 									suggest = SHOW_SUGGEST;
 									room = client->getToken()->get_space()->getName();
-									cout << "Room: " << room << endl;
 								}
 								else if (suggest == SHOW_SUGGEST)
 								{
@@ -584,8 +726,12 @@ int main()
 								}
 								else if (suggest == GET_REVEAL)
 								{
-									cout << "Enter pressed, should be changing back to game" << endl;
 									suggestScreen.reset();
+									suspectEntered = false;
+									weaponEntered = false;
+									suspect = "NONE";
+									weapon = "NONE";
+									room = "NONE";
 									suggest = NO_SUGGEST;
 								}
 							}
@@ -599,7 +745,6 @@ int main()
 								{
 									suggestScreen.suggestSuspect(mouse);
 									suspect = suggestScreen.getSuspect();
-									cout << "suspect is " << suspect << endl;
 									if (suspect != "NONE")
 									{
 										suspectEntered = true;
@@ -610,7 +755,6 @@ int main()
 								{
 									suggestScreen.suggestWeapon(mouse);
 									weapon = suggestScreen.getWeapon();
-									cout << "weapon is " << weapon << endl;
 									if (weapon != "NONE")
 									{
 										weaponEntered = true;
@@ -621,6 +765,7 @@ int main()
 					}
 				}
 			}
+
 			string revealedCard;
 			string revealingPlayer;
 
@@ -634,7 +779,6 @@ int main()
 				// Wait for reveal to be returned
 				gameStatus.setString("Waiting for a card to be revealed...");
 				sf::Packet revealData;
-				cout << "Client: waiting on card reveal" << endl;
 				bool packetReceived = false;
 				while (!packetReceived)
 				{
@@ -690,6 +834,65 @@ int main()
 						gameStatus.setPosition(sf::Vector2f(275, 30));
 					}
 					suggest = GET_REVEAL;
+					suspectEntered = false;
+					weaponEntered = false;
+					suspect = "NONE";
+					weapon = "NONE";
+					room = "NONE";
+				}
+			}
+
+			// If it is time to send the accusation
+			if (accuse == SEND_ACCUSE)
+			{
+				sf::Packet accusationPacket;
+				accusationPacket << suspect << weapon << room;
+				client->sendData(accusationPacket);
+
+				bool gameOver;
+				string playerName;
+				string character;
+				string suspect;
+				string weapon;
+				string room;
+				bool resultsReceived = false;
+
+				while (!resultsReceived)
+				{
+					sf::Packet results;
+					results = client->receiveData();
+					if (results >> gameOver >> playerName >> character >> suspect >> weapon >> room)
+					{
+						resultsReceived = true;
+						if (gameOver)
+						{
+							gameStatus.setString("You have correctly accused:\n" +
+								suspect + " with the " + weapon + " in the " + room +
+								"\n          GAME OVER--YOU WIN!");
+							gameStatus.setPosition(sf::Vector2f(100, 10));
+							state = GAME_OVER;
+						}
+						else
+						{
+							gameStatus.setString(playerName + " has incorrectly accused:\n" +
+								suspect + " with the " + weapon + " in the " + room +
+								"\n           YOU LOSE");
+							gameStatus.setPosition(sf::Vector2f(100, 10));
+							client->getToken()->setBlack();
+							client->updateInfo(false, false, false);
+						}
+					}
+					window.clear();
+					window.draw(rendered_board);
+					window.draw(gameStatus);
+					window.draw(stepCounterText);
+					sidebar->render(&window);
+					for (int i = 0; i < tokensVect.size(); i++)
+					{
+						window.draw(tokensVect[i]->get_token());
+					}
+					client->displayHand(&window);
+					window.display();
 				}
 			}
 
@@ -700,10 +903,12 @@ int main()
 			int tokenCol;
 			int tokenRow;
 			bool isSuggest;
-			if (updatedInfo >> tokenName >> tokenCol >> tokenRow >> getTurn >> isSuggest)
+			bool isAccuse;
+			if (updatedInfo >> tokenName >> tokenCol >> tokenRow >> getTurn >> isSuggest >> isAccuse)
 			{
-				if(!isTurn)
-				{ 
+				if (!isTurn)
+				{
+					cout << "Is accuse is: " << isAccuse << endl;
 					for (int i = 0; i < tokensVect.size(); i++)
 					{
 						if (tokensVect[i]->getName() == tokenName)
@@ -741,7 +946,6 @@ int main()
 					// If the player whose turn it is has made a suggestion, handle that
 					if (isSuggest)
 					{
-						cout << "Suggestion is being made" << endl;
 						// Update status text to reflect suggestion mode
 						gameStatus.setString(playerTurnName + " is making a suggestion");
 						gameStatus.setPosition(sf::Vector2f(400, 30));
@@ -766,7 +970,6 @@ int main()
 							suggestion = client->receiveData();
 							if (suggestion >> playerName >> playerSuspect >> playerWeapon >> playerRoom)
 							{
-								cout << "Suggestion Received" << endl;
 								suggestReceived = true;
 								gameStatus.setString("           " + playerName + " has suggested:\n" + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom);
 								gameStatus.setPosition(sf::Vector2f(100, 30));
@@ -829,20 +1032,20 @@ int main()
 							{
 								switch (event.type)
 								{
-									case sf::Event::Closed:
+								case sf::Event::Closed:
+								{
+									delete client;
+									if (serverCreated)
 									{
-										delete client;
-										if (serverCreated)
-										{
-											delete server;
-										}
-										window.close();
-										break;
+										delete server;
 									}
-									default:
-									{
-										break;
-									}
+									window.close();
+									break;
+								}
+								default:
+								{
+									break;
+								}
 								}
 							}
 							window.clear();
@@ -858,12 +1061,10 @@ int main()
 
 						if (promptedForCards)
 						{
-							cout << "Client: About to send hand" << endl;
 							client->sendHand();
 							bool match = client->receiveMatch();
 							if (match)
 							{
-								cout << "Match found" << endl;
 								// Find which cards match the suggestion in prep for the choice screen
 								suggestScreen.findRevealCards(playerSuspect, playerWeapon, playerRoom, client->getHand());
 
@@ -879,45 +1080,44 @@ int main()
 									{
 										switch (event.type)
 										{
-											case sf::Event::Closed:
+										case sf::Event::Closed:
+										{
+											if (serverCreated)
 											{
-												if (serverCreated)
-												{
-													delete server;
-												}
-												delete client;
-												window.close();
-												break;
+												delete server;
 											}
+											delete client;
+											window.close();
+											break;
+										}
 
-											case sf::Event::KeyReleased:
+										case sf::Event::KeyReleased:
+										{
+											if (event.key.code == sf::Keyboard::Enter && cardEntered)
 											{
-												if (event.key.code == sf::Keyboard::Enter && cardEntered)
-												{
-													cardChosen = true;
-												}
-												break;
+												cardChosen = true;
 											}
+											break;
+										}
 
-											case sf::Event::MouseButtonReleased:
+										case sf::Event::MouseButtonReleased:
+										{
+											if (event.mouseButton.button == sf::Mouse::Left)
 											{
-												if (event.mouseButton.button == sf::Mouse::Left)
+												suggestScreen.chooseRevealCard(mouse);
+												chosenCard = suggestScreen.getRevealCard();
+												if (chosenCard != "NONE")
 												{
-													suggestScreen.chooseRevealCard(mouse);
-													chosenCard = suggestScreen.getRevealCard();
-													cout << "Chosen card is " << chosenCard << endl;
-													if (chosenCard != "NONE")
-													{
-														cardEntered = true;
-													}
+													cardEntered = true;
 												}
-												break;
 											}
-											
-											default:
-											{
-												break;
-											}
+											break;
+										}
+
+										default:
+										{
+											break;
+										}
 										}
 									}
 									window.clear();
@@ -946,6 +1146,65 @@ int main()
 						gameStatus.setString(client->getResults());
 						gameStatus.setPosition(sf::Vector2f(275, 30));
 					}
+
+
+					// Handle accusation if it is not your turn
+					else if (isAccuse)
+					{
+						gameStatus.setString(playerTurnName + " is making an accusation!");
+						gameStatus.setPosition(sf::Vector2f(400, 30));
+
+						bool gameOver;
+						string playerName;
+						string character;
+						string suspect;
+						string weapon;
+						string room;
+						bool resultsReceived = false;
+
+						while (!resultsReceived)
+						{
+							sf::Packet results;
+							results = client->receiveData();
+							if (results >> gameOver >> playerName >> character >> suspect >> weapon >> room)
+							{
+								resultsReceived = true;
+								if (gameOver)
+								{
+									gameStatus.setString(playerName + " has correctly accused:\n" +
+										suspect + " with the " + weapon + " in the " + room +
+										"\n                  GAME OVER!");
+									gameStatus.setPosition(sf::Vector2f(100, 10));
+									state = GAME_OVER;
+								}
+								else
+								{
+									gameStatus.setString("  " + playerName + " has incorrectly accused:\n" +
+										suspect + " with the " + weapon + " in the " + room +
+										"\n           The game is still on!");
+									gameStatus.setPosition(sf::Vector2f(100, 10));
+									for (int i = 0; i < tokensVect.size(); i++)
+									{
+										if (tokensVect[i]->getName() == character)
+										{
+											tokensVect[i]->setBlack();
+										}
+									}
+								}
+							}
+							window.clear();
+							window.draw(rendered_board);
+							window.draw(gameStatus);
+							window.draw(stepCounterText);
+							sidebar->render(&window);
+							for (int i = 0; i < tokensVect.size(); i++)
+							{
+								window.draw(tokensVect[i]->get_token());
+							}
+							client->displayHand(&window);
+							window.display();
+						}
+					}
 				}
 			}
 
@@ -964,7 +1223,7 @@ int main()
 
 			else if (suggest == SHOW_SUGGEST)
 			{
-				suggestScreen.renderSuggestion(&window, suspect, weapon, room);
+				suggestScreen.renderSuggestion(&window, room);
 			}
 
 			else if (suggest == GET_REVEAL)
@@ -972,11 +1231,38 @@ int main()
 				suggestScreen.renderReveal(&window);
 			}
 
+			// Render proper Accusation screen if applicable
+			else if (accuse == CONFIRM)
+			{
+				accuseScreen.renderConfirmation(&window);
+				accuseScreen.updateButtons(mouse);
+			}
+
+			else if (accuse == ACCUSE_SUSPECT)
+			{
+				accuseScreen.renderSuspects(&window);
+			}
+
+			else if (accuse == ACCUSE_WEAPON)
+			{
+				accuseScreen.renderWeapons(&window);
+			}
+
+			else if (accuse == ACCUSE_ROOM)
+			{
+				accuseScreen.renderRooms(&window);
+			}
+			else if (accuse == SHOW_ACCUSE)
+			{
+				accuseScreen.renderSuggestion(&window);
+			}
+
 			else
 			{
 				window.draw(rendered_board);
 				window.draw(gameStatus);
 				window.draw(stepCounterText);
+				sidebar->render(&window);
 				for (int i = 0; i < tokensVect.size(); i++)
 				{
 					window.draw(tokensVect[i]->get_token());

@@ -45,6 +45,7 @@ class GameServer : public Server
         void sendMatch(bool, int);
         void getReveal(int);
         void sendResultsMessage(bool, int, string);
+        void handleAccusation();
 };
 
 #endif

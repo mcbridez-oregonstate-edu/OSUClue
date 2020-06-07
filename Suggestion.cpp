@@ -20,7 +20,7 @@ Suggestion::Suggestion(sf::Font* font)
 	b_rooms = createButtonArray(2);
 	suggestionText.setFont(*font);
 	suggestionText.setCharacterSize(40);
-	suggestionText.setPosition(sf::Vector2f(300, 25));
+	suggestionText.setPosition(sf::Vector2f(350, 25));
 	suspect = "NONE";
 	weapon = "NONE";
 	revealedCard = "NONE";
@@ -45,7 +45,7 @@ void Suggestion::suggestSuspect(const sf::Vector2f mouse)
 
 /***********************************************************************************************
 						void Suggestion::suggestWeapon(const sf::Vector2f mouse)
- * Description: Returns the weapon suggested by the player
+ * Description: Gets the weapon suggested by the player
 ***********************************************************************************************/
 void Suggestion::suggestWeapon(const sf::Vector2f mouse)
 {
@@ -122,7 +122,6 @@ void Suggestion::chooseRevealCard(const sf::Vector2f mouse)
 {
 	for (int i = 0; i < suggestCards.size(); i++)
 	{
-		cout << "Name in Suggestion is: " << suggestCards[i]->getName();
 		suggestCards[i]->update(mouse);
 		if (suggestCards[i]->isPressed())
 		{
@@ -190,7 +189,7 @@ string Suggestion::getRevealCard()
 }
 
 /************************************************************************************************
-	void Suggestion::renderSuspects(sf::RenderTarget* window, const sf::Vector2f mouse)
+				void Suggestion::renderSuspects(sf::RenderTarget* window)
  * Description: Renders the suggestion buttons to the target window
 ************************************************************************************************/
 void Suggestion::renderSuspects(sf::RenderTarget* window)
@@ -205,7 +204,7 @@ void Suggestion::renderSuspects(sf::RenderTarget* window)
 }
 
 /************************************************************************************************
-	void Suggestion::renderWeapons(sf::RenderTarget* window, const sf::Vector2f mouse)
+					void Suggestion::renderWeapons(sf::RenderTarget* window)
  * Description: Renders the suggestion buttons to the target window
 ************************************************************************************************/
 void Suggestion::renderWeapons(sf::RenderTarget* window)
@@ -223,7 +222,7 @@ void Suggestion::renderWeapons(sf::RenderTarget* window)
 	void Suggestion::renderSuggestion(sf::RenderTarget* window, string suspect, string weapon, string room)
  * Description: Renders the player's suggestion to the target window
 *************************************************************************************************************/
-void Suggestion::renderSuggestion(sf::RenderTarget* window, string suspect, string weapon, string room)
+void Suggestion::renderSuggestion(sf::RenderTarget* window, string room)
 {
 	suggestionText.setString("You have Suggested: (Press 'Enter' to continue . . .)");
 	window->draw(suggestionText);
@@ -307,13 +306,16 @@ void Suggestion::reset()
 	for (int j = 0; j < b_people.size(); j++) 
 	{
 		b_people[j]->resetPos();
+		b_people[j]->setIdle();
 	}
 	for (int j = 0; j < b_weapons.size(); j++) 
 	{
 		b_weapons[j]->resetPos();
+		b_weapons[j]->setIdle();
 	}
 	for (int j = 0; j < b_rooms.size(); j++) 
 	{
 		b_rooms[j]->resetPos();
+		b_rooms[j]->setIdle();
 	}
 }
