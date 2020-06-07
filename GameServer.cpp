@@ -44,7 +44,6 @@ GameServer::GameServer(int inport) : Server(inport)
 void GameServer::receivePlayerInfo()
 {
     sf::Packet playerInfo;
-    //cout << "Server: Checking if player data is sent" << endl;
     playerInfo = receiveData();
     int clientNum = 0;
     if (!playerInfo.endOfPacket())
@@ -225,7 +224,7 @@ void GameServer::updatePlayers()
                 players[i].isTurn = receivedPlayer.isTurn;
             }
         }
-        cout << "isAccuse in server: " << isAccuse << ", sending to players... "<< endl;
+ 
         sf::Packet sendPos;
         sendPos << receivedPlayer.character << receivedPlayer.column << receivedPlayer.row << !receivedPlayer.isTurn << isSuggest << isAccuse;
         sendAll(sendPos);
@@ -236,7 +235,6 @@ void GameServer::updatePlayers()
         }
         if (isAccuse)
         {
-            cout << "Server: About to handle accusation" << endl;
             handleAccusation();
         }
         // If that player's turn is over, increment the turn tracker
@@ -249,8 +247,8 @@ void GameServer::updatePlayers()
             }
 
             // If the player has made a bad accusation, skip their turn since they're no longer
-            // in the game
-            if (!players[playerTurn].isAlive)
+            // in the game (and continue to skip if there are more than one)
+            while (!players[playerTurn].isAlive)
             {
                 playerTurn++;
                 if (playerTurn == 6)

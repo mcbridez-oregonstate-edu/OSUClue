@@ -11,9 +11,9 @@
 			Sidebar::Sidebar(sf::Font* font, string playerName, string characterName)
  * Description: The constructor for the Sidebar. Sets up all the objects.
 *****************************************************************************************/
-Sidebar::Sidebar(sf::Font* font, string name, string characterName) : accuse("Make an Accusation", sf::Vector2f(40, 400), 35),
+Sidebar::Sidebar(sf::Font* font, string name, string characterName) : accuse("Make an Accusation", sf::Vector2f(50, 400), 35),
 	endTurn("End Turn", sf::Vector2f(50, 475), 35), 
-	secretPassage("Use Secret Passage", sf::Vector2f(40, 550), 35)
+	secretPassage("Use Secret Passage", sf::Vector2f(50, 550), 35)
 {
 	if (characterName == "Miss Scarlet") {
 		characterTexture.loadFromFile("res/images/characters/scarlet.png");
@@ -152,4 +152,13 @@ bool Sidebar::endTurnPressed()
 void Sidebar::resetAccuse()
 {
 	accuse.setIdle();
+}
+
+/*********************************************************************************************
+									void Sidebar::disableAccuse()
+ * Description: Disables the accuse button
+*********************************************************************************************/
+void Sidebar::disableAccuse()
+{
+	accuse.disable();
 }

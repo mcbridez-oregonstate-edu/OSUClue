@@ -137,6 +137,7 @@ void Suggestion::chooseRevealCard(const sf::Vector2f mouse)
 void Suggestion::showRevealCard(string cardName, string revealingPlayer)
 {
 	suggestionText.setString(revealingPlayer + " revealed: (Press Enter to continue...)");
+	suggestionText.setPosition(sf::Vector2f(350, 25));
 	for (int i = 0; i < b_people.size(); i++)
 	{
 		if (b_people[i]->getName() == cardName)
@@ -195,6 +196,7 @@ string Suggestion::getRevealCard()
 void Suggestion::renderSuspects(sf::RenderTarget* window)
 {
 	suggestionText.setString("Suggestion: Choose a Suspect and press Enter");
+	suggestionText.setPosition(sf::Vector2f(350, 25));
 	window->draw(suggestionText);
 	for (int i = 0; i < b_people.size(); i++) 
 	{
@@ -210,6 +212,7 @@ void Suggestion::renderSuspects(sf::RenderTarget* window)
 void Suggestion::renderWeapons(sf::RenderTarget* window)
 {
 	suggestionText.setString("Suggestion: Choose a Weapon and press Enter");
+	suggestionText.setPosition(sf::Vector2f(350, 25));
 	window->draw(suggestionText);
 	for (int i = 0; i < b_weapons.size(); i++) 
 	{
@@ -225,6 +228,7 @@ void Suggestion::renderWeapons(sf::RenderTarget* window)
 void Suggestion::renderSuggestion(sf::RenderTarget* window, string room)
 {
 	suggestionText.setString("You have Suggested: (Press 'Enter' to continue . . .)");
+	suggestionText.setPosition(sf::Vector2f(350, 25));
 	window->draw(suggestionText);
 	int suspectNum = -1;
 	int weaponNum = -1;
@@ -271,6 +275,7 @@ void Suggestion::renderSuggestion(sf::RenderTarget* window, string room)
 void Suggestion::renderRevealChoice(sf::RenderTarget* window)
 {
 	suggestionText.setString("Choose a card to reveal and press Enter:");
+	suggestionText.setPosition(sf::Vector2f(400, 25));
 	
 	for (int i = 0; i < suggestCards.size(); i++)
 	{

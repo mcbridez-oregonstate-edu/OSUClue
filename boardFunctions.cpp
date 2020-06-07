@@ -282,15 +282,53 @@ vector<CardButton*> createButtonArray(int type)
 	************************************************************************************/
 	vector<NotebookButton*> createNotebookButtons()
 	{
-
 		vector<NotebookButton*> buttonVector;
 
 		for (int i = 0; i < 21; i++) {
-			NotebookButton* button = new NotebookButton(i, sf::Vector2f(1100, 10 + (18 * i)));
+			NotebookButton* button = new NotebookButton(i, sf::Vector2f(1200, 200 + (20 * i)));
 			buttonVector.push_back(button);
 		}
 
 		return buttonVector;
+	}
+
+	vector<sf::Text> createNotebookLabels(sf::Font* font)
+	{
+		vector<sf::Text> notebookLabels;
+		for (int i = 0; i < 21; i++)
+		{
+			sf::Text text;
+			text.setFont(*font);
+			notebookLabels.push_back(text);
+			notebookLabels[i].setCharacterSize(20);
+			notebookLabels[i].setPosition(sf::Vector2f(1000, 190 + (20 * i)));
+		}
+
+		notebookLabels[0].setString("Miss Scarlet:");
+		notebookLabels[1].setString("Colonel Mustard:");
+		notebookLabels[2].setString("Mrs. White:");
+		notebookLabels[3].setString("Mr. Green:");
+		notebookLabels[4].setString("Mrs. Peacock:");
+		notebookLabels[5].setString("Prof. Plum:");
+
+		notebookLabels[6].setString("Wrench:");
+		notebookLabels[7].setString("Revolver:");
+		notebookLabels[8].setString("Lead Pipe:");
+		notebookLabels[9].setString("Rope:");
+		notebookLabels[10].setString("Candlestick:");
+		notebookLabels[11].setString("Knife:");
+
+		notebookLabels[12].setString("Conservatory:");
+		notebookLabels[13].setString("Lounge:");
+		notebookLabels[14].setString("Billiard Room:");
+		notebookLabels[15].setString("Library:");
+		notebookLabels[16].setString("Dining Room:");
+		notebookLabels[17].setString("Hall:");
+		notebookLabels[18].setString("Ballroom:");
+		notebookLabels[19].setString("Kitchen:");
+		notebookLabels[20].setString("Study:");
+
+		return notebookLabels;
 	}
 
 	/************************************************************************************

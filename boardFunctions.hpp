@@ -21,6 +21,7 @@ vector<token*> playerTokens(double, double, boardTile***);
 void move(sf::Event*, boardTile***, token*, int*);
 vector<CardButton*> createButtonArray(int);
 vector<NotebookButton*> createNotebookButtons();
+vector<sf::Text> createNotebookLabels(sf::Font* font);
 
 int secretPassage(token* token, boardTile*** board);
 void moveSuggestion(std::string room, token* token, boardTile*** board);

@@ -33,6 +33,7 @@ class Sidebar
 		bool passagePressed();
 		bool endTurnPressed();
 		void resetAccuse();
+		void disableAccuse();
 };
 
 #endif

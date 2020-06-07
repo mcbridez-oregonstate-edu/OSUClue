@@ -31,6 +31,7 @@ class JoinServerScreen
 		void clientCreated();
 		void clientNotCreated();
 		void render(sf::RenderTarget*);
+		void disableBack();
 };
 
 #endif

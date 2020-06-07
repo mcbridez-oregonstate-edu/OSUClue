@@ -107,7 +107,6 @@ void GameClient::updateInfo(bool isTurn, bool isSuggest, bool isAccuse)
         thisPlayer.getToken()->get_col(), thisPlayer.getToken()->get_row(), isTurn};
     sf::Packet updatePacket;
     updatePacket << myPlayer << isSuggest << isAccuse;
-    cout << "is Accuse in client" << isAccuse << endl;
     sendData(updatePacket);
 }
 

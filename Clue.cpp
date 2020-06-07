@@ -9,6 +9,7 @@
 #include "GameClient.hpp"
 #include "CharacterButton.hpp"
 #include "SimpleButton.hpp"
+#include "NotebookButton.hpp"
 #include "boardFunctions.hpp"
 #include "threadFunctions.hpp"
 #include "StartScreen.hpp"
@@ -86,6 +87,15 @@ int main()
 	// Create accusation functionality
 	Accusation accuseScreen(&font);
 
+	// Create notebook buttons and Labels
+	vector<NotebookButton*> notebook = createNotebookButtons();
+	vector<sf::Text> labels = createNotebookLabels(&font);
+	sf::Text title;
+	title.setFont(font);
+	title.setString("Notebook");
+	title.setCharacterSize(30);
+	title.setPosition(sf::Vector2f(1000, 150));
+
 	string suspect;
 	string weapon;
 	string room;
@@ -111,11 +121,22 @@ int main()
 	int roll = 0;
 	int steps = 0;
 
+	// Buttons to allow the user to make a suggestion if they've been moved to a room by another player's suggestion
+	SimpleButton yes("Yes", sf::Vector2f(450, 500), 75);
+	SimpleButton no("No", sf::Vector2f(750, 500), 75);
+
 	sf::Text stepCounterText;
 	string stepCounterString;
 	stepCounterText.setFont(font);
 	stepCounterText.setCharacterSize(35);
-	stepCounterText.setPosition(sf::Vector2f(1000, 30));
+	stepCounterText.setPosition(sf::Vector2f(50, 620));
+
+	// Winner and solution for game over screen
+	sf::Text gameOver;
+	gameOver.setFont(font);
+	gameOver.setString("GAME OVER");
+	gameOver.setCharacterSize(150);
+	gameOver.setPosition(300, 200);
 
 	// Name and character creation storage/indicators
 	string name;
@@ -484,7 +505,6 @@ int main()
 			// Get whose turn it is
 			if (getTurn)
 			{
-				cout << "Getting turn info" << endl;
 				sf::Packet turnPacket;
 				turnPacket = client->receiveData();
 				string playerTurnCharacter;
@@ -500,6 +520,66 @@ int main()
 							isTurn = true;
 							if (!checkDoors(clueBoard, client->getToken()->get_space()->getName()))
 							{
+								if (movedBySuggest)
+								{
+									gameStatus.setString("You were moved into the " + client->getToken()->get_space()->getName() +
+										"\n by another player. Would you like to make a suggestion?");
+									gameStatus.setPosition(sf::Vector2f(300, 300));
+									bool chosen = false;
+									while (!chosen)
+									{
+										while (window.pollEvent(event))
+										{
+											mouse = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
+											yes.update(mouse);
+											no.update(mouse);
+											switch (event.type)
+											{
+												case sf::Event::Closed:
+												{
+													if (serverCreated)
+													{
+														delete server;
+													}
+													delete sidebar;
+													delete client;
+													window.close();
+													break;
+												}
+												case sf::Event::MouseButtonPressed:
+												{
+													if (event.mouseButton.button == sf::Mouse::Left)
+													{
+														if (yes.isPressed())
+														{
+															chosen = true;
+															suggest = CHOOSE_SUSPECT;
+															client->updateInfo(isTurn, true, false);
+															movedBySuggest = false;
+															steps = 0;
+														}
+														else if (no.isPressed())
+														{
+															chosen = true;
+															movedBySuggest = false;
+														}
+													}
+													break;
+												}
+												default:
+												{
+													break;
+												}
+											}
+										}
+
+										window.clear();
+										window.draw(gameStatus);
+										yes.render(&window);
+										no.render(&window);
+										window.display();
+									}
+								}
 								gameStatus.setString("It's your turn! Move using the arrow keys \nor choose another action from the sidebar");
 								gameStatus.setPosition(sf::Vector2f(300, 30));
 								roll = die.roll() + die.roll();
@@ -527,7 +607,7 @@ int main()
 			sidebar->disableButtons(isTurn);
 			if (isTurn)
 			{
-				sidebar->enablePassage(isSecretPassage(client->getToken()) && !usedPassage);
+				sidebar->enablePassage(isSecretPassage(client->getToken()) && !usedPassage && steps == roll);
 				sidebar->enableEndTurn(steps, isTurn);
 			}
 
@@ -596,6 +676,14 @@ int main()
 						{
 							if (event.mouseButton.button == sf::Mouse::Left)
 							{
+								for (int i = 0; i < notebook.size(); i++) 
+								{
+									if (notebook[i]->isPressed()) 
+									{
+										notebook[i]->flipColor();
+									}
+								}
+
 								if (sidebar->endTurnPressed())
 								{
 									client->updateInfo(false, false, false);
@@ -636,8 +724,8 @@ int main()
 									if (accuseScreen.yesPressed())
 									{
 										accuse = ACCUSE_SUSPECT;
-										cout << "Yes pressed, sending update info" << endl;
 										client->updateInfo(isTurn, false, true);
+										sidebar->disableAccuse();
 									}
 
 									if (accuseScreen.noPressed())
@@ -694,6 +782,7 @@ int main()
 							{
 								delete server;
 							}
+							delete sidebar;
 							delete client;
 							window.close();
 							break;
@@ -741,6 +830,14 @@ int main()
 						{
 							if (event.mouseButton.button == sf::Mouse::Left)
 							{
+								for (int i = 0; i < notebook.size(); i++)
+								{
+									if (notebook[i]->isPressed())
+									{
+										notebook[i]->flipColor();
+									}
+								}
+
 								if (suggest == CHOOSE_SUSPECT)
 								{
 									suggestScreen.suggestSuspect(mouse);
@@ -766,6 +863,12 @@ int main()
 				}
 			}
 
+			sidebar->updateButtons(mouse);
+			for (int i = 0; i < notebook.size(); i++)
+			{
+				notebook[i]->update(mouse);
+			}
+
 			string revealedCard;
 			string revealingPlayer;
 
@@ -778,6 +881,7 @@ int main()
 
 				// Wait for reveal to be returned
 				gameStatus.setString("Waiting for a card to be revealed...");
+				gameStatus.setPosition(sf::Vector2f(400, 30));
 				sf::Packet revealData;
 				bool packetReceived = false;
 				while (!packetReceived)
@@ -800,7 +904,22 @@ int main()
 								{
 									delete server;
 								}
+								delete sidebar;
 								window.close();
+								break;
+							}
+							case sf::Event::MouseButtonReleased:
+							{
+								if (event.mouseButton.button == sf::Mouse::Left)
+								{
+									for (int i = 0; i < notebook.size(); i++)
+									{
+										if (notebook[i]->isPressed())
+										{
+											notebook[i]->flipColor();
+										}
+									}
+								}
 								break;
 							}
 							default:
@@ -812,10 +931,21 @@ int main()
 					window.clear();
 					window.draw(rendered_board);
 					window.draw(gameStatus);
+					sidebar->render(&window);
 					for (int i = 0; i < tokensVect.size(); i++)
 					{
 						window.draw(tokensVect[i]->get_token());
 					}
+					for (int i = 0; i < notebook.size(); i++)
+					{
+						notebook[i]->update(mouse);
+						notebook[i]->render(&window);
+					}
+					for (int i = 0; i < labels.size(); i++)
+					{
+						window.draw(labels[i]);
+					}
+					window.draw(title);
 					client->displayHand(&window);
 					window.display();
 				}
@@ -866,20 +996,25 @@ int main()
 						resultsReceived = true;
 						if (gameOver)
 						{
-							gameStatus.setString("You have correctly accused:\n" +
-								suspect + " with the " + weapon + " in the " + room +
-								"\n          GAME OVER--YOU WIN!");
-							gameStatus.setPosition(sf::Vector2f(100, 10));
+							gameStatus.setString("         You win!    \n" +
+								suspect + " with the " + weapon + " in the " + room);
+							gameStatus.setPosition(sf::Vector2f(300, 700));
+							accuse = NO_ACCUSE;
 							state = GAME_OVER;
+							if (serverCreated)
+							{
+								serverThread->join();
+							}
 						}
 						else
 						{
 							gameStatus.setString(playerName + " has incorrectly accused:\n" +
 								suspect + " with the " + weapon + " in the " + room +
 								"\n           YOU LOSE");
-							gameStatus.setPosition(sf::Vector2f(100, 10));
+							gameStatus.setPosition(sf::Vector2f(400, 10));
 							client->getToken()->setBlack();
-							client->updateInfo(false, false, false);
+							steps = 0;
+							accuse = NO_ACCUSE;
 						}
 					}
 					window.clear();
@@ -951,6 +1086,7 @@ int main()
 						gameStatus.setPosition(sf::Vector2f(400, 30));
 						window.clear();
 						window.draw(rendered_board);
+						sidebar->render(&window);
 						window.draw(gameStatus);
 						for (int i = 0; i < tokensVect.size(); i++)
 						{
@@ -964,6 +1100,7 @@ int main()
 						bool promptedForCards = false;
 						bool suggestDisproved = false;
 
+						// Wait for the player's suggestion
 						while (!suggestReceived)
 						{
 							sf::Packet suggestion;
@@ -972,15 +1109,23 @@ int main()
 							{
 								suggestReceived = true;
 								gameStatus.setString("           " + playerName + " has suggested:\n" + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom);
-								gameStatus.setPosition(sf::Vector2f(100, 30));
-								cout << playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom << endl;
+								gameStatus.setPosition(sf::Vector2f(400, 30));
 								for (int i = 0; i < tokensVect.size(); i++)
 								{
 									if (tokensVect[i]->getName() == playerSuspect)
 									{
 										moveSuggestion(playerRoom, tokensVect[i], clueBoard);
+										if (playerSuspect == client->getToken()->getName())
+										{
+											movedBySuggest = true;
+										}
 									}
 								}
+							}
+
+							for (int i = 0; i < notebook.size(); i++)
+							{
+								notebook[i]->update(mouse);
 							}
 
 							// Put in event loop and render functs so things don't get stuck
@@ -995,7 +1140,22 @@ int main()
 									{
 										delete server;
 									}
+									delete sidebar;
 									window.close();
+									break;
+								}
+								case sf::Event::MouseButtonReleased:
+								{
+									if (event.mouseButton.button == sf::Mouse::Left)
+									{
+										for (int i = 0; i < notebook.size(); i++)
+										{
+											if (notebook[i]->isPressed())
+											{
+												notebook[i]->flipColor();
+											}
+										}
+									}
 									break;
 								}
 								default:
@@ -1007,6 +1167,7 @@ int main()
 							window.clear();
 							window.draw(rendered_board);
 							window.draw(gameStatus);
+							sidebar->render(&window);
 							for (int i = 0; i < tokensVect.size(); i++)
 							{
 								window.draw(tokensVect[i]->get_token());
@@ -1017,6 +1178,8 @@ int main()
 
 						while (!promptedForCards && !suggestDisproved)
 						{
+							mouse = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
+
 							string prompt = client->getPrompt();
 							if (prompt == "CARDS")
 							{
@@ -1025,6 +1188,11 @@ int main()
 							else if (prompt == "DONE")
 							{
 								suggestDisproved = true;
+							}
+
+							for (int i = 0; i < notebook.size(); i++)
+							{
+								notebook[i]->update(mouse);
 							}
 
 							// Put in event loop and render functs so things don't get stuck
@@ -1039,7 +1207,22 @@ int main()
 									{
 										delete server;
 									}
+									delete sidebar;
 									window.close();
+									break;
+								}
+								case sf::Event::MouseButtonReleased:
+								{
+									if (event.mouseButton.button == sf::Mouse::Left)
+									{
+										for (int i = 0; i < notebook.size(); i++)
+										{
+											if (notebook[i]->isPressed())
+											{
+												notebook[i]->flipColor();
+											}
+										}
+									}
 									break;
 								}
 								default:
@@ -1051,6 +1234,7 @@ int main()
 							window.clear();
 							window.draw(rendered_board);
 							window.draw(gameStatus);
+							sidebar->render(&window);
 							for (int i = 0; i < tokensVect.size(); i++)
 							{
 								window.draw(tokensVect[i]->get_token());
@@ -1076,6 +1260,11 @@ int main()
 									// Need this in here because this is its own mini game loop and otherwise the buttons can't detect mouse pos
 									mouse = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
 
+									for (int i = 0; i < notebook.size(); i++)
+									{
+										notebook[i]->update(mouse);
+									}
+
 									while (window.pollEvent(event))
 									{
 										switch (event.type)
@@ -1086,6 +1275,7 @@ int main()
 											{
 												delete server;
 											}
+											delete sidebar;
 											delete client;
 											window.close();
 											break;
@@ -1133,6 +1323,7 @@ int main()
 								donePrompt = client->getPrompt();
 								window.clear();
 								window.draw(rendered_board);
+								sidebar->render(&window);
 								window.draw(gameStatus);
 								window.draw(stepCounterText);
 								for (int i = 0; i < tokensVect.size(); i++)
@@ -1171,18 +1362,21 @@ int main()
 								resultsReceived = true;
 								if (gameOver)
 								{
-									gameStatus.setString(playerName + " has correctly accused:\n" +
-										suspect + " with the " + weapon + " in the " + room +
-										"\n                  GAME OVER!");
-									gameStatus.setPosition(sf::Vector2f(100, 10));
+									gameStatus.setString("                  " + playerName + " wins! \n" +
+										suspect + " with the " + weapon + " in the " + room);
+									gameStatus.setPosition(sf::Vector2f(300, 700));
 									state = GAME_OVER;
+									if (serverCreated)
+									{
+										serverThread->join();
+									}
 								}
 								else
 								{
 									gameStatus.setString("  " + playerName + " has incorrectly accused:\n" +
 										suspect + " with the " + weapon + " in the " + room +
 										"\n           The game is still on!");
-									gameStatus.setPosition(sf::Vector2f(100, 10));
+									gameStatus.setPosition(sf::Vector2f(400, 10));
 									for (int i = 0; i < tokensVect.size(); i++)
 									{
 										if (tokensVect[i]->getName() == character)
@@ -1214,21 +1408,62 @@ int main()
 			if (suggest == CHOOSE_SUSPECT)
 			{
 				suggestScreen.renderSuspects(&window);
+
+				for (int i = 0; i < notebook.size(); i++)
+				{	
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}	
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 
 			else if (suggest == CHOOSE_WEAPON)
 			{
 				suggestScreen.renderWeapons(&window);
+				for (int i = 0; i < notebook.size(); i++)
+				{
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 
 			else if (suggest == SHOW_SUGGEST)
 			{
 				suggestScreen.renderSuggestion(&window, room);
+				for (int i = 0; i < notebook.size(); i++)
+				{
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 
 			else if (suggest == GET_REVEAL)
 			{
 				suggestScreen.renderReveal(&window);
+				for (int i = 0; i < notebook.size(); i++)
+				{
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 
 			// Render proper Accusation screen if applicable
@@ -1241,20 +1476,60 @@ int main()
 			else if (accuse == ACCUSE_SUSPECT)
 			{
 				accuseScreen.renderSuspects(&window);
+				for (int i = 0; i < notebook.size(); i++)
+				{
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 
 			else if (accuse == ACCUSE_WEAPON)
 			{
 				accuseScreen.renderWeapons(&window);
+				for (int i = 0; i < notebook.size(); i++)
+				{
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 
 			else if (accuse == ACCUSE_ROOM)
 			{
 				accuseScreen.renderRooms(&window);
+				for (int i = 0; i < notebook.size(); i++)
+				{
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 			else if (accuse == SHOW_ACCUSE)
 			{
 				accuseScreen.renderSuggestion(&window);
+				for (int i = 0; i < notebook.size(); i++)
+				{
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 
 			else
@@ -1273,8 +1548,48 @@ int main()
 				{
 					client->displayHand(&window);
 				}
+				for (int i = 0; i < notebook.size(); i++)
+				{
+					notebook[i]->update(mouse);
+					notebook[i]->render(&window);
+				}
+				for (int i = 0; i < labels.size(); i++)
+				{
+					window.draw(labels[i]);
+				}
+				window.draw(title);
 			}
 
+			window.display();
+		}
+
+		// Display game over screen
+		else if (state == GAME_OVER)
+		{
+			while (window.pollEvent(event))
+			{
+				switch (event.type)
+				{
+					case sf::Event::Closed:
+					{
+						if (serverCreated)
+						{
+							delete server;
+						}
+						delete client;
+						delete sidebar;
+						window.close();
+						break;
+					}
+					default:
+					{
+						break;
+					}
+				}
+			}
+			window.clear();
+			window.draw(gameOver);
+			window.draw(gameStatus);
 			window.display();
 		}
 	}

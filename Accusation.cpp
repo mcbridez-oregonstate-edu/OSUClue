@@ -12,11 +12,11 @@
  * Description: The constructor for Accusation, uses Suggestion to instantiate the objects
 ********************************************************************************************/
 Accusation::Accusation(sf::Font* font) : Suggestion(font), yes("Yes", 
-	sf::Vector2f(450, 500), 70), no("No", sf::Vector2f(750, 500), 70)
+	sf::Vector2f(450, 500), 75), no("No", sf::Vector2f(750, 500), 75)
 {
-	suggestionText.setString("Making a false accusation will end the game for you.\n         Are you sure you want to proceed?");
-	suggestionText.setPosition(sf::Vector2f(100, 200));
-	suggestionText.setCharacterSize(75);
+	suggestionText.setString("Making a false accusation will end the game for you.\n                 Are you sure you want to proceed?");
+	suggestionText.setPosition(sf::Vector2f(60, 200));
+	suggestionText.setCharacterSize(65);
 
 	room = "NONE";
 }

@@ -46,24 +46,32 @@ void NotebookButton::setButtonPos(sf::Vector2f targetPos)
 ** Name: void CardButton::update(sf::Vector2f mousePos)
 ** Description: Function that updates the button when hovered and pressed
 ********************************************************************************/
-int NotebookButton::update(const sf::Vector2f mousePos)
+void NotebookButton::update(const sf::Vector2f mousePos)
 {
 	buttonState = IDLE;
 
 
-	if (shape.getGlobalBounds().contains(mousePos)) {
-		buttonState = PRESSED;
+	buttonState = IDLE;
+
+	if (shape.getGlobalBounds().contains(mousePos))
+	{
+		buttonState = HOVER;
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			buttonState = PRESSED;
+		}
 	}
 
-	switch (buttonState) {
+	switch (buttonState) 
+	{
 
 	case PRESSED:
-		//flipColor();
-		return 1;
-	default:
-		return 0;
+		flipColor();
 		break;
 
+	default:
+		break;
 	}
 }
 
@@ -71,16 +79,8 @@ int NotebookButton::update(const sf::Vector2f mousePos)
 ** Name: void CardButton::render(sf::RenderTarget* target)
 ** Description: Function that draws the button
 ********************************************************************************/
-void NotebookButton::render(sf::RenderTarget* target, int notebookValue)
+void NotebookButton::render(sf::RenderTarget* target)
 {
-	if (notebookValue == 1) {
-		shape.setFillColor(activeColor);
-
-	}
-	else {
-		shape.setFillColor(idleColor);
-
-	}
 	target->draw(shape);
 }
 
