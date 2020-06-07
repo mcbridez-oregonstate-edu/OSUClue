@@ -10,22 +10,26 @@
 
 #include <SFML/Network.hpp>
 #include <string>
+#include "Card.hpp"
+#include "Token.hpp"
 using std::string;
+using std::vector;
 
 // A structure for keeping track of which client is which player, what character they're
-// playing, and what their chosen name is (also later position once this gets integrated
+// playing, and what their chosen name is (also later position once this gets integrated)
 struct ServerPlayer
 {
     string name;
-    string character;       // Type on this can be changed if necessary, mainly useful for printing/testing
+    string character;   
     int clientNum;
-    // Point pos            (uncomment once the GUI functionality gets added in--be sure to add into 
-    //                      the operator overrides below)
+    int column;
+    int row;
+    bool isTurn;
+    bool isAlive;
 };
 
 // Packet operator overrides for ServerPlayer
 sf::Packet& operator <<(sf::Packet&, const ServerPlayer&);
-
 sf::Packet& operator >>(sf::Packet&, ServerPlayer&);
 
 #endif

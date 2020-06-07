@@ -17,8 +17,13 @@ NotebookButton::NotebookButton(int arrayPos, sf::Vector2f b_pos)
 {
 	shape.setSize(sf::Vector2f(10, 10));
 	shape.move(b_pos);
+<<<<<<< HEAD
 	
 	hoverColor = sf::Color(192,192,192);
+=======
+
+	hoverColor = sf::Color(192, 192, 192);
+>>>>>>> minchellaWork2
 	activeColor = sf::Color::Red;
 	idleColor = sf::Color::White;
 
@@ -46,11 +51,16 @@ void NotebookButton::setButtonPos(sf::Vector2f targetPos)
 ** Name: void CardButton::update(sf::Vector2f mousePos)
 ** Description: Function that updates the button when hovered and pressed
 ********************************************************************************/
+<<<<<<< HEAD
 int NotebookButton::update(const sf::Vector2f mousePos)
+=======
+void NotebookButton::update(const sf::Vector2f mousePos)
+>>>>>>> minchellaWork2
 {
 	buttonState = IDLE;
 
 
+<<<<<<< HEAD
 	if (shape.getGlobalBounds().contains(mousePos)) {
 			buttonState = PRESSED;
 	}
@@ -64,6 +74,29 @@ int NotebookButton::update(const sf::Vector2f mousePos)
 		return 0;
 		break;
 
+=======
+	buttonState = IDLE;
+
+	if (shape.getGlobalBounds().contains(mousePos))
+	{
+		buttonState = HOVER;
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			buttonState = PRESSED;
+		}
+	}
+
+	switch (buttonState) 
+	{
+
+	case PRESSED:
+		flipColor();
+		break;
+
+	default:
+		break;
+>>>>>>> minchellaWork2
 	}
 }
 
@@ -71,6 +104,7 @@ int NotebookButton::update(const sf::Vector2f mousePos)
 ** Name: void CardButton::render(sf::RenderTarget* target)
 ** Description: Function that draws the button
 ********************************************************************************/
+<<<<<<< HEAD
 void NotebookButton::render(sf::RenderTarget* target, int notebookValue)
 {
 	if (notebookValue == 1) {
@@ -82,6 +116,11 @@ void NotebookButton::render(sf::RenderTarget* target, int notebookValue)
 		
 	}
 	target->draw(shape);	
+=======
+void NotebookButton::render(sf::RenderTarget* target)
+{
+	target->draw(shape);
+>>>>>>> minchellaWork2
 }
 
 /********************************************************************************
@@ -113,5 +152,8 @@ bool NotebookButton::isPressed()
 	}
 	return false;
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> minchellaWork2

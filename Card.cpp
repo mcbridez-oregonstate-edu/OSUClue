@@ -1,3 +1,4 @@
+
 /********************************************************************************
 ** Changes by: Adam Pham
 ** Date: 4/15/2020
@@ -6,6 +7,7 @@
 ********************************************************************************/
 
 #include "Card.hpp"
+#include "packetstructs.hpp"
 #include <string>
 
 /********************************************************************************
@@ -105,6 +107,7 @@ std::string Card::getName() {
 	return name;
 }
 
+
 /********************************************************************************
 ** Function: void setCardPos(sf::Vector2f pos);
 ** Description: Sets the card's position in the game window.
@@ -130,4 +133,15 @@ sf::Sprite Card::getSprite()
 ********************************************************************************/
 CardType Card::getType() {
 	return type;
+}
+
+// Packet operator overrides for Card
+sf::Packet& operator <<(sf::Packet& packet, const Card& card)
+{
+	return packet << card.name << card.type;
+}
+
+sf::Packet& operator >>(sf::Packet& packet, Card& card)
+{
+	return packet >> card.name >> card.type;
 }

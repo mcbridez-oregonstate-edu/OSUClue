@@ -5,15 +5,17 @@
  * Description: Defines structs for use with the server and extends the Packets to be
  * able to use them
 ***********************************************************************************/
+
 #include "packetstructs.hpp"
+
 
 // Packet operator overrides for ServerPlayer
 sf::Packet& operator <<(sf::Packet& packet, const ServerPlayer& player)
 {
-    return packet << player.name << player.character << player.clientNum;
+    return packet << player.name << player.character << player.clientNum << player.column << player.row << player.isTurn;
 }
 
 sf::Packet& operator >>(sf::Packet& packet, ServerPlayer& player)
 {
-    return packet >> player.name >> player.character >> player.clientNum;
+    return packet >> player.name >> player.character >> player.clientNum >> player.column >> player.row >> player.isTurn;
 }

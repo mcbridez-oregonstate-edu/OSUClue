@@ -8,7 +8,7 @@ boardTile::boardTile(string type, int rowInput, int colInput) {
 	if (type.at(0) == 'w') {
 		occupied = true;
 		room = false;
-		
+
 		door = false;
 		tileType = Wall;
 	}
@@ -24,7 +24,7 @@ boardTile::boardTile(string type, int rowInput, int colInput) {
 	else if (type.at(0) == 'r') {
 		occupied = false;
 		room = true;
-		
+
 		door = false;
 		tileType = Room;
 	}
@@ -40,7 +40,7 @@ boardTile::boardTile(string type, int rowInput, int colInput) {
 	else {
 		occupied = false;
 		room = true;
-		
+
 		door = true;
 		tileType = Room;
 	}
@@ -74,10 +74,10 @@ boardTile::boardTile(string type, int rowInput, int colInput) {
 		roomName = "Lounge";
 	}
 	else {
-		roomName = "Ground Floor";
+		roomName = "Hallway";
 	}
 
-	
+
 
 	row = rowInput;
 	col = colInput;
@@ -92,8 +92,8 @@ boardTile::boardTile(const boardTile& other)
 	occupied = other.occupied;
 	room = other.room;
 
-	
-	
+
+
 
 	tileType = other.tileType;
 	door = other.door;

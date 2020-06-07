@@ -104,14 +104,15 @@ void CardButton::setButtonPos(sf::Vector2f targetPos)
 void CardButton::update(const sf::Vector2f mousePos)
 {
 	buttonState = IDLE;
+<<<<<<< HEAD
 	
 
 	if (image.getGlobalBounds().contains(mousePos)) {
-		buttonState = HOVER;
+		buttonState = PRESSED;
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			buttonState = PRESSED;
-		}
+		}*/
 	}
 
 	switch (buttonState) {
@@ -126,6 +127,27 @@ void CardButton::update(const sf::Vector2f mousePos)
 			// turn yellow on click
 			image.setColor(sf::Color::Yellow);
 			break;
+=======
+
+
+	if (image.getGlobalBounds().contains(mousePos)) 
+	{
+		buttonState = PRESSED;
+	}
+
+	switch (buttonState) {
+	case IDLE:
+		// set color to original
+		image.setColor(sf::Color(255, 255, 255));
+		break;
+	case HOVER:
+		image.setColor(hoverColor);
+		break;
+	default:
+		// turn yellow on click
+		image.setColor(sf::Color(160, 160, 160, 100));
+		break;
+>>>>>>> minchellaWork2
 
 	}
 }
@@ -169,3 +191,12 @@ std::string CardButton::getName()
 {
 	return name;
 }
+<<<<<<< HEAD
+=======
+
+void CardButton::setIdle()
+{
+	buttonState = IDLE;
+	image.setColor(sf::Color(255, 255, 255));
+}
+>>>>>>> minchellaWork2

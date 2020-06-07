@@ -5,7 +5,6 @@
 ********************************************************************************************************************/
 #include <SFML/Graphics.hpp>
 #include "token.hpp"
-#include <iostream>
 
 
 
@@ -33,8 +32,6 @@ token::token(sf::Color color, double row_start, double col_start, int row, int c
 token::token(std::string name, double width, double height, boardTile*** board)
 {
 	sf::Color color;
-	double row_start = 0;
-	double col_start = 0;
 	int row = 0;
 	int col = 0;
 	if (name == "Colonel Mustard")
@@ -99,6 +96,7 @@ token::token(std::string name, double width, double height, boardTile*** board)
 	tile_col = col;
 	current_space = board[tile_row][tile_col];
 	current_space->setOccupied(1);
+	this->name = name;
 }
 
 /*******************************************************************************************************************
@@ -117,7 +115,6 @@ void token::move_token(double row, double col, int row_index, int col_index, boa
 	tile_row += row_index;
 	tile_col += col_index;
 	current_space = board[tile_row][tile_col];
-	
 }
 
 int token::get_row() {
@@ -152,11 +149,12 @@ void token::move_passage(double row, double col, int row_index, int col_index, b
 	tile_row = row_index;
 	tile_col = col_index;
 	current_space = board[row_index][col_index];
-	
+
 }
 
 // set token color to black (no longer in game)
-void token::setBlack() {
+void token::setBlack() 
+{
+	piece.setPosition(sf::Vector2f(row_start, col_start));
 	piece.setFillColor(sf::Color::Black);
 }
-

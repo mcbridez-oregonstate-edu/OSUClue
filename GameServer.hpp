@@ -20,14 +20,32 @@ class GameServer : public Server
 {
     private:
         ServerPlayer players[6];
+        int playerTurn;
+        int playersCreated;
         Deck theDeck;
-        vector<Card*> solution;
+        vector<Card> solution;
         void receivePlayerInfo();
+        void swap(ServerPlayer*, ServerPlayer*);
 
     public:
         GameServer();
         GameServer(int);
         void acceptPlayers();
+        void sendTakenCharacters();
+        void startGame();
+        void dealPlayers();
+        void setPlayerOrder();
+        void sendTurn();
+        void updatePlayers();
+        void playGame();
+        void handleSuggestion();
+        vector<string> getPlayerHand();
+        void promptForCards(int);
+        void sendDone();
+        void sendMatch(bool, int);
+        void getReveal(int);
+        void sendResultsMessage(bool, int, string);
+        void handleAccusation();
 };
 
 #endif
