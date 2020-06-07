@@ -133,7 +133,6 @@ void GameClient::sendHand()
 ****************************************************************************************/
 string GameClient::getPrompt()
 {
-    cout << " Client: About to receive prompt for cards/done" << endl;
     sf::Packet prompt;
     prompt = receiveData();
     string sendCards;

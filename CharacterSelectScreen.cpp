@@ -91,7 +91,7 @@ void CharacterSelectScreen::getUserInput(sf::Event* event)
 		input.erase(input.getSize() - 1, 1);
 		inputDisplay.setString(input);
 	}
-	else if (input.getSize() < 25)
+	else if (input.getSize() < 16)
 	{
 		input += event->text.unicode;
 		inputDisplay.setString(input);

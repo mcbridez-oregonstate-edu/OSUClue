@@ -16,7 +16,7 @@ using std::string;
 
 class Suggestion
 {
-    private:
+    protected:
         vector<CardButton*> b_people;
         vector<CardButton*> b_weapons;
         vector<CardButton*> b_rooms;

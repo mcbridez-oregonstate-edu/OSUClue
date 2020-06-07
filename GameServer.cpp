@@ -337,6 +337,7 @@ void GameServer::handleSuggestion()
         }
     }
     cout << "Match search done, sending results to clients" << endl;
+    sendDone();
     sendResultsMessage(match, checkPlayer, playerName);
 }
 

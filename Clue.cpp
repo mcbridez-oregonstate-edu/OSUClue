@@ -337,7 +337,6 @@ int main()
 				// If the randomly-generated "play the game" signal is sent
 				if (taken == "d2WO8CBMC7b9KoMHh@@abO8ci!")
 				{
-					cout << "Client: Signal received, changing to GAME" << endl;
 					if (serverCreated)
 					{
 						serverThread->join();
@@ -585,9 +584,9 @@ int main()
 								}
 								else if (suggest == GET_REVEAL)
 								{
+									cout << "Enter pressed, should be changing back to game" << endl;
 									suggestScreen.reset();
 									suggest = NO_SUGGEST;
-									gameStatus.setString(client->getResults());
 								}
 							}
 						}
@@ -684,6 +683,12 @@ int main()
 				else
 				{
 					suggestScreen.showRevealCard(revealedCard, revealingPlayer);
+					string done = client->getPrompt();
+					if (done == "DONE")
+					{
+						gameStatus.setString(client->getResults());
+						gameStatus.setPosition(sf::Vector2f(275, 30));
+					}
 					suggest = GET_REVEAL;
 				}
 			}
@@ -763,7 +768,7 @@ int main()
 							{
 								cout << "Suggestion Received" << endl;
 								suggestReceived = true;
-								gameStatus.setString(playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom);
+								gameStatus.setString("           " + playerName + " has suggested:\n" + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom);
 								gameStatus.setPosition(sf::Vector2f(100, 30));
 								cout << playerName + " has suggested " + playerSuspect + " with the " + playerWeapon + " in the " + playerRoom << endl;
 								for (int i = 0; i < tokensVect.size(); i++)
@@ -812,7 +817,6 @@ int main()
 							string prompt = client->getPrompt();
 							if (prompt == "CARDS")
 							{
-								cout << "Client: Received prompt for cards" << endl;
 								promptedForCards = true;
 							}
 							else if (prompt == "DONE")
@@ -868,6 +872,9 @@ int main()
 								string chosenCard;
 								while (!cardChosen)
 								{
+									// Need this in here because this is its own mini game loop and otherwise the buttons can't detect mouse pos
+									mouse = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
+
 									while (window.pollEvent(event))
 									{
 										switch (event.type)
@@ -937,6 +944,7 @@ int main()
 							}
 						}
 						gameStatus.setString(client->getResults());
+						gameStatus.setPosition(sf::Vector2f(275, 30));
 					}
 				}
 			}

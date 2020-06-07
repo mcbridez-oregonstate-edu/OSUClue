@@ -143,9 +143,6 @@
     <ClCompile Include="CharacterSelectScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Clue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Die.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -10,6 +10,8 @@
 #include "CardButton.hpp"
 #include "NotebookButton.hpp"
 #include <vector>
+#include <string>
+using std::string;
 
 using std::vector;
 
@@ -22,5 +24,7 @@ vector<NotebookButton*> createNotebookButtons();
 
 int secretPassage(token* token, boardTile*** board);
 void moveSuggestion(std::string room, token* token, boardTile*** board);
+
+bool checkDoors(boardTile***, string);
 
 #endif

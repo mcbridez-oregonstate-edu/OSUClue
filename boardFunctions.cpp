@@ -160,8 +160,9 @@ void move(sf::Event* event, boardTile*** boardArray, token* playerToken, int* st
 		if (steps > 0) {
 			if (isValidMove(playerToken->get_space(), boardArray[playerToken->get_row()][playerToken->get_col() + 1], *steps))
 			{
+				playerToken->get_space()->setOccupied(0);
 				playerToken->move_token(width, 0, 0, 1, boardArray);
-
+				playerToken->get_space()->setOccupied(1);
 			}
 		}
 	}
@@ -171,8 +172,9 @@ void move(sf::Event* event, boardTile*** boardArray, token* playerToken, int* st
 		if (steps > 0) {
 			if (isValidMove(playerToken->get_space(), boardArray[playerToken->get_row()][playerToken->get_col() - 1], *steps))
 			{
+				playerToken->get_space()->setOccupied(0);
 				playerToken->move_token(-width, 0, 0, -1, boardArray);
-
+				playerToken->get_space()->setOccupied(1);
 			}
 		}
 	}
@@ -182,8 +184,9 @@ void move(sf::Event* event, boardTile*** boardArray, token* playerToken, int* st
 		if (steps > 0) {
 			if (isValidMove(playerToken->get_space(), boardArray[playerToken->get_row() + 1][playerToken->get_col()], *steps))
 			{
+				playerToken->get_space()->setOccupied(0);
 				playerToken->move_token(0, height, 1, 0, boardArray);
-
+				playerToken->get_space()->setOccupied(1);
 			}
 		}
 	}
@@ -193,7 +196,9 @@ void move(sf::Event* event, boardTile*** boardArray, token* playerToken, int* st
 		if (steps > 0) {
 			if (isValidMove(playerToken->get_space(), boardArray[playerToken->get_row() - 1][playerToken->get_col()], *steps))
 			{
+				playerToken->get_space()->setOccupied(0);
 				playerToken->move_token(0, -height, -1, 0, boardArray);
+				playerToken->get_space()->setOccupied(1);
 			}
 		}
 	}
@@ -353,4 +358,63 @@ vector<CardButton*> createButtonArray(int type)
 		else if (room == "Kitchen") {
 			token->move_passage(449.25, 205, 22, 4, board);
 		}
+	}
+
+	/******************************************************************************************************************
+										bool checkDoors(boardTile*** board, string roomName)
+	 * Description: Takes a board and the name of the room to check, then checks the appropriate door spaces to see
+	 * if they are all blocked (occupied) by another token. If all the doors are blocked, returns true, else returns 
+	 * false
+	******************************************************************************************************************/
+	bool checkDoors(boardTile*** board, string roomName)
+	{
+		bool blocked = false;
+
+		if (roomName == "Lounge")
+		{
+
+		}
+		else if (roomName == "Dining Room")
+		{
+
+		}
+		else if (roomName == "Conservatory")
+		{
+			if (board[7][9]->isOccupied())
+			{
+				blocked = true;
+			}
+		}
+		else if (roomName == "Billiard Room") 
+		{
+			if (board[11][8]->isOccupied() && board[15][3]->isOccupied())
+			{
+				blocked = true;
+			}
+		}
+		else if (roomName == "Library") 
+		{
+			if (board[15][5]->isOccupied() && board[18][9]->isOccupied())
+			{
+				blocked = true;
+			}
+		}
+		else if (roomName == "Study") 
+		{
+
+		}
+		else if (roomName == "Ballroom") 
+		{
+
+		}
+		else if (roomName == "Hall") 
+		{
+
+		}
+		else if (roomName == "Kitchen") 
+		{
+
+		}
+
+		return blocked;
 	}

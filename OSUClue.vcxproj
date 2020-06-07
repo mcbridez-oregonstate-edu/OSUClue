@@ -51,7 +51,6 @@
     <ClCompile Include="CharacterButton.cpp" />
     <ClCompile Include="CharacterSelectScreen.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="Clue.cpp" />
     <ClCompile Include="CreateServerScreen.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Die.cpp" />
