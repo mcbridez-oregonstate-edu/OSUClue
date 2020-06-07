@@ -461,38 +461,11 @@ int main()
 
 				if (suggestion_phase == 0) { // player suggests a suspect
 					suggestionText.setString("Suggestion: Choose a Suspect");
-					//for (int i = 0; i < b_people.size(); i++) {
-					//	b_people[i]->update(mouse);
-					//	if (b_people[i]->isPressed()) {
-					//		suggestionChoice = b_people[i]->getName();
-					//		suggestion_phase++;
-					//		playerSuggest.push_back(suggestionChoice);
-					//	
-					//		// move the suggested player to the room
-					//		for (int i = 0; i < num_players; i++) {
-					//			
-					//			if (players[i]->getTokenName() == suggestionChoice) {	
-					//				// if the token is moved to a different room due to a suggestion, they are allowed to suggest on their turn
-					//				if (players[i]->getToken()->get_space()->getName() != players[current_player]->getToken()->get_space()->getName()) {
-					//					players[i]->setSuggested(0);
-					//				}
-					//				moveSuggestion(players[current_player]->getToken()->get_space()->getName(), players[i]->getToken(), boardArray);
-					//				break;
-					//			}
-					//		}
-					//	}
-					//}
+					
 				}
 				else if (suggestion_phase == 1) { // player suggests a weapon
 					suggestionText.setString("Suggestion: Choose a Weapon");
-					/*for (int i = 0; i < b_weapons.size(); i++) {
-						b_weapons[i]->update(mouse);
-						if (b_weapons[i]->isPressed()) {
-							suggestionChoice = b_weapons[i]->getName();
-							suggestion_phase++;
-							playerSuggest.push_back(suggestionChoice);
-						}
-					}*/
+					
 				}
 				else if (suggestion_phase == 2) { // current location is automatically suggested
 					suggestionChoice = players[current_player]->getToken()->get_space()->getName();
@@ -595,36 +568,14 @@ int main()
 
 				if (accusation_phase == 0) { // player chooses a suspect
 					suggestionText.setString("Accusation: Choose a Suspect");
-					/*for (int i = 0; i < b_people.size(); i++) {
-						b_people[i]->update(mouse);
-						if (b_people[i]->isPressed()) {
-							accusationChoice = b_people[i]->getName();
-							accusation_phase++;
-							playerAccusation.push_back(accusationChoice);
-						}
-					}*/
 				}
 				else if (accusation_phase == 1) { // player chooses a weapon
 					suggestionText.setString("Accusation: Choose a Weapon");
-					/*for (int i = 0; i < b_weapons.size(); i++) {
-						b_weapons[i]->update(mouse);
-						if (b_weapons[i]->isPressed()) {
-							accusationChoice = b_weapons[i]->getName();
-							accusation_phase++;
-							playerAccusation.push_back(accusationChoice);
-						}
-					}*/
+					
 				}
 				else if (accusation_phase == 2) { // player chooses a room
 					suggestionText.setString("Accusation: Choose a Location");
-					/*for (int i = 0; i < b_rooms.size(); i++) {
-						b_rooms[i]->update(mouse);
-						if (b_rooms[i]->isPressed()) {
-							accusationChoice = b_rooms[i]->getName();
-							accusation_phase++;
-							playerAccusation.push_back(accusationChoice);
-						}
-					}*/
+					
 				}
 				else if (accusation_phase == 3) { // show which cards were suggested
 					suggestionText.setString("You have chosen:\nPress 'Enter' to continue . . .");
@@ -733,13 +684,6 @@ int main()
 		else if (game_state == 0) { // suggestion phase
 
 
-					////updating all player notebooks
-					//for (int i = 0; i < players.size(); i++) {				
-					//	NotebookEntities nCard = players[i]->nCard(shownCard);
-					//	players[i]->updateNotebook(nCard, 0, 0);						
-					//}
-
-
 			if (suggestion_phase == 0) { // render buttons for people
 				for (int i = 0; i < b_people.size(); i++) {
 					b_people[i]->render(&window);
@@ -825,38 +769,22 @@ int main()
 						for (int j = 0; j < b_people.size(); j++) {
 							if (b_people[j]->getName() == choices[i]) {
 								b_people[j]->setButtonPos(sf::Vector2f(375, 140));
-								b_people[j]->update(mouse);
-								/*if (b_people[j]->isPressed()) {
-									suggestion_phase++;
-									revealedCard = b_people[j];
-								}*/
-								b_people[j]->render(&window);
-								//b_people[j]->resetPos();
+								b_people[j]->update(mouse);		
+								b_people[j]->render(&window);							
 							}
 						}
 						for (int k = 0; k < b_weapons.size(); k++) {
 							if (b_weapons[k]->getName() == choices[i]) {
 								b_weapons[k]->setButtonPos(sf::Vector2f(575, 140));
 								b_weapons[k]->update(mouse);
-								/*if (b_weapons[k]->isPressed()) {
-									suggestion_phase++;
-									revealedCard = b_weapons[k];
-								}*/
 								b_weapons[k]->render(&window);
-								//b_weapons[k]->resetPos();
 							}
 						}
 						for (int h = 0; h < b_rooms.size(); h++) {
 							if (b_rooms[h]->getName() == choices[i]) {
 								b_rooms[h]->setButtonPos(sf::Vector2f(775, 140));
 								b_rooms[h]->update(mouse);
-								/*
-								if (b_rooms[h]->isPressed()) {
-									suggestion_phase++;
-									revealedCard = b_rooms[h];
-								}*/
 								b_rooms[h]->render(&window);
-								//b_rooms[h]->resetPos();
 							}
 						}
 						window.draw(journal);
