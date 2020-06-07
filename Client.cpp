@@ -19,14 +19,15 @@ Client::Client(sf::IpAddress server, int serverPort)
     serverIP = server;
     port = serverPort;
 
-    sf::Socket::Status status = socket.connect(serverIP, port);
+    sf::Socket::Status status = socket.connect(serverIP, port, sf::milliseconds(5.f));
     if (status != sf::Socket::Done)
     {
-        cout << "Error: Could not connect to server" << endl;
+        success = false;
     }
     else
     {
-        cout << "Connected to server" << endl;
+        selector.add(socket);
+        success = true;
     }
 }
 
@@ -38,11 +39,11 @@ void Client::sendData(sf::Packet packet)
 {
     if (socket.send(packet) != sf::Socket::Done)
     {
-        cout << "Error: Issue sending data" << endl;
+        cout << "Client Error: Issue sending data" << endl;
     }
     else
     {
-        cout << "Data sent!" << endl;
+        cout << "Client: Data sent!" << endl;
     }
 }
 
@@ -53,15 +54,27 @@ void Client::sendData(sf::Packet packet)
 sf::Packet Client::receiveData()
 {
     sf::Packet packet;
-
-    if (socket.receive(packet) != sf::Socket::Done)
+    if (selector.wait(sf::microseconds(10.f)))
     {
-        cout << "Error: Issue receiving data" << endl;
+        if (selector.isReady(socket))
+        {
+            socket.receive(packet);
+        }
     }
     else
     {
-        cout << "Data received!" << endl;
+        //cout << "Server: Nothing ready to receive" << endl;
     }
 
     return packet;
+}
+
+/**************************************************************************
+                             bool isSuccessful()
+ * Description: Returns the value of "success" to indicated whether or not
+ * connection to the server was succcesful
+**************************************************************************/
+bool Client::isSuccessful()
+{
+    return success;
 }

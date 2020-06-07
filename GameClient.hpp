@@ -20,8 +20,19 @@ class GameClient : public Client
 
     public:
         GameClient(sf::IpAddress, int);
-        void getPlayerData();
+        void getPlayerData(string, token*, boardTile***);
         void sendPlayerData();
+        void receiveHand();
+        void displayHand(sf::RenderTarget*);
+        bool handIsEmpty();
+        token* getToken();
+        void updateInfo(bool, bool, bool);
+        void sendHand();
+        string getPrompt();
+        bool receiveMatch();
+        void sendReveal(string);
+        string getResults();
+        vector<Card> getHand();
 };
 
 #endif

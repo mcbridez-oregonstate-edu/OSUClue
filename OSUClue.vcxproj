@@ -19,31 +19,64 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="sfml-graphics-d-2.dll" />
-    <None Include="sfml-network-d-2.dll" />
-    <None Include="sfml-system-d-2.dll" />
-    <None Include="sfml-window-d-2.dll" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="Accusation.hpp" />
     <ClInclude Include="boardFunctions.hpp" />
     <ClInclude Include="boardTile.h" />
     <ClInclude Include="Card.hpp" />
-    <ClInclude Include="CardButton.hpp" />
+    <ClInclude Include="CharacterSelectScreen.hpp" />
+    <ClInclude Include="Client.hpp" />
+    <ClInclude Include="CreateServerScreen.hpp" />
     <ClInclude Include="Deck.hpp" />
+    <ClInclude Include="Die.hpp" />
+    <ClInclude Include="GameClient.hpp" />
+    <ClInclude Include="GameServer.hpp" />
+    <ClInclude Include="CardButton.hpp" />
+    <ClInclude Include="CharacterButton.hpp" />
+    <ClInclude Include="buttonStates.hpp" />
     <ClInclude Include="NotebookButton.hpp" />
+    <ClInclude Include="JoinServerScreen.hpp" />
+    <ClInclude Include="Sidebar.hpp" />
+    <ClInclude Include="StartScreen.hpp" />
+    <ClInclude Include="Suggestion.hpp" />
+    <ClInclude Include="threadFunctions.hpp" />
+    <ClInclude Include="SimpleButton.hpp" />
+    <ClInclude Include="packetstructs.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Server.hpp" />
     <ClInclude Include="Token.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Accusation.cpp" />
     <ClCompile Include="boardFunctions.cpp" />
     <ClCompile Include="boardTile.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardButton.cpp" />
+    <ClCompile Include="CharacterButton.cpp" />
+    <ClCompile Include="CharacterSelectScreen.cpp" />
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Clue.cpp" />
+    <ClCompile Include="CreateServerScreen.cpp" />
     <ClCompile Include="Deck.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Die.cpp" />
+    <ClCompile Include="GameClient.cpp" />
+    <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="JoinServerScreen.cpp" />
     <ClCompile Include="NotebookButton.cpp" />
+    <ClCompile Include="packetstructs.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Sidebar.cpp" />
+    <ClCompile Include="SimpleButton.cpp" />
+    <ClCompile Include="StartScreen.cpp" />
+    <ClCompile Include="Suggestion.cpp" />
+    <ClCompile Include="threadFunctions.cpp" />
     <ClCompile Include="Token.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sfml-graphics-d-2.dll" />
+    <None Include="sfml-network-d-2.dll" />
+    <None Include="sfml-system-d-2.dll" />
+    <None Include="sfml-window-d-2.dll" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -115,7 +148,7 @@
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML-2.5.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\abiga\OneDrive\Documents\SFML\SFML-2.5.1\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
     </ClCompile>
@@ -123,22 +156,22 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>gdi32.lib;winmm.lib;freetype.lib;opengl32.lib;sfml-window-d.lib;ws2_32.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)SFML-2.5.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\abiga\OneDrive\Documents\SFML\SFML-2.5.1\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\mcbri\source\SFML\include;C:\Users\abiga\Documents\SFML\SFML-2.5.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\abiga\Documents\SFML\SFML-2.5.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\mcbri\source\SFML\lib;C:\Users\abiga\Documents\SFML\SFML-2.5.1\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-network-s-d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\abiga\OneDrive\Documents\SFML\SFML-2.5.1\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -150,7 +183,7 @@
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML-2.5.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\abiga\OneDrive\Documents\SFML\SFML-2.5.1\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
     </ClCompile>
@@ -160,7 +193,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>gdi32.lib;winmm.lib;freetype.lib;opengl32.lib;sfml-window-d.lib;ws2_32.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)SFML-2.5.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\abiga\OneDrive\Documents\SFML\SFML-2.5.1\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,17 +202,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SFML_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\mcbri\source\SFML\include;$(SolutionDir)SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;opengl32.lib;freetype.lib;sfml-graphics-s.lib;sfml-audio-s.lib;sfml-window-s.lib;sfml-system-s.lib;sfml-network-s.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\mcbri\source\SFML\lib;$(SolutionDir)SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-window-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

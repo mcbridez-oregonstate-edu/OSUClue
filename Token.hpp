@@ -16,6 +16,8 @@ private:
 	boardTile* current_space;
 	int tile_row;
 	int tile_col;
+	int row_start;
+	int col_start;
 		
 public:
 
@@ -27,7 +29,6 @@ public:
 	int get_row();
 	int get_col();
 	std::string getName();
-	
 	void move_passage(double row, double col, int row_index, int col_index, boardTile*** board);
 	void setBlack();
 };
