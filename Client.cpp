@@ -19,7 +19,7 @@ Client::Client(sf::IpAddress server, int serverPort)
     serverIP = server;
     port = serverPort;
 
-    sf::Socket::Status status = socket.connect(serverIP, port, sf::milliseconds(5.f));
+    sf::Socket::Status status = socket.connect(serverIP, port, sf::microseconds(5.f));
     if (status != sf::Socket::Done)
     {
         success = false;
