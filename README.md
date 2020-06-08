@@ -34,10 +34,11 @@ This project aims to be portable. There is no need for any special software. The
 
 ## System Documentation
 ### Software Architecture and Design
-- An overview of your software’s architecture and design
-- At least 2 diagrams communicating the architecture/design of your software
-- Ability to play online with others via a server.
-- Design patterns, and in what modules/componnents.
+#### High Level Architecture
+![High Level Architecture](https://github.com/mcbridez-oregonstate-edu/OSUClue/blob/master/High-level%20architecture.jpg)
+
+#### UML Class Diagram
+![UML Class Diagram](https://github.com/mcbridez-oregonstate-edu/OSUClue/blob/master/OSUCLUE%20class%20UML%20image.png)
 
 ### Final State of the Software
 The software uses a single MSI file to install the game onto a user's computer.
