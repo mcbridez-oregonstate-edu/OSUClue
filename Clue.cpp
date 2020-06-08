@@ -214,7 +214,7 @@ int main()
 			bool serverStatus = server->isSuccessful();
 			if (serverStatus == true)
 			{
-				serverIP = sf::IpAddress::getLocalAddress();
+				serverIP = sf::IpAddress::getPublicAddress();
 				serverScreen.serverCreated(serverIP);
 			}
 			else if (serverStatus == false)
@@ -520,7 +520,18 @@ int main()
 							isTurn = true;
 							if (!checkDoors(clueBoard, client->getToken()->get_space()->getName()))
 							{
-								if (movedBySuggest)
+								if (!movedBySuggest)
+								{
+									gameStatus.setString("It's your turn! Move using the arrow keys \nor choose another action from the sidebar");
+									gameStatus.setPosition(sf::Vector2f(300, 30));
+									roll = die.roll() + die.roll();
+									steps = roll;
+									stepCounterString = "Steps Remaining: " + std::to_string(steps) +
+										"\nLocation: " + client->getToken()->get_space()->getName();
+									stepCounterText.setString(stepCounterString);
+								}
+								// Handle the case where the player is moved into a room by a suggestion
+								else
 								{
 									gameStatus.setString("You were moved into the " + client->getToken()->get_space()->getName() +
 										"\n by another player. Would you like to make a suggestion?");
@@ -555,13 +566,25 @@ int main()
 															chosen = true;
 															suggest = CHOOSE_SUSPECT;
 															client->updateInfo(isTurn, true, false);
-															movedBySuggest = false;
+															// Put this in here to disable the passage in the case of moving into a room with a passage
+															roll = die.roll() + die.roll();
+															stepCounterString = "Steps Remaining: " + std::to_string(steps) +
+																"\nLocation: " + client->getToken()->get_space()->getName();
+															stepCounterText.setString(stepCounterString);
 															steps = 0;
+															movedBySuggest = false;
 														}
 														else if (no.isPressed())
 														{
 															chosen = true;
 															movedBySuggest = false;
+															gameStatus.setString("It's your turn! Move using the arrow keys \nor choose another action from the sidebar");
+															gameStatus.setPosition(sf::Vector2f(300, 30));
+															roll = die.roll() + die.roll();
+															steps = roll;
+															stepCounterString = "Steps Remaining: " + std::to_string(steps) +
+																"\nLocation: " + client->getToken()->get_space()->getName();
+															stepCounterText.setString(stepCounterString);
 														}
 													}
 													break;
@@ -580,13 +603,7 @@ int main()
 										window.display();
 									}
 								}
-								gameStatus.setString("It's your turn! Move using the arrow keys \nor choose another action from the sidebar");
-								gameStatus.setPosition(sf::Vector2f(300, 30));
-								roll = die.roll() + die.roll();
-								steps = roll;
-								stepCounterString = "Steps Remaining: " + std::to_string(steps) +
-									"\nLocation: " + client->getToken()->get_space()->getName();
-								stepCounterText.setString(stepCounterString);
+								
 							}
 							else
 							{
@@ -961,7 +978,7 @@ int main()
 					if (done == "DONE")
 					{
 						gameStatus.setString(client->getResults());
-						gameStatus.setPosition(sf::Vector2f(275, 30));
+						gameStatus.setPosition(sf::Vector2f(325, 30));
 					}
 					suggest = GET_REVEAL;
 					suspectEntered = false;
@@ -1335,7 +1352,7 @@ int main()
 							}
 						}
 						gameStatus.setString(client->getResults());
-						gameStatus.setPosition(sf::Vector2f(275, 30));
+						gameStatus.setPosition(sf::Vector2f(325, 30));
 					}
 
 
