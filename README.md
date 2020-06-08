@@ -14,7 +14,9 @@
 <h2>How to Play</h2>
 <p>Download the installer from the latest release build. Run the installer. Install to your folder of choice. Run the game via desktop shortcut, start menu shortcut, or directly from the folder.</p>
 
-<p>The server needs to enable port forwarding first. The following <a href=https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/">link</a> will show how to do it.</p>
+<p>The server needs to enable port forwarding first. The following link will show how to do it.</p>
+
+<p>https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/</p>
 
 <p><b>NOTE</b>: There may be a warning that the installer is from an untrusted source. The installer is completely safe. We are just unlisted as a trusted source.</p>
 
