@@ -181,5 +181,8 @@
     <None Include="sfml-window-d-2.dll">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="README.md">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
