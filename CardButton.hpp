@@ -7,17 +7,10 @@
 #ifndef CARDBUTTON_HPP
 #define CARDBUTTON_HPP
 
-<<<<<<< HEAD
-#include <SFML/Graphics.hpp>
-#include <string>
-
-enum button_states { IDLE = 0, HOVER, PRESSED };
-=======
 #include "buttonStates.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
 
->>>>>>> minchellaWork2
 
 class CardButton {
 
@@ -28,13 +21,8 @@ private:
 
 	std::string name;
 	sf::Vector2f pos;
-<<<<<<< HEAD
-	
-	int buttonState;
-=======
 
 	button_states buttonState;
->>>>>>> minchellaWork2
 
 
 
@@ -47,11 +35,7 @@ public:
 	void resetPos();
 	bool isPressed();
 	std::string getName();
-<<<<<<< HEAD
-
-=======
 	void setIdle();
->>>>>>> minchellaWork2
 
 
 };
@@ -59,8 +43,4 @@ public:
 
 
 
-<<<<<<< HEAD
 #endif
-=======
-#endif
->>>>>>> minchellaWork2

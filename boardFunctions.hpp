@@ -11,8 +11,8 @@
 #include "NotebookButton.hpp"
 #include <vector>
 #include <string>
-using std::string;
 
+using std::string;
 using std::vector;
 
 bool isValidMove(boardTile* current_space, boardTile* target_space, int& stepCount);
